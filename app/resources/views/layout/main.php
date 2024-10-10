@@ -10,6 +10,11 @@
     
 </head>
 <body>
+
+    <?php
+    include __DIR__.'/navbar/navbar.php';
+    ?>
+
     <?php echo $content; ?>
 
     <?php echo $this->section('scripts'); ?>
