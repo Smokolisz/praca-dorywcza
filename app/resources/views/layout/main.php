@@ -12,6 +12,12 @@
 <body>
     <?php echo $content; ?>
 
+
+    <?php
+    include __DIR__.'/footer/footer.php';
+    ?>
+
     <?php echo $this->section('scripts'); ?>
+
 </body>
 </html>
