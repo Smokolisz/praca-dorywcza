@@ -1,0 +1,33 @@
+{
+    "name": "adam/praca-dorywcza",
+    "description": "Serwis internetowy do wystawianie ogloszen pracy",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Adam Czwordon",
+            "email": "adam.czwordon@gmail.com"
+        },
+        {
+            "name": "Marcin Burnat",
+            "email": "burnatmarcin.102@gmail.com"
+        },
+        {
+            "name": "Denis Czorniczek",
+            "email": "denisczorniczek@interia.pl"
+        },
+        {
+            "name": "Dewid Bielecki",
+            "email": "dewid.bielecki@gmail.com"
+        }
+    ],
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.7",
+        "php-di/php-di": "^7.0"
+    }
+}
