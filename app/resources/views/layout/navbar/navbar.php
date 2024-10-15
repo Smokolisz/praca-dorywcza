@@ -1,5 +1,6 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
+      
         <a class="navbar-item" href="/">
             Praca Dorywcza
         </a>
@@ -22,6 +23,7 @@
             <div class="navbar-item">
                 <a class="button is-primary" href="#">Dodaj Ogłoszenie</a>
             </div>
+          
         </div>
 
         <div class="navbar-end">
