@@ -53,10 +53,10 @@
             <div class="navbar-item">
                 <div class="buttons">
                     <a class="button is-primary">
-                        <strong>Sign up</strong>
+                        <strong>Zarejestruj się</strong>
                     </a>
                     <a class="button is-light">
-                        Log in
+                        Zaloguj się
                     </a>
                 </div>
             </div>

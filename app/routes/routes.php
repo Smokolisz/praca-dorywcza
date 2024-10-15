@@ -25,3 +25,5 @@ return function (App $app) {
         return $response;
     });
 };
+
+//tutaj sie dodaje sciezki np.: /login ($app->get('/login', [HomeController::class, 'index']);)
