@@ -2,8 +2,8 @@
     Strona Główna
 <?php $this->endSection(); ?>
 
-<div class="container">
-    <h1 class="title"><?php echo $message; ?></h1>
+<div class="container py-6">
+    <h1 class="title">Strona główna</h1>
     <p>To jest treść strony głównej.</p>
 </div>
 

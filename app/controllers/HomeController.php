@@ -17,12 +17,9 @@ class HomeController
 
     public function index(Request $request, Response $response, $args)
     {
-        // Dane do przekazania do widoku
-        $data = ['message' => 'Witamy na stronie głównej!'];
-
         // Renderowanie widoku z layoutem 'main'
         $view = $this->container->get('view');
-        $output = $view->render('home/index', $data, 'main');
+        $output = $view->render('home/index', [], 'main');
 
         $response->getBody()->write($output);
         return $response;
