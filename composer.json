@@ -28,6 +28,9 @@
     "require": {
         "slim/slim": "4.*",
         "slim/psr7": "^1.7",
-        "php-di/php-di": "^7.0"
+        "php-di/php-di": "^7.0",
+        "larapack/dd": "^1.1",
+        "rakit/validation": "^1.4",
+        "monolog/monolog": "^3.7"
     }
 }

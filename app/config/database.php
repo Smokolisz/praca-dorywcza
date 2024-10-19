@@ -4,11 +4,9 @@ return [
     'db' => [
         'driver' => 'mysql',
         'host' => 'localhost',
-        'database' => 'praca_dorywcza',
+        'database' => 'swift-jobs',
         'username' => 'root',
         'password' => '',
         'charset' => 'utf8',
-        'collation' => 'utf8_unicode_ci',
-        'prefix' => '',
     ],
 ];

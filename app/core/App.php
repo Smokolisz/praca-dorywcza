@@ -4,6 +4,9 @@ use Slim\Factory\AppFactory;
 use Psr\Container\ContainerInterface;
 use DI\Container;
 use App\Core\View;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
 
 require __DIR__ . '/../../vendor/autoload.php';
 
@@ -30,6 +33,14 @@ $container->set('db', function (ContainerInterface $c) use ($settings) {
 
 $container->set('view', function() {
     return new View(__DIR__ . '/../resources/views/');
+});
+
+$container->set('logger', function (ContainerInterface $c) {
+    $logger = new Logger('app_logger');
+
+    $logger->pushHandler(new StreamHandler(__DIR__ . '/../logs/app.log', Level::Debug));
+
+    return $logger;
 });
 
 // Załaduj plik z trasami
