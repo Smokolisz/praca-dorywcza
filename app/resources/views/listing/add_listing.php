@@ -6,7 +6,7 @@ Dodaj Ogłoszenie
     <div class="box my-6">
         <h1 class="title">Dodaj Ogłoszenie</h1>
 
-        <form action="add_listing.php" method="post" enctype="multipart/form-data">
+        <form action="/add-listing" method="post" enctype="multipart/form-data">
             <div class="columns">
                 
                 <!-- Lewa kolumna -->
@@ -96,10 +96,11 @@ Dodaj Ogłoszenie
                         <div id="map" style="width: 100%; height: 300px;"></div> <!-- Kontener na mapę -->
                     </div>
 
+                    <!-- Pole tekstowe na wybraną lokalizację (współrzędne) -->
                     <!-- Pole tekstowe na wybraną lokalizację (adres) -->
                     <div class="field">
                         <label class="label">Adres</label>
-                        <input class="input is-fullwidth" type="text" id="address" name="address" placeholder="Podaj adres">
+                        <input class="input is-fullwidth" type="text" id="address" name="address" placeholder="Podaj adres" readonly>
                     </div>
                 </div>
 
@@ -147,7 +148,7 @@ Dodaj Ogłoszenie
             }
         });
     }
-
+///////////////////////////////////////////////////////////////
     function geocode(request) {
         geocoder
             .geocode(request)
@@ -159,14 +160,14 @@ Dodaj Ogłoszenie
                 marker.setPosition(results[0].geometry.location);
                 marker.setMap(map);
 
-                // Zapisz współrzędne do ukrytych pól
-                document.getElementById('latitude').value = results[0].geometry.location.lat();
-                document.getElementById('longitude').value = results[0].geometry.location.lng();
+                // Zapisz adres do pola adresu
+                document.getElementById('address').value = results[0].formatted_address;
             })
             .catch((e) => {
                 alert("Geocode was not successful: " + e);
             });
     }
+
 
     window.initMap = initMap;
 
