@@ -3,6 +3,8 @@
 use App\Controllers\HomeController;
 use App\Controllers\LoginController;
 use App\Controllers\RegisterController;
+use App\Controllers\JobController;
+use App\Controllers\ListingController;
 use Slim\App;
 
 return function (App $app) {
@@ -24,6 +26,12 @@ return function (App $app) {
         $response->getBody()->write("moje konto");
         return $response;
     });
+    
+    $app->get('/job/{id}', [JobController::class, 'index']);
+
+    // dodawanie ogloszenia
+    $app->get('/add-listing', [ListingController::class, 'showAddListingForm']);
+    $app->post('/add-listing', [ListingController::class, 'submitListing']);
 };
 
 //tutaj sie dodaje sciezki np.: /login ($app->get('/login', [HomeController::class, 'index']);)
