@@ -3,6 +3,7 @@
 use App\Controllers\HomeController;
 use App\Controllers\LoginController;
 use App\Controllers\RegisterController;
+use App\Controllers\JobController;
 use Slim\App;
 
 return function (App $app) {
@@ -24,6 +25,9 @@ return function (App $app) {
         $response->getBody()->write("moje konto");
         return $response;
     });
+    
+    $app->get('/job/{id}', [JobController::class, 'index']);
+
 };
 
 //tutaj sie dodaje sciezki np.: /login ($app->get('/login', [HomeController::class, 'index']);)
