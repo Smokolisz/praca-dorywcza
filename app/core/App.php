@@ -43,5 +43,16 @@ $container->set('logger', function (ContainerInterface $c) {
     return $logger;
 });
 
+$container->set('mailService', function () {
+    $host = 'smtp.gmail.com';
+    $username = 'your-email@example.com';
+    $password = 'your-email-password';
+    $port = 587;
+
+    return new \App\Services\MailService($host, $username, $password, $port);
+});
+
+
+
 // Załaduj plik z trasami
 (require __DIR__ . '/../routes/routes.php')($app);
