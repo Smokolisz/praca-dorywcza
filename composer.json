@@ -31,6 +31,12 @@
         "php-di/php-di": "^7.0",
         "larapack/dd": "^1.1",
         "rakit/validation": "^1.4",
-        "monolog/monolog": "^3.7"
+        "monolog/monolog": "^3.7",
+        "phpmailer/phpmailer": "^6.9"
+    },
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true
+        }
     }
 }

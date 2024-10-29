@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Resources\Mails\Register\ConfirmEmail;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Container\ContainerInterface;
@@ -55,26 +56,36 @@ class RegisterController
 
         // Przygotowanie zapytania SQL
         $sql = <<<SQL
-        INSERT INTO users (email, password, first_name, last_name, active, role) 
-        VALUES (:email, :password, :first_name, :last_name, :active, :role)
+        INSERT INTO users (email, password, first_name, last_name, active, role, token) 
+        VALUES (:email, :password, :first_name, :last_name, :active, :role, :token)
         SQL;
 
         // Haszowanie hasła
         $hashedPassword = password_hash($data['password'], PASSWORD_BCRYPT);
 
         try {
+
+            $token = uniqid();
+
             $stmt = $db->prepare($sql);
             $result = $stmt->execute([
                 'email' => $data['email'],
                 'password' => $hashedPassword,
                 'first_name' => $data['first-name'],
                 'last_name' => $data['last-name'],
-                'active' => 1,
-                'role' => 'user'
+                'active' => 0,
+                'role' => 'user',
+                'token' => $token,
             ]);
 
             if ($result) {
                 // Przekierowanie po udanej rejestracji
+
+                $confirmEmail = new ConfirmEmail($token);
+
+                $mailer = $this->container->get('mailService');
+                $mailer->sendEmail($data['email'], $confirmEmail);
+
                 return $response->withHeader('Location', '/konto')
                     ->withStatus(302);
             }
