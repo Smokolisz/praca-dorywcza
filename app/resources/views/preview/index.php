@@ -41,7 +41,7 @@ Podgląd ogłoszenia pracy dorywczej
         <div class="field" style="width: 100%; margin-bottom: 15px;">
             <button class="button is-primary is-fullwidth" onclick="showConfirmationModal()">Przyjmuje zlecenie</button>
         </div>
-        
+
         <div class="content" style="text-align: center; padding-top: 10px; width: 100%;">
             <h2 class="subtitle">Dane kontaktowe</h2>
             <p><strong>Telefon:</strong> <?= htmlspecialchars($job['phone_number']) ?></p>
@@ -65,7 +65,7 @@ Podgląd ogłoszenia pracy dorywczej
             <p>Czy na pewno chcesz przyjąć to zlecenie?</p>
         </section>
         <footer class="modal-card-foot" style="justify-content: center;">
-            <button class="button is-primary" style="margin-right: 10px;" >Tak, przyjmuję</button>
+            <button class="button is-primary" style="margin-right: 10px;" onclick="closeConfirmationModal()">Tak, przyjmuję</button>
             <button class="button" onclick="closeConfirmationModal()">Anuluj</button>
         </footer>
     </div>
@@ -73,16 +73,16 @@ Podgląd ogłoszenia pracy dorywczej
 
 <?php $this->startSection('scripts'); ?>
 <script>
-function showChatWindow() {
-    alert("Tu będzie okno Chatu");
-}
+    function showChatWindow() {
+        alert("Tu będzie okno Chatu");
+    }
 
-function showConfirmationModal() {
-    document.getElementById("confirmationModal").classList.add("is-active");
-}
+    function showConfirmationModal() {
+        document.getElementById("confirmationModal").classList.add("is-active");
+    }
 
-function closeConfirmationModal() {
-    document.getElementById("confirmationModal").classList.remove("is-active");
-}
+    function closeConfirmationModal() {
+        document.getElementById("confirmationModal").classList.remove("is-active");
+    }
 </script>
 <?php $this->endSection(); ?>

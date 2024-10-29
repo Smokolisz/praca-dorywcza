@@ -86,7 +86,7 @@ class RegisterController
                 $mailer = $this->container->get('mailService');
                 $mailer->sendEmail($data['email'], $confirmEmail);
 
-                return $response->withHeader('Location', '/konto')
+                return $response->withHeader('Location', '/zaloguj-sie')
                     ->withStatus(302);
             }
         } catch (\PDOException $e) {
