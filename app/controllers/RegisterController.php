@@ -16,7 +16,7 @@ class RegisterController
         $this->container = $container;
     }
 
-    public function index(Request $request, Response $response, $args) : Response
+    public function index(Request $request, Response $response, $args): Response
     {
         $view = $this->container->get('view');
         $output = $view->render('register/index', [], 'main');
@@ -25,7 +25,7 @@ class RegisterController
         return $response;
     }
 
-    public function store(Request $request, Response $response, $args) : Response
+    public function store(Request $request, Response $response, $args): Response
     {
         // Pobierz dane z formularza
         $data = $request->getParsedBody();
@@ -82,7 +82,7 @@ class RegisterController
             // Logowanie błędu
             $logger = $this->container->get('logger');
             $logger->error('Błąd bazy danych', ['message' => $e->__toString()]);
-            
+
             // Przekierowanie w przypadku błędu
             return $response->withHeader('Location', '/zarejestruj-sie')
                 ->withStatus(500)

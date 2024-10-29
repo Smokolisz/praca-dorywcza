@@ -95,4 +95,14 @@ class LoginController
         return $response->withHeader('Location', '/')
             ->withStatus(302);
     }
+
+    public function logout(Request $request, Response $response, $args): Response
+    {
+        // Wyczyść sesję
+        session_unset();
+        session_destroy();
+
+        // Przekierowanie po wylogowaniu
+        return $response->withHeader('Location', '/')->withStatus(302);
+    }
 }

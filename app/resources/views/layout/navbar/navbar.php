@@ -32,7 +32,7 @@
                 if (isset($_SESSION['user_id'])):
                 ?>
                     <div class="navbar-item has-dropdown is-hoverable">
-                        <a class="navbar-link" href="/konto">
+                        <a class="navbar-link" href="/profil">
                             Witaj, <?= $_SESSION['first_name'] ?>
                         </a>
 
@@ -48,7 +48,7 @@
                             </a>
                             <hr class="navbar-divider">
                             <div class="navbar-item">
-                                <a class="button is-danger is-dark is-small is-fullwidth">
+                                <a class="button is-danger is-dark is-small is-fullwidth" href="/wyloguj-sie" >
                                     Wyloguj się
                                 </a>
                             </div>
