@@ -21,7 +21,7 @@
             </a>
 
             <div class="navbar-item">
-                <a class="button is-primary" href="#">Dodaj Ogłoszenie</a>
+                <a class="button is-primary" href="/add-listing">Dodaj Ogłoszenie</a>
             </div>
           
         </div>

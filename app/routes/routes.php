@@ -4,6 +4,8 @@ use App\Controllers\HomeController;
 use App\Controllers\LoginController;
 use App\Controllers\RegisterController;
 use App\Controllers\ProfileController;
+use App\Controllers\JobController;
+use App\Controllers\ListingController;
 use Slim\App;
 
 return function (App $app) {
@@ -32,6 +34,20 @@ return function (App $app) {
     //zmiana hasła 
     $app->get('/profil/zmien-haslo', [ProfileController::class, 'updatePasswordForm']);
     $app->post('/profil/zmien-haslo', [ProfileController::class, 'updatePassword']);
+
+    // moje konto
+    $app->get('/konto', function ($request, $response, array $args) {
+        // Dewid stwórz tu swój kontroller konta użytkownika
+        $response->getBody()->write("moje konto");
+        return $response;
+    });
+    
+    $app->get('/job/{id}', [JobController::class, 'index']);
+
+    // dodawanie ogloszenia
+    $app->get('/add-listing', [ListingController::class, 'showAddListingForm']);
+    $app->post('/add-listing', [ListingController::class, 'submitListing']);
+};
 
     //powiadomienia użytkownika
     $app->get('/profil/powiadomienia', [ProfileController::class, 'notifications']);
