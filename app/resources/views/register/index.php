@@ -6,26 +6,39 @@ Zarejestruj się
     <div class="box my-6">
         <h1 class="title">Zarejestruj się</h1>
 
-        <form method="POST">
+        <?php if (!empty($_SESSION['registration_errors'])): ?>
+            <div class="notification is-danger">
+                <?php foreach ($_SESSION['registration_errors'] as $error): ?>
+                    <p><?= htmlspecialchars($error) ?></p>
+                <?php endforeach; ?>
+            </div>
+            <?php unset($_SESSION['registration_errors']); // Usunięcie błędów po ich wyświetleniu 
+            ?>
+        <?php endif; ?>
+
+        <form action="/zarejestruj-sie" method="POST">
 
             <div class="field">
                 <label class="label" for="first-name">Imię</label>
                 <div class="control">
-                    <input class="input" type="text" id="first-name" name="first-name" max="50" required>
+                    <input class="input" type="text" id="first-name" name="first-name" max="50" required
+                        value="<?= htmlspecialchars($_SESSION['register_data']['first-name'] ?? '') ?>">
                 </div>
             </div>
 
             <div class="field">
                 <label class="label" for="last-name">Nazwisko</label>
                 <div class="control">
-                    <input class="input" type="text" id="last-name" name="last-name" max="100" required>
+                    <input class="input" type="text" id="last-name" name="last-name" max="100" required
+                        value="<?= htmlspecialchars($_SESSION['register_data']['last-name'] ?? '') ?>">
                 </div>
             </div>
 
             <div class="field">
                 <label class="label" for="email">Email</label>
                 <div class="control">
-                    <input class="input" type="email" id="email" name="email" max="255" required>
+                    <input class="input" type="email" id="email" name="email" max="255" required
+                        value="<?= htmlspecialchars($_SESSION['register_data']['email'] ?? '') ?>">
                 </div>
             </div>
 
@@ -65,3 +78,7 @@ Zarejestruj się
 <?php $this->startSection('scripts'); ?>
 <!-- <script src="path/to/script.js"></script> -->
 <?php $this->endSection(); ?>
+
+
+<?php unset($_SESSION['register_data']); // Usuń dane po wyświetleniu 
+?>
