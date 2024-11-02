@@ -8,10 +8,12 @@ class ConfirmEmail extends AbstractMail
 {
     private string $subject = "Potwierdź adres e-mail";
     private string $token;
+    private string $appUrl;
 
-    public function __construct(string $token)
+    public function __construct(string $appUrl, string $token)
     {
         $this->token = $token;
+        $this->appUrl = $appUrl;
     }
 
     public function getSubject() : string
@@ -82,7 +84,7 @@ class ConfirmEmail extends AbstractMail
                     <p>Witaj,</p>
                     <p>Dziękujemy za rejestrację w naszym serwisie. Aby zakończyć proces rejestracji, prosimy o potwierdzenie swojego adresu e-mail, klikając poniższy przycisk:</p>
                     <p style="text-align: center;">
-                        <a href="'.$_SERVER['REQUEST_URI'].'/confirm-email/'.$this->token.'" class="button">Potwierdź adres email</a>
+                        <a href="'.$this->appUrl.'/potwierdz-email/'.$this->token.'" class="button">Potwierdź adres email</a>
                     </p>
                     <p>Jeśli nie zakładałeś(aś) konta, zignoruj ten e-mail.</p>
                     <p>Z pozdrowieniami,<br>Zespół Swift-Jobs</p>

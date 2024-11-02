@@ -4,6 +4,13 @@ Zaloguj się
 
 <div class="container my-6 is-max-tablet" style="padding-bottom:20px">
     <div class="box my-6">
+
+        <?php if (isset($isJustRegistered) && $isJustRegistered): ?>
+            <div class="notification is-success">
+                <p>Rejestracja przebiegła pomyślnie. Zweryfikuj adres e-mail żeby móc się zalogować.</p>
+            </div>
+        <?php endif; ?>
+
         <h1 class="title">Zaloguj się</h1>
 
         <?php if (!empty($_SESSION['login_errors'])): ?>

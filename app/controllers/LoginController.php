@@ -10,16 +10,29 @@ use Rakit\Validation\Validator;
 class LoginController
 {
     protected $container;
+    private $db;
 
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->db = $this->container->get('db');
+
+        if(isset($_SESSION['user_id'])) {
+            header('Location: /');
+            exit;
+        }
     }
 
     public function index(Request $request, Response $response, $args): Response
     {
+        $data = $request->getQueryParams();
+
+        $isJustRegistered = isset($data['register']);
+
         $view = $this->container->get('view');
-        $output = $view->render('login/index', [], 'main');
+        $output = $view->render('login/index', [
+            'isJustRegistered' => $isJustRegistered
+        ], 'main');
 
         $response->getBody()->write($output);
         return $response;
@@ -48,13 +61,26 @@ class LoginController
 
         // Operacje na bazie danych wewnątrz try-catch
         try {
-            $db = $this->container->get('db');
 
             // Przygotowanie zapytania SQL
             $sql = "SELECT * FROM users WHERE email = :email LIMIT 1";
-            $stmt = $db->prepare($sql);
-            $stmt->execute(['email' => $data['email'],]);
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute(['email' => $data['email']]);
             $user = $stmt->fetch();
+
+            if ($user['active'] == 0) {
+                $_SESSION['login_errors'] = ['Konto nie aktywne'];
+                $_SESSION['login_data'] = $data; //Zapisz dane logowania w sesji
+                return $response->withHeader('Location', '/zaloguj-sie')
+                    ->withStatus(302);
+            }
+
+            if ($user['verified'] == 0) {
+                $_SESSION['login_errors'] = ['Email nie zweryfikowany'];
+                $_SESSION['login_data'] = $data; //Zapisz dane logowania w sesji
+                return $response->withHeader('Location', '/zaloguj-sie')
+                    ->withStatus(302);
+            }
 
             if (!$user) {
                 $_SESSION['login_errors'] = ['Nie znaleziono użytkownika'];
