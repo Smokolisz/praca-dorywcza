@@ -83,8 +83,8 @@ class RegisterController
 
         // Przygotowanie zapytania SQL
         $sql = <<<SQL
-        INSERT INTO users (email, password, first_name, last_name, active, role, token) 
-        VALUES (:email, :password, :first_name, :last_name, :active, :role, :token)
+        INSERT INTO users (email, password, first_name, last_name, active, verified, role, token) 
+        VALUES (:email, :password, :first_name, :last_name, :active, :verified, :role, :token)
         SQL;
 
         // Haszowanie hasła
@@ -100,7 +100,8 @@ class RegisterController
                 'password' => $hashedPassword,
                 'first_name' => $data['first-name'],
                 'last_name' => $data['last-name'],
-                'active' => 0,
+                'active' => 1,
+                'verified' => 0,
                 'role' => 'user',
                 'token' => $token,
             ]);
@@ -108,14 +109,17 @@ class RegisterController
             if ($result) {
                 // Przekierowanie po udanej rejestracji
 
-                $confirmEmail = new ConfirmEmail($token);
+                $appConfig = $this->container->get('app-config');
 
+                $confirmEmail = new ConfirmEmail($appConfig['app-url'], $token);
                 $mailer = $this->container->get('mailService');
                 $mailer->sendEmail($data['email'], $confirmEmail);
+                
                 unset($_SESSION['register_data']); // Jeśli rejestracja przebiegnie pomyślnie, usuń dane z sesji
-                return $response->withHeader('Location', '/zaloguj-sie')
+                return $response->withHeader('Location', '/zaloguj-sie?register=success')
                     ->withStatus(302);
             }
+
         } catch (\PDOException $e) {
             // Logowanie błędu
             $logger = $this->container->get('logger');

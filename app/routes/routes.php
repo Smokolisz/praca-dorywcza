@@ -6,6 +6,7 @@ use App\Controllers\RegisterController;
 use App\Controllers\ProfileController;
 use App\Controllers\JobController;
 use App\Controllers\ListingController;
+use App\Controllers\VerifyEmailController;
 use Slim\App;
 
 return function (App $app) {
@@ -16,6 +17,8 @@ return function (App $app) {
     // rejestracja
     $app->get('/zarejestruj-sie', [RegisterController::class, 'index']);
     $app->post('/zarejestruj-sie', [RegisterController::class, 'store']);
+
+    $app->get('/potwierdz-email/{token}', [VerifyEmailController::class, 'index']);
 
     // logowanie
     $app->get('/zaloguj-sie', [LoginController::class, 'index']);
