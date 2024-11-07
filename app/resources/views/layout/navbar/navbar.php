@@ -2,9 +2,9 @@
     <div class="navbar-brand">
       
         <a class="navbar-item" href="/">
-            Praca Dorywcza
+        <img src="/pictures/logo_swiftjobs.png" alt="logo">
         </a>
-
+        <button class="button is-success is-dark">Success</button>
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -18,7 +18,10 @@
 
             <a class="navbar-item">
                 Kategorie
+                
             </a>
+
+           
 
             <div class="navbar-item">
                 <a class="button is-primary" href="/add-listing">Dodaj Ogłoszenie</a>
