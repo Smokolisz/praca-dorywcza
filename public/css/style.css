@@ -1,3 +1,113 @@
 .is-borderless {
     border:none;
+/* ========================================== */
+/* =============   NAVBAR    ================ */
+/* ========================================== */
+.navbar-item{
+    margin-right: 30px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+.navbar{
+    padding: 0px;
+    margin-top: 70px;
+    margin-left: 80px;
+    margin-right: 30px;
+}
+.title{
+    margin-bottom: 10px;
+    margin-top: 5px;
+}
+.logo{
+    width: 100px;
+}
+.image{
+    padding: 0px;
+}
+.button{
+    padding: 10px;
+}
+.is-dark{
+    padding: 10px;
+}
+.is-32x32{
+    padding: 0px;
+}
+
+
+/* ========================================== */
+/* =============   STRONA GŁÓWNA    ========= */
+/* ========================================== */
+
+
+.strona-glowna{
+  margin-top: 50px;
+}
+.cell{
+    margin-left: 0px;
+    align-items: center;
+}
+
+.subtitle{
+    margin-top: 60px;
+    margin-left: 50px;
+    color: aliceblue;
+}
+
+.is-1{
+    margin-top: 60px;
+    margin-left: 200px;
+}
+
+.is-5{
+    margin-right: 30px;
+    margin-left: 200px;
+}
+
+.is-3{
+    margin-left: 100px;
+}
+.box{
+    margin-left: 100px;
+    margin-right: 100px;  
+    background-color: hsl(222, 16%, 16%);
+}
+.is-6{
+    padding: 0px;
+    margin-left: 0px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+.no-gap{
+    margin-top: 20px;
+}
+.scroll-container {
+    position: relative;
+    height: 650px; 
+    overflow-y: auto; 
+    display: flex;      
+    flex-direction: column;     
+    gap: 20px;     
+    
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 90%, transparent);
+    mask-image: linear-gradient(to bottom, transparent, black 15%, black 90%, transparent);              /* Odstępy między boxami */
+}
+
+/* ========================================== */
+/* =============   FOOTER    ================ */
+/* ========================================== */
+
+.centered-content {
+    text-align: center;  /* Centrowanie tekstu w poziomie */
+    padding-top: 100px;       /* Dodanie paddingu */
+              /* Zmiana koloru tekstu */
+}
+
+.custom-link {
+    color: inherit; /* Dziedziczy kolor tekstu z rodzica, co usunie niebieski kolor */
+    text-decoration: none; /* Usuwa podkreślenie */
+}
+
+.custom-link:hover {
+    color: grey; /* Zmienia kolor na szary przy najechaniu myszką */
 }

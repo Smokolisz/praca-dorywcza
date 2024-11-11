@@ -9,6 +9,8 @@ use App\Controllers\JobController;
 use App\Controllers\ListingController;
 use App\Controllers\ResetPasswordController;
 use App\Controllers\VerifyEmailController;
+use App\Controllers\StatuteController;
+use App\Controllers\FaqController;
 use Slim\App;
 
 return function (App $app) {
@@ -60,7 +62,12 @@ return function (App $app) {
     //przesyłanie zdjęcia profilowego
     $app->post('/profil/upload-profile-picture', [ProfileController::class,  'uploadProfilePicture']);
 
-
     $app->get('/czat/{jobId}', [ChatController::class,  'show']);
+
+    // Strona regulaminu
+    $app->get('/regulamin', [StatuteController::class, 'show']);
+
+    // Strona FAQ
+    $app->get('/faq', [FaqController::class, 'show']);
 
 };
