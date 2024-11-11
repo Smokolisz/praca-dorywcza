@@ -46,7 +46,7 @@ class RegisterController
         // Definiowanie niestandardowych wiadomości w języku polskim
         $validation->setMessages([
             'email:email'            => 'Podany adres email jest niepoprawny.',
-            'confirm-password:same'  => 'Hasło musi być takie samo jak hasło główne.',
+            'confirm-password:same'  => 'Hasła muszą być takie same.',
             'password:min'           => 'Hasło musi mieć co najmniej 6 znaków.',
             'terms:accepted'         => 'Musisz zaakceptować regulamin.',
             'required'               => 'Pole :attribute jest wymagane.',
@@ -83,8 +83,8 @@ class RegisterController
 
         // Przygotowanie zapytania SQL
         $sql = <<<SQL
-        INSERT INTO users (email, password, first_name, last_name, active, verified, role, token) 
-        VALUES (:email, :password, :first_name, :last_name, :active, :verified, :role, :token)
+        INSERT INTO users (email, password, first_name, last_name, active, verified, role, verify_email_token) 
+        VALUES (:email, :password, :first_name, :last_name, :active, :verified, :role, :verify_email_token)
         SQL;
 
         // Haszowanie hasła
@@ -103,7 +103,7 @@ class RegisterController
                 'active' => 1,
                 'verified' => 0,
                 'role' => 'user',
-                'token' => $token,
+                'verify_email_token' => $token,
             ]);
 
             if ($result) {

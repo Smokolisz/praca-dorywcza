@@ -33,7 +33,7 @@ $container->set('db', function () use ($dbConfig) {
 });
 
 $container->set('view', function() {
-    return new View(__DIR__ . '/../resources/views/');
+    return new View(__DIR__ . '/../Resources/Views/');
 });
 
 $container->set('logger', function () {

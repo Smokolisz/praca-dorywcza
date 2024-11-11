@@ -16,7 +16,7 @@ class JobController
         $this->container = $container;
     }
 
-    public function index(Request $request, Response $response, $args)
+    public function index(Request $request, Response $response, $args): Response
     {
         $db = $this->container->get('db');
         $stmt = $db->prepare("SELECT * FROM listings WHERE id = :id LIMIT 1");
@@ -27,7 +27,6 @@ class JobController
         if (!$job) {
             $response->getBody()->write("Ogłoszenie nie zostało znalezione.");
             return $response->withStatus(404);
-            
         }
 
         $view = $this->container->get('view');

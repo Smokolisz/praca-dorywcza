@@ -16,7 +16,7 @@ class ProfileController
     }
 
     // Wyświetlanie profilu użytkownika
-    public function index(Request $request, Response $response, $args)
+    public function index(Request $request, Response $response, $args): Response
     {
         $db = $this->container->get("db");
         $view = $this->container->get("view");
@@ -43,7 +43,7 @@ class ProfileController
     }
 
     // Wyświetlanie formularza edycji profilu
-    public function edit(Request $request, Response $response, $args)
+    public function edit(Request $request, Response $response, $args): Response
     {
         $db = $this->container->get("db");
         $view = $this->container->get("view");
@@ -66,7 +66,7 @@ class ProfileController
     }
 
     // Zapisanie zmian w profilu użytkownika
-    public function updateProfile(Request $request, Response $response, $args)
+    public function updateProfile(Request $request, Response $response, $args): Response
     {
         $db = $this->container->get("db");
         $userId = $_SESSION['user_id'] ?? null;
@@ -89,7 +89,7 @@ class ProfileController
     }
 
     // Wyświetlanie formularza zmiany hasła
-    public function updatePasswordForm(Request $request, Response $response, $args)
+    public function updatePasswordForm(Request $request, Response $response, $args): Response
     {
         $view = $this->container->get("view");
         $output = $view->render('account/change_password', [], "main");
@@ -98,7 +98,7 @@ class ProfileController
     }
 
     // Zapisanie nowego hasła
-    public function updatePassword(Request $request, Response $response, $args)
+    public function updatePassword(Request $request, Response $response, $args): Response
     {
         $db = $this->container->get("db");
         $view = $this->container->get("view");
@@ -146,7 +146,7 @@ class ProfileController
 
 
     // Wyświetlanie powiadomień użytkownika
-    public function notifications(Request $request, Response $response, $args)
+    public function notifications(Request $request, Response $response, $args): Response
     {
         $db = $this->container->get("db");
         $view = $this->container->get("view");
@@ -168,7 +168,7 @@ class ProfileController
     }
 
     // Wyświetlanie historii aktywności użytkownika
-    public function activityLog(Request $request, Response $response, $args)
+    public function activityLog(Request $request, Response $response, $args): Response
     {
         $db = $this->container->get("db");
         $view = $this->container->get("view");
@@ -197,7 +197,7 @@ class ProfileController
 
 
     // Przesyłanie zdjęcia profilowego
-    public function uploadProfilePicture(Request $request, Response $response, $args)
+    public function uploadProfilePicture(Request $request, Response $response, $args): Response
     {
         $db = $this->container->get("db");
         $userId = $_SESSION['user_id'] ?? null;
