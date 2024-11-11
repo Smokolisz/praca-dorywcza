@@ -6,6 +6,7 @@ use App\Controllers\RegisterController;
 use App\Controllers\ProfileController;
 use App\Controllers\JobController;
 use App\Controllers\ListingController;
+use App\Controllers\ResetPasswordController;
 use App\Controllers\VerifyEmailController;
 use App\Controllers\StatuteController;
 use App\Controllers\FaqController;
@@ -25,6 +26,11 @@ return function (App $app) {
     // logowanie
     $app->get('/zaloguj-sie', [LoginController::class, 'index']);
     $app->post('/zaloguj-sie', [LoginController::class, 'login']);
+
+    $app->get('/resetuj-haslo', [ResetPasswordController::class, 'index']);
+    $app->post('/resetuj-haslo/wyslij-email', [ResetPasswordController::class, 'sendPasswordResetEmail']);
+    $app->get('/resetuj-haslo/{token}', [ResetPasswordController::class, 'edit']);
+    $app->post('/resetuj-haslo/{token}', [ResetPasswordController::class, 'update']);
 
     //wylogowanie
     $app->get('/wyloguj-sie', [LoginController::class, 'logout']);
