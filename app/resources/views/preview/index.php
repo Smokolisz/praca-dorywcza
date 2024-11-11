@@ -51,6 +51,10 @@ Podgląd ogłoszenia pracy dorywczej
         <div class="field" style="width: 100%; margin-top: 15px;">
             <button class="button is-info is-fullwidth" onclick="showChatWindow()">Napisz wiadomość</button>
         </div>
+        <!-- Przycisk Negocjuj stawkę -->
+        <div class="mt-4">
+            <a href="/negocjacje/start/<?= htmlspecialchars($job['id']) ?>" class="button is-primary is-fullwidth">Negocjuj stawkę</a>
+        </div>
     </div>
 </div>
 
@@ -66,6 +70,8 @@ Podgląd ogłoszenia pracy dorywczej
         </section>
         <footer class="modal-card-foot" style="justify-content: center;">
             <button class="button is-primary" style="margin-right: 10px;" onclick="closeConfirmationModal()">Tak, przyjmuję</button>
+            <!-- Przycisk Negocjuj stawkę -->
+            <button class="button is-info" style="margin-right: 10px;" onclick="startNegotiation()">Negocjuj stawkę</button>
             <button class="button" onclick="closeConfirmationModal()">Anuluj</button>
         </footer>
     </div>
@@ -75,6 +81,10 @@ Podgląd ogłoszenia pracy dorywczej
 <script>
     function showChatWindow() {
         alert("Tu będzie okno Chatu");
+    }
+
+    function startNegotiation() {
+        window.location.href = "/negocjacje/start/<?= htmlspecialchars($job['id']) ?>";
     }
 
     function showConfirmationModal() {

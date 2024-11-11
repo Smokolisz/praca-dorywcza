@@ -6,7 +6,9 @@ use App\Controllers\RegisterController;
 use App\Controllers\ProfileController;
 use App\Controllers\JobController;
 use App\Controllers\ListingController;
+use App\Controllers\LogoutController;
 use App\Controllers\VerifyEmailController;
+use App\Controllers\NegotiationController;
 use Slim\App;
 
 return function (App $app) {
@@ -25,7 +27,7 @@ return function (App $app) {
     $app->post('/zaloguj-sie', [LoginController::class, 'login']);
 
     //wylogowanie
-    $app->get('/wyloguj-sie', [LoginController::class, 'logout']);
+    $app->get('/wyloguj-sie', [LogoutController::class, 'logout']);
 
     //profil użytkownika
     $app->get('/profil', [ProfileController::class, 'index']);
@@ -52,4 +54,19 @@ return function (App $app) {
 
     //przesyłanie zdjęcia profilowego
     $app->post('/profil/upload-profile-picture', [ProfileController::class,  'uploadProfilePicture']);
+
+    //formularz rozpoczęcia negocjacji
+    $app->get('/negocjacje/start/{id}', [NegotiationController::class, 'startNegotiationForm']);
+
+    //wyświetlanie negocjacji
+    $app->get('/negocjacje/{id}', [NegotiationController::class, 'showNegotiation']);
+
+    //rozpoczęcie nowej negocjacji
+    $app->post('/negocjacje/start', [NegotiationController::class, 'startNegotiation']);
+
+    // Akceptacja oferty
+    $app->post('/negocjacje/{id}/akceptacja', [NegotiationController::class, 'acceptOffer']);
+
+    // Odrzucenie oferty
+    $app->post('/negocjacje/{id}/odrzucenie', [NegotiationController::class, 'rejectOffer']);
 };
