@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use PDO; // Upewnij się, że ta linia jest obecna
+use PDO;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Container\ContainerInterface;
