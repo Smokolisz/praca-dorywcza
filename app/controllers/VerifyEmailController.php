@@ -25,7 +25,7 @@ class VerifyEmailController
 
         $db = $this->container->get('db');
 
-        $sql = "SELECT * FROM users WHERE token = :token";
+        $sql = "SELECT * FROM users WHERE verify_email_token = :token";
         $stmt = $db->prepare($sql);
         $user = $stmt->execute(['token' => $token]);
 
@@ -35,7 +35,7 @@ class VerifyEmailController
 
 
         // verify user
-        $sql = "UPDATE users SET verified = 1 WHERE token = :token";
+        $sql = "UPDATE users SET verified = 1 WHERE verify_email_token = :token";
         $stmt = $db->prepare($sql);
         $stmt->execute(['token' => $token]);
 
