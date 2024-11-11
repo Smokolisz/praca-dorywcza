@@ -33,6 +33,7 @@ class RegisterController
 
         // Walidacja
         $validator = new Validator();
+
         $validation = $validator->validate($data, [
             'first-name'       => 'required',
             'last-name'        => 'required',
@@ -42,22 +43,48 @@ class RegisterController
             'terms'            => 'required|accepted'
         ]);
 
+        // Definiowanie niestandardowych wiadomości w języku polskim
+        $validation->setMessages([
+            'email:email'            => 'Podany adres email jest niepoprawny.',
+            'confirm-password:same'  => 'Hasła muszą być takie same.',
+            'password:min'           => 'Hasło musi mieć co najmniej 6 znaków.',
+            'terms:accepted'         => 'Musisz zaakceptować regulamin.',
+            'required'               => 'Pole :attribute jest wymagane.',
+        ]);
+
+        $validation->validate();
+
         // Obsługa błędów walidacji
         if ($validation->fails()) {
-            $errors = $validation->errors();
-            // Przekierowanie z błędami
+            $errors = $validation->errors()->firstOfAll();
+
+            // Przechowaj błędy w sesji (lub przekierowanie z błędami w nagłówkach)
+            $_SESSION['registration_errors'] = $errors;
+            $_SESSION['register_data'] = $data;
+
             return $response->withHeader('Location', '/zarejestruj-sie')
-                ->withStatus(302)
-                ->withHeader('X-Errors', json_encode($errors->firstOfAll()));
+                ->withStatus(302);
         }
 
         // Dostęp do bazy danych
         $db = $this->container->get('db');
 
+        // Sprawdzenie, czy email już istnieje w bazie
+        $stmt = $db->prepare("SELECT COUNT(*) FROM users WHERE email = :email");
+        $stmt->execute(['email' => $data['email']]);
+        $emailExists = $stmt->fetchColumn();
+
+        if ($emailExists) {
+            // Jeśli email już istnieje, zapisujemy błąd w sesji
+            $_SESSION['registration_errors'] = ['email' => 'Podany adres email jest już zarejestrowany.'];
+            $_SESSION['register_data'] = $data;
+            return $response->withHeader('Location', '/zarejestruj-sie')->withStatus(302);
+        }
+
         // Przygotowanie zapytania SQL
         $sql = <<<SQL
-        INSERT INTO users (email, password, first_name, last_name, active, role, token) 
-        VALUES (:email, :password, :first_name, :last_name, :active, :role, :token)
+        INSERT INTO users (email, password, first_name, last_name, active, verified, role, verify_email_token) 
+        VALUES (:email, :password, :first_name, :last_name, :active, :verified, :role, :verify_email_token)
         SQL;
 
         // Haszowanie hasła
@@ -73,27 +100,31 @@ class RegisterController
                 'password' => $hashedPassword,
                 'first_name' => $data['first-name'],
                 'last_name' => $data['last-name'],
-                'active' => 0,
+                'active' => 1,
+                'verified' => 0,
                 'role' => 'user',
-                'token' => $token,
+                'verify_email_token' => $token,
             ]);
 
             if ($result) {
                 // Przekierowanie po udanej rejestracji
 
-                $confirmEmail = new ConfirmEmail($token);
+                $appConfig = $this->container->get('app-config');
 
+                $confirmEmail = new ConfirmEmail($appConfig['app-url'], $token);
                 $mailer = $this->container->get('mailService');
                 $mailer->sendEmail($data['email'], $confirmEmail);
-
-                return $response->withHeader('Location', '/zaloguj-sie')
+                
+                unset($_SESSION['register_data']); // Jeśli rejestracja przebiegnie pomyślnie, usuń dane z sesji
+                return $response->withHeader('Location', '/zaloguj-sie?register=success')
                     ->withStatus(302);
             }
+
         } catch (\PDOException $e) {
             // Logowanie błędu
             $logger = $this->container->get('logger');
             $logger->error('Błąd bazy danych', ['message' => $e->__toString()]);
-
+            $_SESSION['register_data'] = $data;
             // Przekierowanie w przypadku błędu
             return $response->withHeader('Location', '/zarejestruj-sie')
                 ->withStatus(500)

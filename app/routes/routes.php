@@ -6,6 +6,8 @@ use App\Controllers\RegisterController;
 use App\Controllers\ProfileController;
 use App\Controllers\JobController;
 use App\Controllers\ListingController;
+use App\Controllers\ResetPasswordController;
+use App\Controllers\VerifyEmailController;
 use Slim\App;
 
 return function (App $app) {
@@ -17,9 +19,16 @@ return function (App $app) {
     $app->get('/zarejestruj-sie', [RegisterController::class, 'index']);
     $app->post('/zarejestruj-sie', [RegisterController::class, 'store']);
 
+    $app->get('/potwierdz-email/{token}', [VerifyEmailController::class, 'index']);
+
     // logowanie
     $app->get('/zaloguj-sie', [LoginController::class, 'index']);
     $app->post('/zaloguj-sie', [LoginController::class, 'login']);
+
+    $app->get('/resetuj-haslo', [ResetPasswordController::class, 'index']);
+    $app->post('/resetuj-haslo/wyslij-email', [ResetPasswordController::class, 'sendPasswordResetEmail']);
+    $app->get('/resetuj-haslo/{token}', [ResetPasswordController::class, 'edit']);
+    $app->post('/resetuj-haslo/{token}', [ResetPasswordController::class, 'update']);
 
     //wylogowanie
     $app->get('/wyloguj-sie', [LoginController::class, 'logout']);

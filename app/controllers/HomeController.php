@@ -15,7 +15,7 @@ class HomeController
         $this->container = $container;
     }
 
-    public function index(Request $request, Response $response, $args)
+    public function index(Request $request, Response $response, $args): Response
     {
         // Renderowanie widoku z layoutem 'main'
         $view = $this->container->get('view');

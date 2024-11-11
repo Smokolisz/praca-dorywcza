@@ -16,7 +16,7 @@ class JobController
         $this->container = $container;
     }
 
-    public function index(Request $request, Response $response, $args)
+    public function index(Request $request, Response $response, $args): Response
     {
         $db = $this->container->get('db');
         $stmt = $db->prepare("SELECT * FROM listings WHERE id = :id LIMIT 1");
