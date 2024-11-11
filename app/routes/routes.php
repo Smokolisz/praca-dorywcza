@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\ChatController;
 use App\Controllers\HomeController;
 use App\Controllers\LoginController;
 use App\Controllers\RegisterController;
@@ -58,4 +59,8 @@ return function (App $app) {
 
     //przesyłanie zdjęcia profilowego
     $app->post('/profil/upload-profile-picture', [ProfileController::class,  'uploadProfilePicture']);
+
+
+    $app->get('/czat/{jobId}', [ChatController::class,  'show']);
+
 };

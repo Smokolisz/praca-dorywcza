@@ -23,7 +23,9 @@ Podgląd ogłoszenia pracy dorywczej
                 <div class="content">
                     <h2 class="subtitle">Zdjęcia</h2>
                     <div class="gallery" style="display: flex; gap: 10px; flex-wrap: wrap;">
-                        <?php foreach (json_decode($job['images']) as $image): ?>
+                        <?php 
+                            $images = json_decode($job['images']);
+                            foreach ($images as $image): ?>
                             <img src="/pictures/<?= htmlspecialchars($image) ?>" alt="Zdjęcie związane z ofertą" style="width: 100px; height: auto;">
                         <?php endforeach; ?>
                     </div>
@@ -49,7 +51,7 @@ Podgląd ogłoszenia pracy dorywczej
         </div>
 
         <div class="field" style="width: 100%; margin-top: 15px;">
-            <button class="button is-info is-fullwidth" onclick="showChatWindow()">Napisz wiadomość</button>
+            <a class="button is-info is-fullwidth" href="/czat/<?= $job['id'] ?>">Napisz wiadomość</a>
         </div>
     </div>
 </div>
