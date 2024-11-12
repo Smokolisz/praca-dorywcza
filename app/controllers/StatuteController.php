@@ -6,7 +6,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Container\ContainerInterface;
 
-class HomeController
+class StatuteController
 {
     protected $container;
 
@@ -15,12 +15,11 @@ class HomeController
         $this->container = $container;
     }
 
-    public function index(Request $request, Response $response, $args): Response
+    // Wyświetlanie strony regulaminu
+    public function show(Request $request, Response $response, $args): Response
     {
-        // Renderowanie widoku z layoutem 'main'
         $view = $this->container->get('view');
-        $output = $view->render('home/index', [], 'main');
-
+        $output = $view->render('regulations/statute', [], 'main'); 
         $response->getBody()->write($output);
         return $response;
     }

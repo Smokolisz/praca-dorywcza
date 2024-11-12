@@ -1,5 +1,6 @@
 <?php
 
+use App\Controllers\ChatController;
 use App\Controllers\HomeController;
 use App\Controllers\LoginController;
 use App\Controllers\RegisterController;
@@ -9,6 +10,10 @@ use App\Controllers\ListingController;
 use App\Controllers\LogoutController;
 use App\Controllers\VerifyEmailController;
 use App\Controllers\NegotiationController;
+use App\Controllers\ResetPasswordController;
+use App\Controllers\VerifyEmailController;
+use App\Controllers\StatuteController;
+use App\Controllers\FaqController;
 use Slim\App;
 
 return function (App $app) {
@@ -25,6 +30,11 @@ return function (App $app) {
     // logowanie
     $app->get('/zaloguj-sie', [LoginController::class, 'index']);
     $app->post('/zaloguj-sie', [LoginController::class, 'login']);
+
+    $app->get('/resetuj-haslo', [ResetPasswordController::class, 'index']);
+    $app->post('/resetuj-haslo/wyslij-email', [ResetPasswordController::class, 'sendPasswordResetEmail']);
+    $app->get('/resetuj-haslo/{token}', [ResetPasswordController::class, 'edit']);
+    $app->post('/resetuj-haslo/{token}', [ResetPasswordController::class, 'update']);
 
     //wylogowanie
     $app->get('/wyloguj-sie', [LogoutController::class, 'logout']);
@@ -69,4 +79,13 @@ return function (App $app) {
 
     // Odrzucenie oferty
     $app->post('/negocjacje/{id}/odrzucenie', [NegotiationController::class, 'rejectOffer']);
+
+    $app->get('/czat/{jobId}', [ChatController::class,  'show']);
+
+    // Strona regulaminu
+    $app->get('/regulamin', [StatuteController::class, 'show']);
+
+    // Strona FAQ
+    $app->get('/faq', [FaqController::class, 'show']);
+
 };
