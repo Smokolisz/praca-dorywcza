@@ -155,6 +155,12 @@ Strona Główna
 
 </div>
 
+<?php $this->startSection('head'); ?>
+<link rel="stylesheet" href="/css/style.css">
+<?php $this->endSection(); ?>
+
+
 <?php $this->startSection('scripts'); ?>
 <!-- <script src="path/to/script.js"></script> -->
+
 <?php $this->endSection(); ?>
