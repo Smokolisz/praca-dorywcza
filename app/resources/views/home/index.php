@@ -2,9 +2,7 @@
 Strona Główna
 <?php $this->endSection(); ?>
 
-
-
-<div class="strona-glowna">
+<div class="strona-glowna pt-6">
 
     <div class="grid">
         <div class="cell" style="padding-top: 30px; padding-left: 20px;">
@@ -15,7 +13,8 @@ Strona Główna
         <div class="cell">
             <h1 class="title is-3">Popularne ogłoszenia</h1>
             <div class="scroll-container">
-                <div class="box">
+
+                <div class="box has-background-grey-darker">
                     <p class="title is-4 no-gap">Koszenie trawnika na terenie Opola</p>
                     <p class="subtitle is-6 no-gap">
                         <span class="icon">
@@ -42,7 +41,7 @@ Strona Główna
                 </div>
 
 
-                <div class="box">
+                <div class="box has-background-grey-darker">
                     <p class="title is-4 no-gap">Opieka nad zwierzętami w Krakowie</p>
                     <p class="subtitle is-6 no-gap">
                         <span class="icon">
@@ -68,7 +67,7 @@ Strona Główna
                     </div>
                 </div>
 
-                <div class="box">
+                <div class="box has-background-grey-darker">
                     <p class="title is-4 no-gap">Nauczyciel języka angielskiego w Warszawie</p>
                     <p class="subtitle is-6 no-gap">
                         <span class="icon">
@@ -94,7 +93,7 @@ Strona Główna
                     </div>
                 </div>
 
-                <div class="box">
+                <div class="box has-background-grey-darker">
                     <p class="title is-4 no-gap">Dostawca jedzenia na rowerze w Gdańsku</p>
                     <p class="subtitle is-6 no-gap">
                         <span class="icon">
@@ -120,7 +119,7 @@ Strona Główna
                     </div>
                 </div>
 
-                <div class="box">
+                <div class="box has-background-grey-darker">
                     <p class="title is-4 no-gap">Programista PHP we Wrocławiu</p>
                     <p class="subtitle is-6 no-gap">
                         <span class="icon">
