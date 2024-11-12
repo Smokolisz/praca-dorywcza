@@ -96,7 +96,7 @@ class NegotiationController
             $stmt = $db->prepare("
             INSERT INTO negotiations (listing_id, user_id, offer_amount, justification, status, created_at, updated_at) 
             VALUES (:listing_id, :user_id, :offer_amount, :justification, 'pending', NOW(), NOW())
-        ");
+            ");
             $stmt->execute([
                 'listing_id' => $listingId,
                 'user_id' => $userId,
@@ -144,7 +144,7 @@ class NegotiationController
         JOIN users u ON n.user_id = u.id
         WHERE n.listing_id = :listing_id
         ORDER BY n.created_at DESC
-    ");
+        ");
         $stmt->execute(['listing_id' => $listingId]);
         $negotiations = $stmt->fetchAll();
 
@@ -176,7 +176,7 @@ class NegotiationController
         SELECT n.*, n.listing_id
         FROM negotiations n
         WHERE n.id = :negotiation_id
-    ");
+        ");
         $stmt->execute(['negotiation_id' => $negotiationId]);
         $negotiation = $stmt->fetch();
 
@@ -214,10 +214,10 @@ class NegotiationController
 
         // Pobranie negocjacji
         $stmt = $db->prepare("
-        SELECT n.*, n.listing_id
-        FROM negotiations n
-        WHERE n.id = :negotiation_id
-    ");
+            SELECT n.*, n.listing_id
+            FROM negotiations n
+            WHERE n.id = :negotiation_id
+        ");
         $stmt->execute(['negotiation_id' => $negotiationId]);
         $negotiation = $stmt->fetch();
 

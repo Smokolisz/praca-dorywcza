@@ -17,10 +17,10 @@ class FaqController
 
     // Wyświetlanie strony FAQ
     public function show(Request $request, Response $response, $args): Response
-{
-    $view = $this->container->get('view');
-    $output = $view->render('regulations/faq', [], 'main'); // Odwołanie do pliku FAQ w folderze regulations
-    $response->getBody()->write($output);
-    return $response;
-}
+    {
+        $view = $this->container->get('view');
+        $output = $view->render('regulations/faq', [], 'main'); // Odwołanie do pliku FAQ w folderze regulations
+        $response->getBody()->write($output);
+        return $response;
+    }
 }
