@@ -11,7 +11,6 @@ use App\Controllers\LogoutController;
 use App\Controllers\VerifyEmailController;
 use App\Controllers\NegotiationController;
 use App\Controllers\ResetPasswordController;
-use App\Controllers\VerifyEmailController;
 use App\Controllers\StatuteController;
 use App\Controllers\FaqController;
 use Slim\App;
@@ -87,5 +86,4 @@ return function (App $app) {
 
     // Strona FAQ
     $app->get('/faq', [FaqController::class, 'show']);
-
 };
