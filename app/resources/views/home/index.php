@@ -5,7 +5,7 @@ Strona Główna
 <div class="strona-glowna pt-6">
 
     <div class="grid">
-        <div class="cell" style="padding-top: 30px; padding-left: 20px;">
+        <div class="cell">
             <h1 class="title is-1">Praca dla ciebie!</h1>
             <p class="subtitle is-5">Szukasz pracy dorywczej lub potrzebujesz wsparcia w codziennych zadaniach? U nas znajdziesz setki ofert dostosowanych do Twoich potrzeb - szybko, wygodnie i bez zbędnych formalności. Dołącz do naszej społeczności, przeglądaj ogłoszenia w swojej okolicy lub wystaw własne i zacznij działać już dziś!</p>
         </div>
