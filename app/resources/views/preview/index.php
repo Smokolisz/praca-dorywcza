@@ -11,7 +11,7 @@ Podgląd ogłoszenia pracy dorywczej
 <div class="container my-6">
     <div class="columns is-variable is-8">
         <!-- Informacje o pracy i zdjęcia -->
-        <div class="column is-three-quarters">
+        <div class="column is-two-thirds">
             <div class="box">
                 <div class="columns">
                     <!-- Informacje o pracy -->
@@ -44,7 +44,7 @@ Podgląd ogłoszenia pracy dorywczej
         </div>
 
         <!-- Dane kontaktowe i akcje -->
-        <div class="column">
+        <div class="column is-one-third">
             <div class="box">
                 <div class="field">
                     <button class="button is-primary is-fullwidth" onclick="showConfirmationModal()">Przyjmuje zlecenie</button>
@@ -55,8 +55,10 @@ Podgląd ogłoszenia pracy dorywczej
                     <p><strong>Telefon:</strong> <?= htmlspecialchars($job['phone_number']) ?></p>
                     <p><strong>E-mail:</strong> <?= htmlspecialchars($job['e-mail']) ?></p>
                 </div>
-        <div class="field" style="width: 100%; margin-top: 15px;">
-            <a class="button is-info is-fullwidth" href="/czat/<?= $job['id'] ?>">Napisz wiadomość</a>
+                <div class="field mt-4">
+                    <a class="button is-info is-fullwidth" href="/czat/<?= $job['id'] ?>">Napisz wiadomość</a>
+                </div>
+            </div>
         </div>
         <!-- Przycisk Negocjuj stawkę -->
         <div class="mt-4">
@@ -99,7 +101,12 @@ Podgląd ogłoszenia pracy dorywczej
         <h2 class="subtitle">Wymagania</h2>
         <ul>
             <?php foreach (json_decode($job['requirements']) as $requirement): ?>
-                <li><?= htmlspecialchars($requirement->requirement) ?></li>
+                <li class="is-flex is-align-items-center">
+                    <span class="icon has-text-primary">
+                        <i class="fas fa-check-circle"></i>
+                    </span>
+                    <span><?= htmlspecialchars($requirement->requirement) ?></span>
+                </li>
             <?php endforeach; ?>
         </ul>
     </div>
@@ -108,7 +115,12 @@ Podgląd ogłoszenia pracy dorywczej
         <h2 class="subtitle">Dostępny sprzęt</h2>
         <ul>
             <?php foreach (json_decode($job['equipment']) as $item): ?>
-                <li><?= htmlspecialchars($item->item) ?></li>
+                <li class="is-flex is-align-items-center">
+                    <span class="icon has-text-primary">
+                        <i class="fas fa-check-circle"></i>
+                    </span>
+                    <span><?= htmlspecialchars($item->item) ?></span>
+                </li>
             <?php endforeach; ?>
         </ul>
     </div>
@@ -117,25 +129,28 @@ Podgląd ogłoszenia pracy dorywczej
         <h2 class="subtitle">To oferujemy</h2>
         <ul>
             <?php foreach (json_decode($job['offer']) as $benefit): ?>
-                <li><?= htmlspecialchars($benefit->benefit) ?></li>
+                <li class="is-flex is-align-items-center">
+                    <span class="icon has-text-primary">
+                        <i class="fas fa-check-circle"></i>
+                    </span>
+                    <span><?= htmlspecialchars($benefit->benefit) ?></span>
+                </li>
             <?php endforeach; ?>
         </ul>
     </div>
 </div>
 
+
 <!-- Kafelek z mapą Google -->
 <div class="container my-6">
     <div class="box">
         <h2 class="subtitle">Lokalizacja</h2>
-        <div id="map" style="width: 100%; height: 300px;"></div>
+        <div id="map" class="is-fullwidth" style="height: 300px;"></div>
     </div>
 </div>
 
 <?php $this->startSection('scripts'); ?>
 <script>
-    function showChatWindow() {
-        alert("Tu będzie okno Chatu");
-    }
 
     function startNegotiation() {
         window.location.href = "/negocjacje/start/<?= htmlspecialchars($job['id']) ?>";
