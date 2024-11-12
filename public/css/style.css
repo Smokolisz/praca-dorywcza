@@ -1,9 +1,10 @@
 .is-borderless {
     border:none;
+}
 /* ========================================== */
 /* =============   NAVBAR    ================ */
 /* ========================================== */
-.navbar-item{
+.navbar-item {
     margin-right: 30px;
     padding-top: 0px;
     padding-bottom: 0px;
@@ -51,7 +52,7 @@
 .subtitle{
     margin-top: 60px;
     margin-left: 50px;
-    color: aliceblue;
+    /* color: aliceblue; */
 }
 
 .is-1{
@@ -70,7 +71,6 @@
 .box{
     margin-left: 100px;
     margin-right: 100px;  
-    background-color: hsl(222, 16%, 16%);
 }
 .is-6{
     padding: 0px;
