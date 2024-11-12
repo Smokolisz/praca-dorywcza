@@ -1,20 +1,20 @@
 <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-      
-            <figure class="image is-64x64">
+
+        <figure class="image is-64x64">
             <img src="/pictures/logo_swiftjobs.png" />
-            </figure>
+        </figure>
         <a class="navbar-item" href="/">
-        <h1 class="title",>SwiftJobs</h1>
+            <h1 class="title" ,>SwiftJobs</h1>
         </a>
-        
+
 
         <button class="button is-ghost">
-                <figure class="image is-32x32">
+            <figure class="image is-32x32">
                 <img src="/pictures/daynight.png" />
-                </figure>
-            </button>  
-        
+            </figure>
+        </button>
+
         <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
             <span aria-hidden="true"></span>
             <span aria-hidden="true"></span>
@@ -32,21 +32,21 @@
             <a class="navbar-item" href="/faq">
                 FAQ
             </a>
-            <a class="navbar-item">
+            <a class="navbar-item" href="/profil">
                 Mój profil
             </a>
             <a class="navbar-item" href="/kontakt">
                 Kontakt
             </a>
 
-           
-           
+
+
 
             <div class="navbar-item">
                 <a class="button is-primary" href="/add-listing">Dodaj Ogłoszenie</a>
             </div>
 
-            
+
 
         </div>
 
@@ -72,7 +72,7 @@
                             </a>
                             <hr class="navbar-divider">
                             <div class="navbar-item">
-                                <a class="button is-danger is-dark is-small is-fullwidth" href="/wyloguj-sie" >
+                                <a class="button is-danger is-dark is-small is-fullwidth" href="/wyloguj-sie">
                                     Wyloguj się
                                 </a>
                             </div>

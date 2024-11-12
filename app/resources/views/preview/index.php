@@ -27,9 +27,9 @@ Podgląd ogłoszenia pracy dorywczej
                     <div class="column">
                         <h2 class="subtitle">Zdjęcia</h2>
                         <div class="gallery is-flex is-flex-wrap-wrap is-justify-content-space-between">
-                            <?php 
-                                $images = json_decode($job['images']);
-                                foreach ($images as $image): ?>
+                            <?php
+                            $images = json_decode($job['images']);
+                            foreach ($images as $image): ?>
                                 <figure class="image is-128x128">
                                     <img src="/pictures/<?= htmlspecialchars($image) ?>" alt="Zdjęcie związane z ofertą">
                                 </figure>
@@ -58,12 +58,13 @@ Podgląd ogłoszenia pracy dorywczej
                 <div class="field mt-4">
                     <a class="button is-info is-fullwidth" href="/czat/<?= $job['id'] ?>">Napisz wiadomość</a>
                 </div>
+                <!-- Przycisk Negocjuj stawkę -->
+                <div class="mt-4">
+                    <a href="/negocjacje/start/<?= htmlspecialchars($job['id']) ?>" class="button is-primary is-fullwidth">Negocjuj stawkę</a>
+                </div>
             </div>
         </div>
-        <!-- Przycisk Negocjuj stawkę -->
-        <div class="mt-4">
-            <a href="/negocjacje/start/<?= htmlspecialchars($job['id']) ?>" class="button is-primary is-fullwidth">Negocjuj stawkę</a>
-        </div>
+
     </div>
 </div>
 
@@ -151,7 +152,6 @@ Podgląd ogłoszenia pracy dorywczej
 
 <?php $this->startSection('scripts'); ?>
 <script>
-
     function startNegotiation() {
         window.location.href = "/negocjacje/start/<?= htmlspecialchars($job['id']) ?>";
     }
@@ -192,7 +192,9 @@ Podgląd ogłoszenia pracy dorywczej
 
     function geocodeAddress(address) {
         const geocoder = new google.maps.Geocoder();
-        geocoder.geocode({ address: address }, (results, status) => {
+        geocoder.geocode({
+            address: address
+        }, (results, status) => {
             if (status === "OK") {
                 map.setCenter(results[0].geometry.location);
                 marker.setPosition(results[0].geometry.location);
