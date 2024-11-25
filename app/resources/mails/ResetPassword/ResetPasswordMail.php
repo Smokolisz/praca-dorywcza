@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Resources\Mails\Register;
+namespace App\Resources\Mails\ResetPassword;
 
 use App\Resources\Mails\AbstractMail;
 
-class ConfirmEmail extends AbstractMail
+class ResetPasswordMail extends AbstractMail
 {
-    private string $subject = "Potwierdź adres e-mail - SwiftJobs";
+    private string $subject = "Zmień swoje hasło - SwiftJobs";
     private string $token;
     private string $appUrl;
 
@@ -29,7 +29,7 @@ class ConfirmEmail extends AbstractMail
         <head>
             <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>Potwierdzenie adresu email</title>
+            <title>Resetowanie hasła</title>
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -78,15 +78,15 @@ class ConfirmEmail extends AbstractMail
         <body>
             <div class="container">
                 <div class="header">
-                    <h2>Potwierdzenie adresu email</h2>
+                    <h2>Resetowanie hasła</h2>
                 </div>
                 <div class="content">
                     <p>Witaj,</p>
-                    <p>Dziękujemy za rejestrację w naszym serwisie. Aby zakończyć proces rejestracji, prosimy o potwierdzenie swojego adresu e-mail, klikając poniższy przycisk:</p>
+                    <p>Otrzymaliśmy prośbę o zresetowanie hasła do Twojego konta. Jeśli chcesz ustawić nowe hasło, kliknij poniższy przycisk:</p>
                     <p style="text-align: center;">
-                        <a href="' . $this->appUrl . '/potwierdz-email/' . $this->token . '" class="button">Potwierdź adres email</a>
+                        <a href="' . $this->appUrl . '/resetuj-haslo/' . $this->token . '" class="button">Zresetuj hasło</a>
                     </p>
-                    <p>Jeśli nie zakładałeś(aś) konta, zignoruj ten e-mail.</p>
+                    <p>Jeśli nie składałeś(aś) prośby o zresetowanie hasła, zignoruj ten e-mail. Twoje hasło pozostanie bez zmian.</p>
                     <p>Z pozdrowieniami,<br>Zespół Swift-Jobs</p>
                 </div>
                 <div class="footer">

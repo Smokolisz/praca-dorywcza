@@ -23,13 +23,19 @@ Zaloguj się
             ?>
         <?php endif; ?>
 
+        <?php if(isset($_SESSION['password-reset-successfully'])): ?>
+            <?php unset($_SESSION['password-reset-successfully']); ?>
+            <div class="notification is-success">
+                <p>Hasło zostało zmienione pomyślnie.</p>
+            </div>
+        <?php endif; ?>
+
         <form action="/zaloguj-sie" method="POST">
 
             <div class="field">
                 <label class="label" for="email">Email</label>
                 <div class="control">
-                    <input class="input" type="email" id="email" name="email" max="255" required
-                        value="<?= htmlspecialchars($_SESSION['login_data']['email'] ?? '') ?>">
+                    <input class="input" type="email" id="email" name="email" max="255" required>
                 </div>
             </div>
 
@@ -42,7 +48,10 @@ Zaloguj się
 
             <div class="field is-grouped">
                 <div class="control">
-                    <button type="submit" class="button is-link">Zaloguj</button>
+                    <button type="submit" class="button is-primary">Zaloguj</button>
+                </div>
+                <div class="control">
+                    <a href="/resetuj-haslo" class="button">Przypomnij hasło</a>
                 </div>
             </div>
 
@@ -53,6 +62,3 @@ Zaloguj się
 <?php $this->startSection('scripts'); ?>
 <!-- <script src="path/to/script.js"></script> -->
 <?php $this->endSection(); ?>
-
-<?php unset($_SESSION['login_data']); // Usuń dane z formularza po ich wyświetleniu 
-?>
