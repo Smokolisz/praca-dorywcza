@@ -2,6 +2,14 @@
 Strona Główna
 <?php $this->endSection(); ?>
 
+
+<?php if (isset($_GET['success']) && $_GET['success'] == 1): ?>
+<div class="notification is-primary is-light">
+    <button class="delete"></button>
+    Ogłoszenie zostało pomyślnie dodane!
+</div>
+<?php endif; ?>
+
 <div class="strona-glowna pt-6">
 
     <div class="grid">
@@ -154,6 +162,19 @@ Strona Główna
     </div>
 
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const deleteButtons = document.querySelectorAll('.notification .delete');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const notification = button.parentElement;
+                notification.remove(); // Usuwa element powiadomienia
+            });
+        });
+    });
+</script>
+
 
 <?php $this->startSection('head'); ?>
 <link rel="stylesheet" href="/css/style.css">
