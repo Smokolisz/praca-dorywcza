@@ -17,7 +17,7 @@ class LoginController
         $this->container = $container;
         $this->db = $this->container->get('db');
 
-        if(isset($_SESSION['user_id'])) {
+        if (isset($_SESSION['user_id'])) {
             header('Location: /');
             exit;
         }
@@ -119,15 +119,5 @@ class LoginController
         // Przekierowanie po zalogowaniu
         return $response->withHeader('Location', '/')
             ->withStatus(302);
-    }
-
-    public function logout(Request $request, Response $response, $args): Response
-    {
-        // Wyczyść sesję
-        session_unset();
-        session_destroy();
-
-        // Przekierowanie po wylogowaniu
-        return $response->withHeader('Location', '/')->withStatus(302);
     }
 }

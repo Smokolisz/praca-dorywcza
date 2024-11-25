@@ -8,7 +8,7 @@ Dodaj Ogłoszenie
 
         <form action="/add-listing" method="post" enctype="multipart/form-data">
             <div class="columns">
-                
+
                 <!-- Lewa kolumna -->
                 <div class="column is-one-third">
                     <div class="field">
@@ -123,7 +123,10 @@ Dodaj Ogłoszenie
     function initMap() {
         map = new google.maps.Map(document.getElementById("map"), {
             zoom: 8,
-            center: { lat: 52.2297, lng: 21.0122 }, // Domyślnie Warszawa
+            center: {
+                lat: 52.2297,
+                lng: 21.0122
+            }, // Domyślnie Warszawa
         });
 
         geocoder = new google.maps.Geocoder();
@@ -135,25 +138,31 @@ Dodaj Ogłoszenie
 
         // Kliknięcie na mapie
         map.addListener("click", (e) => {
-            geocode({ location: e.latLng });
+            geocode({
+                location: e.latLng
+            });
         });
 
         // Przycisk do geokodowania na podstawie adresu
         document.getElementById('geocodeBtn').addEventListener('click', () => {
             const address = document.getElementById('address').value;
             if (address) {
-                geocode({ address: address });
+                geocode({
+                    address: address
+                });
             } else {
                 alert("Wprowadź adres!");
             }
         });
     }
-///////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////////
     function geocode(request) {
         geocoder
             .geocode(request)
             .then((result) => {
-                const { results } = result;
+                const {
+                    results
+                } = result;
 
                 // Ustaw marker w nowej lokalizacji
                 map.setCenter(results[0].geometry.location);
@@ -188,42 +197,42 @@ Dodaj Ogłoszenie
     async defer></script>
 
 <script>
-function previewImages(event) {
-    const files = event.target.files;
-    const container = document.getElementById('imagePreviewContainer');
+    function previewImages(event) {
+        const files = event.target.files;
+        const container = document.getElementById('imagePreviewContainer');
 
-    if (files.length > 10 || (files.length + container.children.length) > 10) {
-        alert('Możesz wybrać maksymalnie 10 zdjęć!');
-        event.target.value = ''; // Zresetuj pole pliku
-        return;
+        if (files.length > 10 || (files.length + container.children.length) > 10) {
+            alert('Możesz wybrać maksymalnie 10 zdjęć!');
+            event.target.value = ''; // Zresetuj pole pliku
+            return;
+        }
+
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.style.width = '100px';
+                img.style.height = '100px';
+                img.style.objectFit = 'cover';
+                img.style.borderRadius = '8px';
+                img.style.marginRight = '10px';
+                container.appendChild(img);
+            };
+
+            reader.readAsDataURL(file);
+        }
+
+        // Dodaj pionowy scrollbar po dodaniu więcej niż 3 zdjęć
+        if (container.children.length > 2) {
+            container.style.maxHeight = '150px'; // Ogranicz wysokość kontenera
+            container.style.overflowY = 'auto'; // Dodaj pionowy scrollbar
+        } else {
+            container.style.overflowY = 'hidden'; // Ukryj scrollbar, jeśli mniej niż 4 zdjęcia
+        }
     }
-
-    for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            const img = document.createElement('img');
-            img.src = e.target.result;
-            img.style.width = '100px';
-            img.style.height = '100px';
-            img.style.objectFit = 'cover';
-            img.style.borderRadius = '8px';
-            img.style.marginRight = '10px';
-            container.appendChild(img);
-        };
-
-        reader.readAsDataURL(file);
-    }
-
-    // Dodaj pionowy scrollbar po dodaniu więcej niż 3 zdjęć
-    if (container.children.length > 2) {
-        container.style.maxHeight = '150px'; // Ogranicz wysokość kontenera
-        container.style.overflowY = 'auto'; // Dodaj pionowy scrollbar
-    } else {
-        container.style.overflowY = 'hidden'; // Ukryj scrollbar, jeśli mniej niż 4 zdjęcia
-    }
-}
 </script>
 
 <?php $this->startSection('scripts'); ?>
