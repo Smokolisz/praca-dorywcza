@@ -1,0 +1,1 @@
+ALTER TABLE `listings` ADD `user_id` INT NOT NULL AFTER `id`, ADD INDEX `user_id` (`user_id`);
