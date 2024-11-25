@@ -50,7 +50,11 @@ return function (App $app) {
     $app->post('/profil/zmien-haslo', [ProfileController::class, 'updatePassword']);
 
     $app->get('/job/{id}', [JobController::class, 'index']);
-
+    $app->post('/contracts/create', \App\Controllers\JobController::class . ':createContract');
+    $app->post('/contracts/accept/{id}', \App\Controllers\JobController::class . ':acceptContract');
+    $app->post('/contracts/reject/{id}', \App\Controllers\JobController::class . ':rejectContract');
+    
+    
     // dodawanie ogloszenia
     $app->get('/add-listing', [ListingController::class, 'showAddListingForm']);
     $app->post('/add-listing', [ListingController::class, 'submitListing']);
