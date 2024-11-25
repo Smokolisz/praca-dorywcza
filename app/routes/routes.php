@@ -13,6 +13,7 @@ use App\Controllers\NegotiationController;
 use App\Controllers\ResetPasswordController;
 use App\Controllers\StatuteController;
 use App\Controllers\FaqController;
+use App\Services\ChatServer;
 use Slim\App;
 
 return function (App $app) {
@@ -80,6 +81,7 @@ return function (App $app) {
     $app->post('/negocjacje/{id}/odrzucenie', [NegotiationController::class, 'rejectOffer']);
 
     $app->get('/czat/{jobId}', [ChatController::class,  'show']);
+    $app->get('/czat/historia/{jobId}', [ChatController::class,  'getMessages']);
 
     // Strona regulaminu
     $app->get('/regulamin', [StatuteController::class, 'show']);
