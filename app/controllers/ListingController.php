@@ -30,9 +30,15 @@ class ListingController
     // Obsługa przesyłania formularza
     public function submitListing(Request $request, Response $response, $args): Response
     {
-        //echo "test";exit;
         // Pobieranie danych z formularza
         $data = $request->getParsedBody();
+
+        // Pobierz aktualnie zalogowanego użytkownika
+        $currentUserId = $_SESSION['user_id'] ?? null;
+        if (!$currentUserId) {
+            $_SESSION['negotiation_error'] = 'Musisz być zalogowany, aby dodać ogłoszenie.';
+            return $response->withHeader('Location', '/login')->withStatus(302);
+        }
 
         // Walidacja danych (przykładowa, można rozbudować)
         if (empty($data['job_type']) || empty($data['description']) || empty($data['payment']) || empty($data['address'])) {
@@ -43,9 +49,10 @@ class ListingController
         // Zapis do bazy danych
         try {
             $db = $this->container->get('db');  // Pobierz połączenie do bazy danych z kontenera
-            $stmt = $db->prepare('INSERT INTO listings (job_type, description, payment_type, payment, address, estimated_time) 
-                                  VALUES (:job_type, :description, :payment_type, :payment, :address, :estimated_time)');
+            $stmt = $db->prepare('INSERT INTO listings (user_id, job_type, description, payment_type, payment, address, estimated_time) 
+                                  VALUES (:user_id, :job_type, :description, :payment_type, :payment, :address, :estimated_time)');
             $stmt->execute([
+                'user_id' => $currentUserId,
                 'job_type' => $data['job_type'],
                 'description' => $data['description'],
                 'payment_type' => $data['payment_type'],

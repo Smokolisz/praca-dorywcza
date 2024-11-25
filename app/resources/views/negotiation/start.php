@@ -17,33 +17,37 @@
         <?php endif; ?>
     </div>
 
+    <?php if ($listingStatus === 'open'): ?>
+        <!-- Formularz złożenia oferty -->
+        <form action="/negocjacje/start" method="POST">
+            <input type="hidden" name="listing_id" value="<?= htmlspecialchars($listingId) ?>">
 
-    <!-- Formularz złożenia oferty -->
-    <form action="/negocjacje/start" method="POST">
-        <input type="hidden" name="listing_id" value="<?= htmlspecialchars($listingId) ?>">
-
-
-        <div class="field">
-            <label class="label">Kwota Oferty</label>
-            <div class="control">
-                <input class="input" type="number" name="offer_amount" min="1" required placeholder="Wpisz kwotę">
+            <div class="field">
+                <label class="label">Kwota Oferty</label>
+                <div class="control">
+                    <input class="input" type="number" name="offer_amount" min="1" required placeholder="Wpisz kwotę">
+                </div>
             </div>
-        </div>
 
-        <div class="field">
-            <label class="label">Uzasadnienie (opcjonalne)</label>
-            <div class="control">
-                <textarea class="textarea" name="justification" placeholder="Dodaj uzasadnienie swojej oferty"></textarea>
+            <div class="field">
+                <label class="label">Uzasadnienie (opcjonalne)</label>
+                <div class="control">
+                    <textarea class="textarea" name="justification" placeholder="Dodaj uzasadnienie swojej oferty"></textarea>
+                </div>
             </div>
-        </div>
 
-        <div class="control">
-            <button class="button is-primary" type="submit">Zaproponuj stawkę</button>
+            <div class="control">
+                <button class="button is-primary" type="submit">Zaproponuj stawkę</button>
+            </div>
+        </form>
+    <?php else: ?>
+        <div class="notification is-warning">
+            To ogłoszenie jest zamknięte i nie przyjmuje nowych negocjacji.
         </div>
-    </form>
+    <?php endif; ?>
 
-    <!-- Propozycja ofert -->
-    <h3 class="title is-5 mt-5">Propozycja Ofert</h3>
+    <!-- Propozycje ofert -->
+    <h3 class="title is-5 mt-5">Propozycje Ofert</h3>
     <ul>
         <?php foreach ($negotiations as $negotiation): ?>
             <li>
@@ -51,7 +55,9 @@
                 <strong>Użytkownik:</strong> <?= htmlspecialchars($negotiation['user_name']) ?><br>
                 <strong>Kwota:</strong> <?= htmlspecialchars($negotiation['offer_amount']) ?> zł<br>
                 <strong>Uzasadnienie:</strong> <?= nl2br(htmlspecialchars($negotiation['justification'])) ?><br>
-                <?php if ($negotiation['status'] === 'pending'): ?>
+                <strong>Status:</strong> <?= htmlspecialchars(ucfirst($negotiation['status'])) ?><br>
+
+                <?php if ($negotiation['status'] === 'pending' && $currentUserId == $listingOwnerId && $listingStatus === 'open'): ?>
                     <!-- Przyciski akceptacji i odrzucenia oferty -->
                     <form action="/negocjacje/<?= htmlspecialchars($negotiation['id']) ?>/akceptacja" method="POST" style="display:inline;">
                         <button class="button is-success" type="submit">Akceptuj ofertę</button>
@@ -59,14 +65,9 @@
                     <form action="/negocjacje/<?= htmlspecialchars($negotiation['id']) ?>/odrzucenie" method="POST" style="display:inline;">
                         <button class="button is-danger" type="submit">Odrzuć ofertę</button>
                     </form>
-                <?php else: ?>
-                    <!-- Wyświetl status -->
-                    <p>Oferta <?= htmlspecialchars($negotiation['status']) ?></p>
                 <?php endif; ?>
-
             </li>
             <hr>
         <?php endforeach; ?>
     </ul>
-
 </div>

@@ -91,6 +91,11 @@ class NegotiationController
                 $_SESSION['negotiation_error'] = 'Ogłoszenie nie zostało znalezione.';
                 return $response->withHeader('Location', '/')->withStatus(404);
             }
+            //Sprawdź czy ogłoszenie jest otwarte
+            if ($listing['status'] !== 'open') {
+                $_SESSION['negotiation_error'] = 'To ogłoszenie jest zamknięte i nie przyjmuje nowych negocjacji.';
+                return $response->withHeader('Location', '/negocjacje/start/' . $listingId)->withStatus(403);
+            }
 
             // Utwórz nową negocjację
             $stmt = $db->prepare("
@@ -137,6 +142,13 @@ class NegotiationController
             return $response->withHeader('Location', '/')->withStatus(404);
         }
 
+        // Pobierz identyfikator właściciela ogłoszenia
+        $listingOwnerId = $listing['user_id'];
+        $currentUserId = $_SESSION['user_id'] ?? null;
+
+        // Pobranie statusu ogłoszenia
+        $listingStatus = $listing['status'];
+
         // Pobranie negocjacji dla tego ogłoszenia
         $stmt = $db->prepare("
         SELECT n.*, CONCAT(u.first_name, ' ', u.last_name) AS user_name
@@ -151,7 +163,10 @@ class NegotiationController
         $output = $view->render('negotiation/start', [
             'listingId' => $listingId,
             'listing' => $listing,
-            'negotiations' => $negotiations
+            'negotiations' => $negotiations,
+            'listingOwnerId' => $listingOwnerId,
+            'currentUserId' => $currentUserId,
+            'listingStatus' => $listingStatus
         ], 'main');
         $response->getBody()->write($output);
         return $response;
@@ -185,15 +200,62 @@ class NegotiationController
             return $response->withHeader('Location', '/')->withStatus(404);
         }
 
+        // Pobranie ogłoszenia
+        $stmt = $db->prepare("SELECT * FROM listings WHERE id = :id");
+        $stmt->execute(['id' => $negotiation['listing_id']]);
+        $listing = $stmt->fetch();
+
+        if (!$listing) {
+            $_SESSION['negotiation_error'] = 'Ogłoszenie nie zostało znalezione.';
+            return $response->withHeader('Location', '/')->withStatus(404);
+        }
+
+        // Sprawdzenie, czy aktualny użytkownik jest właścicielem ogłoszenia
+        $currentUserId = $_SESSION['user_id'] ?? null;
+        if ($listing['user_id'] != $currentUserId) {
+            $_SESSION['negotiation_error'] = 'Nie masz uprawnień do akceptacji tej oferty.';
+            return $response->withHeader('Location', '/')->withStatus(403);
+        }
+
+        // Rozpoczęcie transakcji
+        $db->beginTransaction();
+
         try {
+            // Zablokowanie ogłoszenia do aktualizacji
+            $stmt = $db->prepare("SELECT status FROM listings WHERE id = :id FOR UPDATE");
+            $stmt->execute(['id' => $negotiation['listing_id']]);
+            $listing = $stmt->fetch();
+
+            if ($listing['status'] !== 'open') {
+                $db->rollBack();
+                $_SESSION['negotiation_error'] = 'To ogłoszenie jest już zamknięte.';
+                return $response->withHeader('Location', '/negocjacje/start/' . $negotiation['listing_id'])->withStatus(403);
+            }
+
             // Aktualizacja statusu negocjacji na 'accepted'
             $stmt = $db->prepare("UPDATE negotiations SET status = 'accepted', updated_at = NOW() WHERE id = :id");
             $stmt->execute(['id' => $negotiationId]);
 
-            $_SESSION['negotiation_success'] = 'Oferta została zaakceptowana.';
-            // Przekierowanie na stronę z formularzem
+            // Ustawienie statusu ogłoszenia na 'closed'
+            $stmt = $db->prepare("UPDATE listings SET status = 'closed' WHERE id = :id");
+            $stmt->execute(['id' => $negotiation['listing_id']]);
+
+            // Odrzucenie pozostałych negocjacji dla tego ogłoszenia
+            $stmt = $db->prepare("UPDATE negotiations SET status = 'rejected' WHERE listing_id = :listing_id AND id != :id");
+            $stmt->execute([
+                'listing_id' => $negotiation['listing_id'],
+                'id' => $negotiationId
+            ]);
+
+            // Zatwierdzenie transakcji
+            $db->commit();
+
+            $_SESSION['negotiation_success'] = 'Oferta została zaakceptowana, ogłoszenie jest teraz zamknięte.';
             return $response->withHeader('Location', '/negocjacje/start/' . $negotiation['listing_id'])->withStatus(302);
         } catch (\PDOException $e) {
+            // Wycofanie transakcji w razie błędu
+            $db->rollBack();
+
             $_SESSION['negotiation_error'] = 'Błąd podczas akceptacji oferty.';
             return $response->withHeader('Location', '/negocjacje/start/' . $negotiation['listing_id'])->withStatus(500);
         }
@@ -224,6 +286,23 @@ class NegotiationController
         if (!$negotiation) {
             $_SESSION['negotiation_error'] = 'Negocjacja nie została znaleziona.';
             return $response->withHeader('Location', '/')->withStatus(404);
+        }
+
+        // Pobranie ogłoszenia
+        $stmt = $db->prepare("SELECT * FROM listings WHERE id = :id");
+        $stmt->execute(['id' => $negotiation['listing_id']]);
+        $listing = $stmt->fetch();
+
+        if (!$listing) {
+            $_SESSION['negotiation_error'] = 'Ogłoszenie nie zostało znalezione.';
+            return $response->withHeader('Location', '/')->withStatus(404);
+        }
+
+        // Sprawdzenie, czy aktualny użytkownik jest właścicielem ogłoszenia
+        $currentUserId = $_SESSION['user_id'] ?? null;
+        if ($listing['user_id'] != $currentUserId) {
+            $_SESSION['negotiation_error'] = 'Nie masz uprawnień do akceptacji tej oferty.';
+            return $response->withHeader('Location', '/')->withStatus(403);
         }
 
         try {
