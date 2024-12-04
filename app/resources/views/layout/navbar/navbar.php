@@ -96,3 +96,5 @@
         </div>
     </div>
 </nav>
+
+<link rel="stylesheet" href="/css/navbar.css">

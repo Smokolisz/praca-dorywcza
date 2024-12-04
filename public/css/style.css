@@ -1,39 +1,6 @@
 .is-borderless {
     border:none;
 }
-/* ========================================== */
-/* =============   NAVBAR    ================ */
-/* ========================================== */
-.navbar-item {
-    margin-right: 30px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-}
-.navbar{
-    padding: 0px;
-    margin-top: 40px;
-    margin-left: 80px;
-    margin-right: 30px;
-}
-.title{
-    margin-bottom: 10px;
-    margin-top: 5px;
-}
-.logo{
-    width: 100px;
-}
-.image{
-    padding: 0px;
-}
-.button{
-    padding: 10px;
-}
-.is-dark{
-    padding: 10px;
-}
-.is-32x32{
-    padding: 0px;
-}
 
 
 /* ========================================== */
@@ -68,6 +35,13 @@
 .is-3{
     margin-left: 100px;
 }
+
+h2{
+    font-size: 30px;
+    margin-left: 200px;
+    margin-top: 40px;
+}
+
 .box{
     margin-left: 100px;
     margin-right: 100px;  
@@ -81,6 +55,8 @@
 .no-gap{
     margin-top: 20px;
 }
+
+
 .scroll-container {
     position: relative;
     height: 650px; 
@@ -91,6 +67,10 @@
     
     -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 90%, transparent);
     mask-image: linear-gradient(to bottom, transparent, black 15%, black 90%, transparent);              /* Odstępy między boxami */
+}
+.field{
+  margin-left: 200px;
+  margin-top: 50px;  
 }
 
 /* ========================================== */
