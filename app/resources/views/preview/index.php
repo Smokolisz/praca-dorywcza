@@ -46,9 +46,16 @@ Podgląd ogłoszenia pracy dorywczej
         <!-- Dane kontaktowe i akcje -->
         <div class="column is-one-third">
             <div class="box">
-                <div class="field">
-                    <button class="button is-primary is-fullwidth" onclick="showConfirmationModal()">Przyjmuje zlecenie</button>
-                </div>
+            <div class="field">
+            <div class="field">
+                <?php if ($contractExists): ?>
+                    <button class="button is-primary is-fullwidth" disabled>Kontrakt został już wysłany</button>
+                <?php else: ?>
+                    <button class="button is-primary is-fullwidth" onclick="showConfirmationModal()">Przyjmuję zlecenie</button>
+                <?php endif; ?>
+            </div>
+
+
 
                 <div class="content has-text-centered mt-4">
                     <h2 class="subtitle">Dane kontaktowe</h2>
@@ -68,25 +75,65 @@ Podgląd ogłoszenia pracy dorywczej
     </div>
 </div>
 
+<?php if ($isEmployer && !empty($contracts)): ?>
+<div class="box">
+    <h2 class="subtitle">Panel kontraktów</h2>
+    <table class="table is-fullwidth">
+        <thead>
+            <tr>
+                <th>Użytkownik</th>
+                <th>Data wysłania</th>
+                <th>Status</th>
+                <th>Akcje</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($contracts as $contract): ?>
+            <tr>
+                <td><?= htmlspecialchars($contract['user_id']) ?></td>
+                <td><?= htmlspecialchars($contract['created_at']) ?></td>
+                <td><?= htmlspecialchars($contract['status']) ?></td>
+                <td>
+                    <form action="/contracts/accept/<?= htmlspecialchars($contract['id']) ?>" method="POST" style="display:inline;">
+                        <button class="button is-success is-small" type="submit">Zaakceptuj</button>
+                    </form>
+                    <form action="/contracts/reject/<?= htmlspecialchars($contract['id']) ?>" method="POST" style="display:inline;">
+                        <button class="button is-danger is-small" type="submit">Odrzuć</button>
+                    </form>
+                </td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
+<?php endif; ?>
+
+
+
 <!-- Modal potwierdzenia -->
 <div class="modal" id="confirmationModal">
     <div class="modal-background"></div>
     <div class="modal-card">
         <header class="modal-card-head">
-            <p class="modal-card-title has-text-centered">Potwierdzenie</p>
+            <p class="modal-card-title has-text-centered">Potwierdzenie kontraktu</p>
             <button class="delete" aria-label="close" onclick="closeConfirmationModal()"></button>
         </header>
-        <section class="modal-card-body has-text-centered">
-            <p>Czy na pewno chcesz przyjąć to zlecenie?</p>
+        <section class="modal-card-body">
+            <h2 class="subtitle">Szczegóły ogłoszenia</h2>
+            <p><strong>Typ pracy:</strong> <?= htmlspecialchars($job['job_type']) ?></p>
+            <p><strong>Pracodawca:</strong> <?= htmlspecialchars($job['employer_name']) ?></p>
+            <p><strong>Miasto:</strong> <?= htmlspecialchars($job['city']) ?></p>
+            <p><strong>Stawka godzinowa:</strong> <?= htmlspecialchars($job['payment']) ?> PLN/h</p>
+            <p><strong>Opis:</strong> <?= nl2br(htmlspecialchars($job['description'])) ?></p>
         </section>
         <footer class="modal-card-foot" style="justify-content: center;">
-            <button class="button is-primary" style="margin-right: 10px;" onclick="closeConfirmationModal()">Tak, przyjmuję</button>
-            <!-- Przycisk Negocjuj stawkę -->
-            <button class="button is-info" style="margin-right: 10px;" onclick="startNegotiation()">Negocjuj stawkę</button>
+            <button class="button is-primary" onclick="acceptContract()">Tak, przyjmuję</button>
             <button class="button" onclick="closeConfirmationModal()">Anuluj</button>
         </footer>
     </div>
 </div>
+
+
 
 <!-- Panele informacyjne z zakładkami -->
 <div class="tabs is-centered is-boxed">
@@ -205,6 +252,26 @@ Podgląd ogłoszenia pracy dorywczej
     }
 
     window.initMap = initMap;
+
+    function acceptContract() {
+    fetch('/contracts/create', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ job_id: <?= json_encode($job['id']) ?> }),
+    })
+        .then(response => {
+            if (response.ok) {
+                closeConfirmationModal();
+                window.location.reload();
+            } else {
+                alert('Wystąpił błąd podczas zapisywania kontraktu.');
+            }
+        })
+        .catch(error => console.error('Błąd:', error));
+}
+
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoNfnRG-X71gH-3zJBLX0A3y4irPx64PE&callback=initMap" async defer></script>
 <?php $this->endSection(); ?>
