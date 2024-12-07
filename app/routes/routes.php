@@ -13,7 +13,7 @@ use App\Controllers\NegotiationController;
 use App\Controllers\ResetPasswordController;
 use App\Controllers\StatuteController;
 use App\Controllers\FaqController;
-use App\Services\ChatServer;
+use App\Controllers\SearchController;
 use Slim\App;
 
 return function (App $app) {
@@ -92,4 +92,7 @@ return function (App $app) {
 
     // Strona FAQ
     $app->get('/faq', [FaqController::class, 'show']);
+
+    $app->get('/szukaj', [SearchController::class,  'index']);
+
 };

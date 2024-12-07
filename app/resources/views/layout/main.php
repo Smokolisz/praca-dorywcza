@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@1.0.2/css/bulma.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
+    <link rel="stylesheet" href="/css/style.css">
 
     <?php echo $this->section('head'); ?>
 
@@ -22,8 +23,9 @@
     include __DIR__ . '/navbar/navbar.php';
     ?>
 
-    <?php echo $content; ?>
-
+    <div style="min-height: 60vh;">
+        <?php echo $content; ?>
+    </div>
 
     <?php
     include __DIR__ . '/footer/footer.php';
