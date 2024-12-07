@@ -1,13 +1,15 @@
-<nav class="navbar" role="navigation" aria-label="main navigation">
+<nav class="navbar p-3" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
 
         <figure class="image is-64x64">
             <img src="/pictures/logo_swiftjobs.png" />
         </figure>
-        <a class="navbar-item" href="/">
-            <h1 class="title" ,>SwiftJobs</h1>
-        </a>
 
+        <div class="navbar-item">
+            <h1 class="title">
+                <a href="/" class="has-text-white">SwiftJobs</a>
+            </h1>
+        </div>
 
         <button class="button is-ghost">
             <figure class="image is-32x32">
@@ -32,21 +34,32 @@
             <a class="navbar-item" href="/faq">
                 FAQ
             </a>
-            <a class="navbar-item" href="/profil">
-                Mój profil
-            </a>
             <a class="navbar-item" href="/kontakt">
                 Kontakt
             </a>
-
-
-
 
             <div class="navbar-item">
                 <a class="button is-primary" href="/add-listing">Dodaj Ogłoszenie</a>
             </div>
 
-
+            <?php
+            if (strpos($_SERVER['REQUEST_URI'], '/szukaj') === false):
+            ?>
+            <div class="navbar-item">
+                <form method="GET" action="/szukaj">
+                    <div class="field has-addons">
+                        <div class="control">
+                            <input class="input" type="text" name="q" placeholder="">
+                        </div>
+                        <div class="control">
+                            <button class="button is-info">Szukaj</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <?php
+            endif;
+            ?>
 
         </div>
 
@@ -96,5 +109,3 @@
         </div>
     </div>
 </nav>
-
-<link rel="stylesheet" href="/css/navbar.css">

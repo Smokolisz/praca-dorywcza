@@ -1,4 +1,4 @@
---Dodaj status ogloszenia
+-- Dodaj status ogloszenia
 ALTER TABLE `SWIFT-JOBS`.`LISTINGS`
     ADD COLUMN `STATUS` ENUM(
         'open',
