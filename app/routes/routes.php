@@ -14,6 +14,7 @@ use App\Controllers\ResetPasswordController;
 use App\Controllers\StatuteController;
 use App\Controllers\FaqController;
 use App\Controllers\SearchController;
+use App\Controllers\CategoryController;
 use Slim\App;
 
 return function (App $app) {
@@ -94,5 +95,9 @@ return function (App $app) {
     $app->get('/faq', [FaqController::class, 'show']);
 
     $app->get('/szukaj', [SearchController::class,  'index']);
+
+    $app->get('/kategoria', [CategoryController::class, 'index']);
+    $app->get('/kategoria/{name}', [CategoryController::class, 'show']);
+
 
 };
