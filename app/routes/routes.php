@@ -84,8 +84,10 @@ return function (App $app) {
     // Odrzucenie oferty
     $app->post('/negocjacje/{id}/odrzucenie', [NegotiationController::class, 'rejectOffer']);
 
-    $app->get('/czat/{jobId}', [ChatController::class,  'show']);
-    $app->get('/czat/historia/{jobId}', [ChatController::class,  'getMessages']);
+    $app->get('/czat', [ChatController::class,  'index']);
+    $app->get('/czat/utworz/{jobId}', [ChatController::class,  'create']);
+    $app->get('/czat/{chatId}', [ChatController::class,  'show']);
+    $app->get('/czat/historia/{chatId}', [ChatController::class,  'getMessages']);
 
     // Strona regulaminu
     $app->get('/regulamin', [StatuteController::class, 'show']);

@@ -64,6 +64,11 @@
         </div>
 
         <div class="navbar-end">
+
+            <a class="navbar-item" href="/czat" title="Czaty">
+                <i class="fa-regular fa-comments"></i>
+            </a>
+
             <div class="navbar-item">
                 <?php
                 if (isset($_SESSION['user_id'])):
