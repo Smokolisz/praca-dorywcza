@@ -63,7 +63,7 @@ Podgląd ogłoszenia pracy dorywczej
                     <p><strong>E-mail:</strong> <?= htmlspecialchars($job['e-mail']) ?></p>
                 </div>
                 <div class="field mt-4">
-                    <a class="button is-info is-fullwidth" href="/czat/<?= $job['id'] ?>">Napisz wiadomość</a>
+                    <a class="button is-info is-fullwidth" href="/czat/utworz/<?= $job['id'] ?>">Napisz wiadomość</a>
                 </div>
                 <!-- Przycisk Negocjuj stawkę -->
                 <div class="mt-4">

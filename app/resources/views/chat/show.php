@@ -1,27 +1,31 @@
 <?php $this->startSection('title'); ?>
-Czat
+Czat z <?= $chat->other_user_first_name ?>
 <?php $this->endSection(); ?>
 
+<?php $this->startSection('head'); ?>
 <style>
-    .footer {
-        display: none;
-    }
+.footer {
+    display: none;
+}
 
-    html,
-    body {
-        overflow: hidden;
-    }
-    .is-borderless {
-        border:none;
-    }
-    .is-absolute {
-        position: absolute;
-    }
-    .is-centered-x {
-        left:50%;
-        transform: translate(-50%, 0);
-    }
+html,
+body {
+    overflow: hidden;
+}
+.is-borderless {
+    border:none;
+}
+.is-absolute {
+    position: absolute;
+}
+.is-centered-x {
+    left:50%;
+    transform: translate(-50%, 0);
+}
 </style>
+<?php $this->endSection(); ?>
+
+
 
 <div class="columns is-gapless m-0" style="height:calc(100vh - 64px);">
     <div class="column">
@@ -36,30 +40,18 @@ Czat
                 </p>
             </div>
             <div style="overflow-y: auto;">
-                <a class="panel-block is-active">
+                <?php
+                foreach($chatsHistory as $chatHistory):
+                ?>
+                <a class="panel-block <?= $chatHistory->id == $chat->chat_id ? 'is-active' : '' ?>" href="/czat/<?= $chatHistory->id ?>">
                     <span class="panel-icon">
                         <i class="fas fa-book" aria-hidden="true"></i>
                     </span>
-                    Jan Nowak
+                    <?= $chatHistory->other_user_first_name ?> <?= $chatHistory->other_user_last_name ?>
                 </a>
-                <a class="panel-block">
-                    <span class="panel-icon">
-                        <i class="fas fa-book" aria-hidden="true"></i>
-                    </span>
-                    Anna Ptak
-                </a>
-                <a class="panel-block">
-                    <span class="panel-icon">
-                        <i class="fas fa-book" aria-hidden="true"></i>
-                    </span>
-                    Konrad Łoboda
-                </a>
-                <a class="panel-block">
-                    <span class="panel-icon">
-                        <i class="fas fa-book" aria-hidden="true"></i>
-                    </span>
-                    Ryszard Rutkiewicz
-                </a>
+                <?php
+                endforeach;
+                ?>
             </div>
         </article>
     </div>
@@ -88,48 +80,48 @@ Czat
         <div class="p-5">
             <strong class="title is-4">O tym ogłoszeniu:</strong>
 
-            <p class="subtitle mt-4">Imię zleceniodawcy: <?= $job->first_name ?></p>
+            <p class="subtitle mt-4">Imię zleceniodawcy: <?= $chat->first_name ?></p>
 
-            <?php if (!empty($job->job_type)): ?>
-                <p class="subtitle">Typ pracy: <?= $job->job_type ?></p>
+            <?php if (!empty($chat->job_type)): ?>
+                <p class="subtitle">Typ pracy: <?= $chat->job_type ?></p>
             <?php endif ?>
 
-            <?php if (!empty($job->description)): ?>
+            <?php if (!empty($chat->description)): ?>
                 <div class="subtitle">Opis
-                    <p style="max-height:100px;min-height:50px;overflow-y:auto;"><?= $job->description ?></p>
+                    <p style="max-height:100px;min-height:50px;overflow-y:auto;"><?= $chat->description ?></p>
                 </div>
             <?php endif ?>
 
-            <?php if (!empty($job->payment_type)): ?>
-                <p class="subtitle">Rodzaj wynagrodzenia: <?= $job->payment_type ?></p>
+            <?php if (!empty($chat->payment_type)): ?>
+                <p class="subtitle">Rodzaj wynagrodzenia: <?= $chat->payment_type ?></p>
             <?php endif ?>
 
-            <?php if (!empty($job->payment)): ?>
-                <p class="subtitle">Stawka: <?= $job->payment ?> zł</p>
+            <?php if (!empty($chat->payment)): ?>
+                <p class="subtitle">Stawka: <?= $chat->payment ?> zł</p>
             <?php endif ?>
 
-            <?php if (!empty($job->estimated_time)): ?>
-                <p class="subtitle">Szacowany czas pracy: <?= $job->estimated_time ?> godzin</p>
+            <?php if (!empty($chat->estimated_time)): ?>
+                <p class="subtitle">Szacowany czas pracy: <?= $chat->estimated_time ?> godzin</p>
             <?php endif ?>
 
-            <?php if (!empty($job->address)): ?>
-                <p class="subtitle">Adres: <?= $job->address ?></p>
+            <?php if (!empty($chat->address)): ?>
+                <p class="subtitle">Adres: <?= $chat->address ?></p>
             <?php endif ?>
 
-            <?php if (!empty($job->city)): ?>
-                <p class="subtitle">Miasto: <?= $job->city ?></p>
+            <?php if (!empty($chat->city)): ?>
+                <p class="subtitle">Miasto: <?= $chat->city ?></p>
             <?php endif ?>
 
-            <?php if (!empty($job->equipment)): ?>
-                <p class="subtitle">Sprzęt wymagany: <?= $job->equipment ?></p>
+            <?php if (!empty($chat->equipment)): ?>
+                <p class="subtitle">Sprzęt wymagany: <?= $chat->equipment ?></p>
             <?php endif ?>
 
-            <?php if (!empty($job->requirements)): ?>
-                <p class="subtitle">Wymagania: <?= $job->requirements ?></p>
+            <?php if (!empty($chat->requirements)): ?>
+                <p class="subtitle">Wymagania: <?= $chat->requirements ?></p>
             <?php endif ?>
 
-            <?php if (!empty($job->offer)): ?>
-                <p class="subtitle">Oferta dodatkowa: <?= $job->offer ?></p>
+            <?php if (!empty($chat->offer)): ?>
+                <p class="subtitle">Oferta dodatkowa: <?= $chat->offer ?></p>
             <?php endif ?>
         </div>
     </div>
@@ -139,7 +131,6 @@ Czat
 <script>
     const userId = <?= $_SESSION['user_id'] ?>;
     const chatId = <?= $chat->chat_id ?>;
-    const jobId = <?= $chat->job_id ?>;
 
     const msgText = document.getElementById('msg-text');
     const sendMsgBtn = document.getElementById('send-msg-btn');
@@ -155,7 +146,7 @@ Czat
 
     sendMsgBtn.addEventListener('click', () => sendMessage(msgText.value));
     
-    fetch(`/czat/historia/${jobId}`)
+    fetch(`/czat/historia/${chatId}`)
     .then(response => response.json())
     .then(messages => {
         messages.forEach(message => {
