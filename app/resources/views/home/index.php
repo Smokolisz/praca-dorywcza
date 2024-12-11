@@ -4,6 +4,35 @@ Strona Główna
 
 <div class="strona-glowna pt-6">
 
+    <!--powiadomienia o wystawionej opinii -->
+    <div class="container mb-4">
+        <div class="columns is-centered">
+            <div class="column is-half">
+
+                <?php if (!empty($_SESSION['review_success'])): ?>
+                    <div class="notification is-success mb-4">
+                        <button class="delete" aria-label="close"></button>
+                        <?php
+                        echo htmlspecialchars($_SESSION['review_success']);
+                        unset($_SESSION['review_success']);
+                        ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if (!empty($_SESSION['review_error'])): ?>
+                    <div class="notification is-danger mb-4">
+                        <button class="delete" aria-label="close"></button>
+                        <?php
+                        echo htmlspecialchars($_SESSION['review_error']);
+                        unset($_SESSION['review_error']);
+                        ?>
+                    </div>
+                <?php endif; ?>
+
+            </div>
+        </div>
+    </div>
+
     <div class="grid">
         <div class="cell">
             <h1 class="title is-1">Praca dla ciebie!</h1>
@@ -164,3 +193,15 @@ Strona Główna
 <!-- <script src="path/to/script.js"></script> -->
 
 <?php $this->endSection(); ?>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
+            const $notification = $delete.parentNode;
+
+            $delete.addEventListener('click', () => {
+                $notification.parentNode.removeChild($notification);
+            });
+        });
+    });
+</script>

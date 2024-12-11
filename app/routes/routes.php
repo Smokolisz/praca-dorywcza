@@ -13,6 +13,7 @@ use App\Controllers\NegotiationController;
 use App\Controllers\ResetPasswordController;
 use App\Controllers\StatuteController;
 use App\Controllers\FaqController;
+use App\Controllers\ReviewController;
 use Slim\App;
 
 return function (App $app) {
@@ -63,6 +64,8 @@ return function (App $app) {
 
     //przesyłanie zdjęcia profilowego
     $app->post('/profil/upload-profile-picture', [ProfileController::class,  'uploadProfilePicture']);
+    // Opinie o zalogowanym użytkowniku
+    $app->get('/profil/opinie', [ProfileController::class, 'userReviews']);
 
     //formularz rozpoczęcia negocjacji
     $app->get('/negocjacje/start/{id}', [NegotiationController::class, 'startNegotiationForm']);
@@ -86,4 +89,13 @@ return function (App $app) {
 
     // Strona FAQ
     $app->get('/faq', [FaqController::class, 'show']);
+
+    $app->post('/ogloszenia/{id}/zakoncz', [ListingController::class, 'completeListing']);
+
+    // Opinie
+    $app->get('/opinie/dodaj/{negotiation_id}', [ReviewController::class, 'showAddReviewForm']);
+
+    $app->get('/opinie', [ReviewController::class, 'showReviews']);
+
+    $app->post('/opinie/dodaj', [ReviewController::class, 'submitReview']);
 };

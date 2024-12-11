@@ -203,9 +203,9 @@ class ProfileController
         $userId = $_SESSION['user_id'] ?? null;
 
         if ($userId && $request->getUploadedFiles()) {
-            $uploadedFile = $request->getUploadedFiles()['profile_picture'];
+            $uploadedFile = $request->getUploadedFiles()['profile_picture'] ?? null;
 
-            if ($uploadedFile->getError() === UPLOAD_ERR_OK) {
+            if ($uploadedFile && $uploadedFile->getError() === UPLOAD_ERR_OK) {
                 $directory = __DIR__ . '/../../public/profile_pictures';
                 $filename = sprintf('%s.%s', $userId, pathinfo($uploadedFile->getClientFilename(), PATHINFO_EXTENSION));
                 $uploadedFile->moveTo($directory . '/' . $filename);
@@ -220,5 +220,33 @@ class ProfileController
         }
 
         return $response->withHeader('Location', '/profil')->withStatus(302);
+    }
+
+    // Wyświetlanie opinii o aktualnie zalogowanym użytkowniku
+    public function userReviews(Request $request, Response $response, $args): Response
+    {
+        $db = $this->container->get("db");
+        $view = $this->container->get("view");
+
+        $userId = $_SESSION['user_id'] ?? null;
+
+        if ($userId) {
+            $stmt = $db->prepare("
+                SELECT r.*, 
+                       CONCAT(u2.first_name, ' ', u2.last_name) AS reviewer_name
+                FROM reviews r
+                JOIN users u2 ON r.reviewer_id = u2.id
+                WHERE r.reviewed_user_id = :reviewed_user_id
+                ORDER BY r.created_at DESC
+            ");
+            $stmt->execute(['reviewed_user_id' => $userId]);
+            $reviews = $stmt->fetchAll();
+
+            $output = $view->render('reviews/user_reviews', ['reviews' => $reviews], "main");
+            $response->getBody()->write($output);
+            return $response;
+        }
+
+        return $response->withHeader('Location', '/zaloguj-sie')->withStatus(302);
     }
 }
