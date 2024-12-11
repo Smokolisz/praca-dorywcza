@@ -28,7 +28,7 @@
     <div class="navbar-menu">
         <div class="navbar-start">
 
-            <a class="navbar-item">
+            <a class="navbar-item" href="/kategoria">
                 Kategorie
             </a>
             <a class="navbar-item" href="/faq">
