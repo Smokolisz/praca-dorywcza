@@ -1,113 +1,35 @@
-.is-borderless {
-    border:none;
-}
-/* ========================================== */
-/* =============   NAVBAR    ================ */
-/* ========================================== */
-.navbar-item {
-    margin-right: 30px;
-    padding-top: 0px;
-    padding-bottom: 0px;
-}
-.navbar{
-    padding: 0px;
-    margin-top: 40px;
-    margin-left: 80px;
-    margin-right: 30px;
-}
-.title{
-    margin-bottom: 10px;
-    margin-top: 5px;
-}
-.logo{
-    width: 100px;
-}
-.image{
-    padding: 0px;
-}
-.button{
-    padding: 10px;
-}
-.is-dark{
-    padding: 10px;
-}
-.is-32x32{
-    padding: 0px;
-}
-
-
-/* ========================================== */
-/* =============   STRONA GŁÓWNA    ========= */
-/* ========================================== */
-
-
-.strona-glowna{
-  margin-top: 50px;
-}
-.cell{
-    margin-left: 0px;
-    align-items: center;
-}
-
-.subtitle{
-    margin-top: 60px;
-    margin-left: 50px;
-    /* color: aliceblue; */
-}
-
-.is-1{
-    margin-top: 60px;
-    margin-left: 200px;
-}
-
-.is-5{
-    margin-right: 30px;
-    margin-left: 200px;
-}
-
-.is-3{
-    margin-left: 100px;
-}
-.box{
-    margin-left: 100px;
-    margin-right: 100px;  
-}
-.is-6{
-    padding: 0px;
-    margin-left: 0px;
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-.no-gap{
-    margin-top: 20px;
-}
 .scroll-container {
-    position: relative;
-    height: 650px; 
-    overflow-y: auto; 
-    display: flex;      
-    flex-direction: column;     
-    gap: 20px;     
-    
+    max-height: 700px;
+    overflow-y: auto;
     -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 90%, transparent);
-    mask-image: linear-gradient(to bottom, transparent, black 15%, black 90%, transparent);              /* Odstępy między boxami */
+    mask-image: linear-gradient(to bottom, transparent, black 15%, black 90%, transparent);
 }
 
-/* ========================================== */
-/* =============   FOOTER    ================ */
-/* ========================================== */
-
-.centered-content {
-    text-align: center;  /* Centrowanie tekstu w poziomie */
-    padding-top: 100px;       /* Dodanie paddingu */
-              /* Zmiana koloru tekstu */
+/* Styl dla przeglądarek opartych na WebKit (Chrome, Safari, Opera) */
+::-webkit-scrollbar {
+    width: 6px; /* Szerokość paska przewijania */
 }
 
-.custom-link {
-    color: inherit; /* Dziedziczy kolor tekstu z rodzica, co usunie niebieski kolor */
-    text-decoration: none; /* Usuwa podkreślenie */
+::-webkit-scrollbar-track {
+    background: rgb(19 22 26);; /* Tło "toru" scrollbar */
+    border-radius: 3px;
 }
 
-.custom-link:hover {
-    color: grey; /* Zmienia kolor na szary przy najechaniu myszką */
+::-webkit-scrollbar-thumb {
+    background-color: #aaa; /* Kolor suwaka */
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(19, 22, 26); /* Kolor suwaka przy najechaniu kursorem */
+}
+
+/* Dla Firefox (opcjonalnie, dla zapewnienia spójności) */
+* {
+    scrollbar-width: thin;             /* Cienki scrollbar */
+    scrollbar-color: #aaa rgb(19 22 26);;     /* Kolory suwaka i tła */
+}
+
+.footer a {
+    color:#ddd;
 }

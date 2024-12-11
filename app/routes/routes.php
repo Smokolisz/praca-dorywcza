@@ -14,6 +14,8 @@ use App\Controllers\ResetPasswordController;
 use App\Controllers\StatuteController;
 use App\Controllers\FaqController;
 use App\Controllers\ReviewController;
+use App\Controllers\SearchController;
+use App\Controllers\CategoryController;
 use Slim\App;
 
 return function (App $app) {
@@ -51,7 +53,11 @@ return function (App $app) {
     $app->post('/profil/zmien-haslo', [ProfileController::class, 'updatePassword']);
 
     $app->get('/job/{id}', [JobController::class, 'index']);
-
+    $app->post('/contracts/create', \App\Controllers\JobController::class . ':createContract');
+    $app->post('/contracts/accept/{id}', \App\Controllers\JobController::class . ':acceptContract');
+    $app->post('/contracts/reject/{id}', \App\Controllers\JobController::class . ':rejectContract');
+    
+    
     // dodawanie ogloszenia
     $app->get('/add-listing', [ListingController::class, 'showAddListingForm']);
     $app->post('/add-listing', [ListingController::class, 'submitListing']);
@@ -82,7 +88,10 @@ return function (App $app) {
     // Odrzucenie oferty
     $app->post('/negocjacje/{id}/odrzucenie', [NegotiationController::class, 'rejectOffer']);
 
-    $app->get('/czat/{jobId}', [ChatController::class,  'show']);
+    $app->get('/czat', [ChatController::class,  'index']);
+    $app->get('/czat/utworz/{jobId}', [ChatController::class,  'create']);
+    $app->get('/czat/{chatId}', [ChatController::class,  'show']);
+    $app->get('/czat/historia/{chatId}', [ChatController::class,  'getMessages']);
 
     // Strona regulaminu
     $app->get('/regulamin', [StatuteController::class, 'show']);
@@ -90,12 +99,16 @@ return function (App $app) {
     // Strona FAQ
     $app->get('/faq', [FaqController::class, 'show']);
 
-    $app->post('/ogloszenia/{id}/zakoncz', [ListingController::class, 'completeListing']);
-
     // Opinie
     $app->get('/opinie/dodaj/{negotiation_id}', [ReviewController::class, 'showAddReviewForm']);
 
     $app->get('/opinie', [ReviewController::class, 'showReviews']);
 
     $app->post('/opinie/dodaj', [ReviewController::class, 'submitReview']);
+
+    $app->get('/szukaj', [SearchController::class,  'index']);
+
+    $app->get('/kategoria', [CategoryController::class, 'index']);
+    $app->get('/kategoria/{name}', [CategoryController::class, 'show']);
+
 };

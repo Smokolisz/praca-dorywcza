@@ -8,7 +8,6 @@ Dodaj Ogłoszenie
 
         <form action="/add-listing" method="post" enctype="multipart/form-data">
             <div class="columns">
-
                 <!-- Lewa kolumna -->
                 <div class="column is-one-third">
                     <div class="field">
@@ -43,7 +42,7 @@ Dodaj Ogłoszenie
                     </div>
 
                     <div class="field">
-                        <label class="label">Szacowany czas pracy</label>
+                        <label class="label">Szacowany czas pracy (godziny)</label>
                         <div class="control">
                             <input class="input is-fullwidth" type="number" id="estimated_time" name="estimated_time" placeholder="Podaj szacowany czas w godzinach" required>
                         </div>
@@ -53,10 +52,11 @@ Dodaj Ogłoszenie
                 <!-- Środkowa kolumna -->
                 <div class="column is-one-third">
                     <div class="field">
-                        <label class="label">Dodaj zdjęcie</label>
+                        <label class="label">Dodaj zdjęcia</label>
                         <div class="file has-name">
                             <label class="file-label">
-                                <input class="file-input" type="file" id="image" name="image[]" accept="image/*" multiple onchange="previewImages(event)" max="10">
+                                <input class="file-input" type="file" id="image" name="images[]" accept="image/*" multiple onchange="previewImages(event)">
+
                                 <span class="file-cta">
                                     <span class="file-label">Wybierz pliki</span>
                                 </span>
@@ -71,18 +71,16 @@ Dodaj Ogłoszenie
                         <label class="label">Typ zapłaty</label>
                         <div class="control">
                             <label class="radio">
-                                <input type="radio" name="payment_type" value="godzinowa" class="is-radio">
-                                Stawka godzinowa
+                                <input type="radio" name="payment_type" value="godzinowa" required> Stawka godzinowa
                             </label>
                             <label class="radio">
-                                <input type="radio" name="payment_type" value="za_cala_prace" class="is-radio">
-                                Kwota za całą pracę
+                                <input type="radio" name="payment_type" value="za_cala_prace" required> Kwota za całą pracę
                             </label>
                         </div>
                     </div>
 
                     <div class="field">
-                        <label class="label">Kwota</label>
+                        <label class="label">Kwota (PLN)</label>
                         <div class="control">
                             <input class="input is-fullwidth" type="number" id="payment" name="payment" placeholder="Wpisz kwotę w zł" required>
                         </div>
@@ -93,17 +91,38 @@ Dodaj Ogłoszenie
                 <div class="column is-one-third">
                     <div class="field">
                         <label class="label">Lokalizacja na mapie</label>
-                        <div id="map" style="width: 100%; height: 300px;"></div> <!-- Kontener na mapę -->
+                        <div id="map" style="width: 100%; height: 300px;"></div>
                     </div>
 
-                    <!-- Pole tekstowe na wybraną lokalizację (współrzędne) -->
-                    <!-- Pole tekstowe na wybraną lokalizację (adres) -->
                     <div class="field">
                         <label class="label">Adres</label>
-                        <input class="input is-fullwidth" type="text" id="address" name="address" placeholder="Podaj adres" readonly>
+                        <input class="input is-fullwidth" type="text" id="address" name="address" placeholder="Podaj adres">
                     </div>
                 </div>
+            </div>
 
+            <!-- Zakładki -->
+            <div class="tabs is-centered is-boxed my-6">
+                <ul>
+                    <li class="is-active" onclick="showTab('requirements')"><a>Wymagania</a></li>
+                    <li onclick="showTab('equipment')"><a>Dostępny sprzęt</a></li>
+                    <li onclick="showTab('offer')"><a>To oferujemy</a></li>
+                </ul>
+            </div>
+
+            <div id="requirements" class="tab-content box">
+                <h2 class="subtitle">Wymagania</h2>
+                <textarea name="requirements" class="textarea is-fullwidth" placeholder="Wymień wymagania, oddzielając je przecinkami"></textarea>
+            </div>
+
+            <div id="equipment" class="tab-content box" style="display: none;">
+                <h2 class="subtitle">Dostępny sprzęt</h2>
+                <textarea name="equipment" class="textarea is-fullwidth" placeholder="Wymień dostępny sprzęt, oddzielając go przecinkami"></textarea>
+            </div>
+
+            <div id="offer" class="tab-content box" style="display: none;">
+                <h2 class="subtitle">To oferujemy</h2>
+                <textarea name="offer" class="textarea is-fullwidth" placeholder="Wymień korzyści, oddzielając je przecinkami"></textarea>
             </div>
 
             <div class="field">
@@ -116,125 +135,67 @@ Dodaj Ogłoszenie
 </div>
 
 <script>
-    let map;
-    let marker;
-    let geocoder;
+    // Obsługa zakładek
+    function showTab(tabId) {
+        const contents = document.querySelectorAll('.tab-content');
+        contents.forEach(content => content.style.display = 'none');
 
-    function initMap() {
-        map = new google.maps.Map(document.getElementById("map"), {
-            zoom: 8,
-            center: {
-                lat: 52.2297,
-                lng: 21.0122
-            }, // Domyślnie Warszawa
-        });
+        const tabs = document.querySelectorAll('.tabs ul li');
+        tabs.forEach(tab => tab.classList.remove('is-active'));
 
-        geocoder = new google.maps.Geocoder();
-
-        // Marker, który pojawi się na mapie
-        marker = new google.maps.Marker({
-            map,
-        });
-
-        // Kliknięcie na mapie
-        map.addListener("click", (e) => {
-            geocode({
-                location: e.latLng
-            });
-        });
-
-        // Przycisk do geokodowania na podstawie adresu
-        document.getElementById('geocodeBtn').addEventListener('click', () => {
-            const address = document.getElementById('address').value;
-            if (address) {
-                geocode({
-                    address: address
-                });
-            } else {
-                alert("Wprowadź adres!");
-            }
-        });
-    }
-    ///////////////////////////////////////////////////////////////
-    function geocode(request) {
-        geocoder
-            .geocode(request)
-            .then((result) => {
-                const {
-                    results
-                } = result;
-
-                // Ustaw marker w nowej lokalizacji
-                map.setCenter(results[0].geometry.location);
-                marker.setPosition(results[0].geometry.location);
-                marker.setMap(map);
-
-                // Zapisz adres do pola adresu
-                document.getElementById('address').value = results[0].formatted_address;
-            })
-            .catch((e) => {
-                alert("Geocode was not successful: " + e);
-            });
+        document.getElementById(tabId).style.display = 'block';
+        document.querySelector(`.tabs ul li[onclick="showTab('${tabId}')"]`).classList.add('is-active');
     }
 
-
-    window.initMap = initMap;
-
-    // Dodanie "godzin" po wpisaniu wartości w szacowanym czasie pracy
-    document.getElementById('estimated_time').addEventListener('input', function() {
-        document.getElementById('timeSuffix').style.visibility = this.value ? 'visible' : 'hidden';
-    });
-
-    // Dodanie "zł" po wpisaniu wartości w polu kwoty
-    document.getElementById('payment').addEventListener('input', function() {
-        document.getElementById('currencySuffix').style.visibility = this.value ? 'visible' : 'hidden';
-    });
-</script>
-
-<!-- Załaduj Google Maps API -->
-<script
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoNfnRG-X71gH-3zJBLX0A3y4irPx64PE&callback=initMap"
-    async defer></script>
-
-<script>
+    // Podgląd zdjęć
     function previewImages(event) {
         const files = event.target.files;
         const container = document.getElementById('imagePreviewContainer');
-
-        if (files.length > 10 || (files.length + container.children.length) > 10) {
-            alert('Możesz wybrać maksymalnie 10 zdjęć!');
-            event.target.value = ''; // Zresetuj pole pliku
-            return;
-        }
-
-        for (let i = 0; i < files.length; i++) {
-            const file = files[i];
+        container.innerHTML = '';
+        Array.from(files).forEach(file => {
             const reader = new FileReader();
-
-            reader.onload = function(e) {
+            reader.onload = e => {
                 const img = document.createElement('img');
                 img.src = e.target.result;
                 img.style.width = '100px';
                 img.style.height = '100px';
                 img.style.objectFit = 'cover';
-                img.style.borderRadius = '8px';
                 img.style.marginRight = '10px';
                 container.appendChild(img);
             };
-
             reader.readAsDataURL(file);
-        }
-
-        // Dodaj pionowy scrollbar po dodaniu więcej niż 3 zdjęć
-        if (container.children.length > 2) {
-            container.style.maxHeight = '150px'; // Ogranicz wysokość kontenera
-            container.style.overflowY = 'auto'; // Dodaj pionowy scrollbar
-        } else {
-            container.style.overflowY = 'hidden'; // Ukryj scrollbar, jeśli mniej niż 4 zdjęcia
-        }
+        });
     }
+
+    // Inicjalizacja mapy
+    let map;
+    let marker;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById("map"), { zoom: 8, center: { lat: 52.2297, lng: 21.0122 } });
+        marker = new google.maps.Marker({ map: map });
+        map.addListener("click", (e) => { geocode({ location: e.latLng }); });
+    }
+
+    function geocode(request) {
+        const geocoder = new google.maps.Geocoder();
+        geocoder.geocode(request, (results, status) => {
+            if (status === "OK") {
+                map.setCenter(results[0].geometry.location);
+                marker.setPosition(results[0].geometry.location);
+                if (request.location) document.getElementById('address').value = results[0].formatted_address;
+            }
+        });
+    }
+
+
+    
+    
+    window.initMap = initMap;
 </script>
 
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDoNfnRG-X71gH-3zJBLX0A3y4irPx64PE&callback=initMap" async defer></script>
+
 <?php $this->startSection('scripts'); ?>
-<!-- Możesz dodać tu dodatkowe skrypty -->
+<!-- Dodatkowe skrypty -->
 <?php $this->endSection(); ?>
