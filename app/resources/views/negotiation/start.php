@@ -66,6 +66,9 @@
                         <button class="button is-danger" type="submit">Odrzuć ofertę</button>
                     </form>
                 <?php endif; ?>
+                <?php if ($negotiation['status'] === 'accepted' && ($currentUserId == $listingOwnerId || $currentUserId == $negotiation['user_id'])): ?>
+                    <br><a href="http://localhost:8888/opinie/dodaj/<?= htmlspecialchars($negotiation['id']) ?>" class="button is-small is-link">Dodaj Opinię</a><br>
+                <?php endif; ?>
             </li>
             <hr>
         <?php endforeach; ?>

@@ -43,6 +43,14 @@
             <div class="column is-one-third">
                 <nav class="panel  p-5 is-rounded">
                     <p class="panel-heading has-background-black-ter has-text-white has-text-centered">Opcje profilu</p>
+                    <a href="/profil/opinie" class="panel-block has-text-white">
+                        <span class="panel-icon"><i class="fas fa-star"></i></span>
+                        Opinie
+                    </a>
+                    <a href="/profil/powiadomienia" class="panel-block  has-text-white">
+                        <span class="panel-icon"><i class="fas fa-bell"></i></span>
+                        Powiadomienia
+                    </a>
                     <a href="/profil/edytuj" class="panel-block  has-text-white">
                         <span class="panel-icon"><i class="fas fa-user-edit"></i></span>
                         Edytuj profil
@@ -50,10 +58,6 @@
                     <a href="/profil/zmien-haslo" class="panel-block  has-text-white">
                         <span class="panel-icon"><i class="fas fa-key"></i></span>
                         Zmień hasło
-                    </a>
-                    <a href="/profil/powiadomienia" class="panel-block  has-text-white">
-                        <span class="panel-icon"><i class="fas fa-bell"></i></span>
-                        Powiadomienia
                     </a>
                     <a href="/profil/aktywnosc" class="panel-block  has-text-white">
                         <span class="panel-icon"><i class="fas fa-history"></i></span>

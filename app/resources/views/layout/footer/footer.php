@@ -1,4 +1,5 @@
 <footer class="footer">
+
     <div class="content">
 
         <div class="fixed-grid has-3-cols">
@@ -26,4 +27,5 @@
         </div>
 
     </div>
+
 </footer>
