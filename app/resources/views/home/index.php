@@ -280,6 +280,11 @@ Strona Główna
     </div>
 </div>
 
+<?php $this->startSection('head'); ?>
+<?php $this->endSection(); ?>
+
+<?php $this->startSection('scripts'); ?>
+
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const deleteButtons = document.querySelectorAll('.notification .delete');
@@ -290,20 +295,7 @@ Strona Główna
             });
         });
     });
-</script>
 
-
-<?php $this->startSection('head'); ?>
-<?php $this->endSection(); ?>
-
-
-<?php $this->startSection('scripts'); ?>
-
-<!-- <script src="path/to/script.js"></script> -->
-
-<?php $this->endSection(); ?>
-
-<script>
     document.addEventListener('DOMContentLoaded', () => {
         (document.querySelectorAll('.notification .delete') || []).forEach(($delete) => {
             const $notification = $delete.parentNode;
@@ -316,4 +308,3 @@ Strona Główna
 </script>
 
 <?php $this->endSection(); ?>
-
