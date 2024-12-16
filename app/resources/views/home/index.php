@@ -127,152 +127,34 @@ Strona Główna
                         <h1 class="title is-3">Popularne ogłoszenia</h1>
                         <div class="scroll-container py-3">
 
+
                             <?php foreach ($listings as $listing): ?>
-                                <div class="box has-background-grey-darker">
-                                    <!-- Tytuł jako link do szczegółów -->
-                                    <p class="title is-4 no-gap">
+                                    <div class="box has-background-grey-darker">
+                                        <p class="title is-4 no-gap">
                                         <a href="/job/<?= htmlspecialchars($listing['id']) ?>" class="has-text-light">
                                             <?= htmlspecialchars($listing['job_type']) ?>
                                         </a>
-                                    </p>
-
-
-                                    <div class="box">
-                                        <p class="title is-4 no-gap">Koszenie trawnika na terenie Opola</p>
                                         <p class="subtitle is-6 no-gap">
                                             <span class="icon">
                                                 <i class="fas fa-map-marker-alt"></i>
                                             </span>
-                                            Opole, Zaodrze |
+                                            <?= htmlspecialchars($listing['address']); ?> |
                                             <span class="icon">
                                                 <i class="fas fa-file-contract"></i>
                                             </span>
-                                            Umowa zlecenie |
-                                            <span class="icon">
-                                                <i class="fas fa-truck"></i>
-                                            </span>
-                                            We własnym zakresie
+                                            <?= htmlspecialchars($listing['payment_type']); ?> |
                                         </p>
                                         <div class="tags">
                                             <span class="tag">Brak doświadczenia zawodowego</span>
-                                            <span class="tag">20zł/h</span>
+                                            <span class="tag"><?= htmlspecialchars($listing['payment']); ?>zł</span>
                                             <span class="tag">Dla uczniów/studentów</span>
                                             <span class="icon has-text-danger is-pulled-right">
                                                 <i class="fas fa-heart"></i>
                                             </span>
                                         </div>
                                     </div>
-
-
-                                    <div class="box">
-                                        <p class="title is-4 no-gap">Opieka nad zwierzętami w Krakowie</p>
-                                        <p class="subtitle is-6 no-gap">
-                                            <span class="icon">
-                                                <i class="fas fa-map-marker-alt"></i>
-                                            </span>
-                                            Kraków, Podgórze |
-                                            <span class="icon">
-                                                <i class="fas fa-file-contract"></i>
-                                            </span>
-                                            Umowa o dzieło |
-                                            <span class="icon">
-                                                <i class="fas fa-paw"></i>
-                                            </span>
-                                            Praca z zwierzętami
-                                        </p>
-                                        <div class="tags">
-                                            <span class="tag">Doświadczenie z zwierzętami mile widziane</span>
-                                            <span class="tag">25zł/h</span>
-                                            <span class="tag">Elastyczne godziny</span>
-                                            <span class="icon has-text-danger is-pulled-right">
-                                                <i class="fas fa-heart"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="box">
-                                        <p class="title is-4 no-gap">Nauczyciel języka angielskiego w Warszawie</p>
-                                        <p class="subtitle is-6 no-gap">
-                                            <span class="icon">
-                                                <i class="fas fa-map-marker-alt"></i>
-                                            </span>
-                                            Warszawa, Śródmieście |
-                                            <span class="icon">
-                                                <i class="fas fa-file-contract"></i>
-                                            </span>
-                                            Umowa o pracę |
-                                            <span class="icon">
-                                                <i class="fas fa-book-open"></i>
-                                            </span>
-                                            Nauczanie angielskiego
-                                        </p>
-                                        <div class="tags">
-                                            <span class="tag">Wymagane certyfikaty TESOL/CELTA</span>
-                                            <span class="tag">50zł/h</span>
-                                            <span class="tag">Dla osób z doświadczeniem</span>
-                                            <span class="icon has-text-danger is-pulled-right">
-                                                <i class="fas fa-heart"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="box">
-                                        <p class="title is-4 no-gap">Dostawca jedzenia na rowerze w Gdańsku</p>
-
-                                        <p class="subtitle is-6 no-gap">
-                                            <span class="icon">
-                                                <i class="fas fa-map-marker-alt"></i>
-                                            </span>
-                                            <?= htmlspecialchars($listing['city']) ?>, <?= htmlspecialchars($listing['address']) ?>
-                                        </p>
-                                        <div class="tags">
-
-                                            |
-
-                                            <span class="tag">Brak doświadczenia wymagane</span>
-                                            <span class="tag">18zł/h</span>
-                                            <span class="tag">Dla aktywnych fizycznie</span>
-                                            <span class="icon has-text-danger is-pulled-right">
-                                                <i class="fas fa-heart"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div class="box">
-                                        <p class="title is-4 no-gap">Programista PHP we Wrocławiu</p>
-                                        <p class="subtitle is-6 no-gap">
-                                            <span class="icon">
-                                                <i class="fas fa-map-marker-alt"></i>
-                                            </span>
-                                            Wrocław, Fabryczna |
-
-                                            <span class="icon">
-                                                <i class="fas fa-file-contract"></i>
-                                            </span>
-                                            <?= htmlspecialchars($listing['payment_type']) ?> |
-                                            <span class="icon">
-                                                <i class="fas fa-coins"></i>
-                                            </span>
-
-                                            <?= number_format($listing['payment'], 2) ?> zł/h
-                                            |
-                                            <span>Brak dodatkowych informacji</span>
-
-                                            Programowanie w PHP
-                                        </p>
-                                        <div class="tags">
-                                            <span class="tag">Wymagane doświadczenie min. 2 lata</span>
-                                            <span class="tag">90zł/h</span>
-                                            <span class="tag">Dla doświadczonych programistów</span>
-
-                                            <span class="icon has-text-danger is-pulled-right">
-                                                <i class="fas fa-heart"></i>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
                             <?php endforeach; ?>
-                        </div>
+
                     </div>
                 </div>
             </div>

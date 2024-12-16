@@ -52,6 +52,16 @@ class ListingController
             return $response->withStatus(400);
         }
     
+        $address = $data['address'];
+        $city = null;
+    
+        // Wyodrębnienie miasta z adresu
+        if (preg_match('/,\s?\d{2}-\d{3}\s([^\s,]+),/', $address, $matches)) {
+            $city = $matches[1];
+        } else {
+            $city = 'Nieznane';
+        }
+    
         // Obsługa zdjęć
         $imageNames = [];
         if (isset($uploadedFiles['images'])) {
@@ -65,18 +75,39 @@ class ListingController
     
         try {
             $db = $this->container->get('db');
-            $stmt = $db->prepare('INSERT INTO listings (user_id, job_type, description, payment_type, payment, address, estimated_time, images, category_id) 
-                              VALUES (:user_id, :job_type, :description, :payment_type, :payment, :address, :estimated_time, :images, :category_id)');
+    
+            // Pobierz dane użytkownika z tabeli users
+            $userQuery = $db->prepare('SELECT first_name, last_name, email FROM users WHERE id = :user_id');
+            $userQuery->execute(['user_id' => $currentUserId]);
+            $user = $userQuery->fetch();
+    
+            if (!$user) {
+                $response->getBody()->write("Błąd: Użytkownik nie istnieje.");
+                return $response->withStatus(400);
+            }
+    
+            $employerName = $user['first_name'] . ' ' . $user['last_name'];
+            $email = $user['email'];
+            $phoneNumber = $data['phone_number'] ?? null;
+    
+            // Wstawianie ogłoszenia
+            $stmt = $db->prepare('INSERT INTO listings (user_id, job_type, description, payment_type, payment, address, city, estimated_time, images, category_id, employer_name, `e-mail`, phone_number) 
+                                  VALUES (:user_id, :job_type, :description, :payment_type, :payment, :address, :city, :estimated_time, :images, :category_id, :employer_name, :email, :phone_number)');
+    
             $stmt->execute([
                 'user_id' => $currentUserId,
                 'job_type' => $data['job_type'],
                 'description' => $data['description'],
                 'payment_type' => $data['payment_type'],
                 'payment' => $data['payment'],
-                'address' => $data['address'],
+                'address' => $address,
+                'city' => $city,
                 'estimated_time' => $data['estimated_time'] ?? null,
                 'images' => json_encode($imageNames),
-                'category_id' => $data['category_id']
+                'category_id' => $data['category_id'],
+                'employer_name' => $employerName,
+                'email' => $email,
+                'phone_number' => $phoneNumber
             ]);
     
             return $response->withHeader('Location', '/?success=1')->withStatus(302);
