@@ -157,4 +157,46 @@ class JobController
 
         return $response->withStatus(500)->getBody()->write('Nie udało się odrzucić kontraktu.');
     }
+
+    public function completeListing(Request $request, Response $response, $args): Response
+    {
+        $listingId = $args['id'] ?? null;
+
+        if (!$listingId) {
+            $_SESSION['listing_error'] = 'Brak identyfikatora ogłoszenia.';
+            return $response->withHeader('Location', '/')->withStatus(400);
+        }
+
+        $currentUserId = $_SESSION['user_id'] ?? null;
+
+        if (!$currentUserId) {
+            $_SESSION['listing_error'] = 'Musisz być zalogowany, aby zakończyć ogłoszenie.';
+            return $response->withHeader('Location', '/login')->withStatus(302);
+        }
+
+        $db = $this->container->get('db');
+
+        // Pobierz ogłoszenie
+        $stmt = $db->prepare("SELECT * FROM listings WHERE id = :id");
+        $stmt->execute(['id' => $listingId]);
+        $listing = $stmt->fetch();
+
+        if (!$listing) {
+            $_SESSION['listing_error'] = 'Ogłoszenie nie zostało znalezione.';
+            return $response->withHeader('Location', '/')->withStatus(404);
+        }
+
+        // Sprawdzenie uprawnień
+        if ($listing['user_id'] != $currentUserId) {
+            $_SESSION['listing_error'] = 'Nie masz uprawnień do zakończenia tego ogłoszenia.';
+            return $response->withHeader('Location', '/')->withStatus(403);
+        }
+
+        // Zmień status ogłoszenia na 'closed'
+        $stmt = $db->prepare("UPDATE listings SET listing_status = 'closed' WHERE id = :id");
+        $stmt->execute(['id' => $listingId]);
+
+        $_SESSION['listing_success'] = 'Ogłoszenie zostało zakończone.';
+        return $response->withHeader('Location', '/job/' . $listingId)->withStatus(302);
+    }
 }

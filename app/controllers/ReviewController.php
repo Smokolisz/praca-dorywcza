@@ -16,84 +16,52 @@ class ReviewController
         $this->container = $container;
     }
 
-    // Metoda wyświetlająca formularz dodawania opinii
+    // Wyświetlenie formularza dodawania opinii
     public function showAddReviewForm(Request $request, Response $response, $args): Response
     {
-        $negotiationId = $args['negotiation_id'] ?? null;
-
-        if (!$negotiationId) {
-            $_SESSION['review_error'] = 'Brak identyfikatora negocjacji.';
-            return $response->withHeader('Location', '/')->withStatus(302);
-        }
-
+        $listingId = $args['listing_id'] ?? null;
         $currentUserId = $_SESSION['user_id'] ?? null;
 
-        if (!$negotiationId || !$currentUserId) {
-            $_SESSION['review_error'] = 'Brakujące dane.';
+        if (!$currentUserId) {
+            $_SESSION['review_error'] = 'Musisz być zalogowany, aby dodać opinię.';
+            return $response->withHeader('Location', '/zaloguj-sie')->withStatus(302);
+        }
+
+        if (!$listingId) {
+            $_SESSION['review_error'] = 'Brak identyfikatora ogłoszenia.';
             return $response->withHeader('Location', '/')->withStatus(302);
         }
 
         $db = $this->container->get('db');
 
-        // Pobierz negocjację
-        $stmt = $db->prepare("SELECT * FROM negotiations WHERE id = :id");
-        $stmt->execute(['id' => $negotiationId]);
-        $negotiation = $stmt->fetch();
-
-        if (!$negotiation) {
-            $_SESSION['review_error'] = 'Negocjacja nie została znaleziona.';
-            return $response->withHeader('Location', '/')->withStatus(302);
-        }
-
-        // Sprawdź, czy oferta jest zaakceptowana
-        if (!isset($negotiation['status']) || $negotiation['status'] !== 'accepted') {
-            $_SESSION['review_error'] = 'Nie możesz wystawić opinii przed zaakceptowaniem oferty.';
-            return $response->withHeader('Location', '/negocjacje/' . $negotiationId)->withStatus(302);
-        }
-
-        // Pobierz właściciela ogłoszenia
-        $stmt = $db->prepare("SELECT user_id FROM listings WHERE id = :listing_id");
-        $stmt->execute(['listing_id' => $negotiation['listing_id']]);
+        // Sprawdź, czy ogłoszenie istnieje
+        $stmt = $db->prepare("SELECT user_id FROM listings WHERE id = :id AND listing_status = 'closed'");
+        $stmt->execute(['id' => $listingId]);
         $listingOwnerId = $stmt->fetchColumn();
 
-        if ($currentUserId == $listingOwnerId) {
-            $reviewedUserId = $negotiation['user_id']; // Zleceniobiorca
-        } elseif ($currentUserId == $negotiation['user_id']) {
-            $reviewedUserId = $listingOwnerId; // Zleceniodawca
-        } else {
-            $_SESSION['review_error'] = 'Nie masz uprawnień do tej akcji.';
-            return $response->withHeader('Location', '/')->withStatus(302);
+        if (!$listingOwnerId) {
+            $_SESSION['review_error'] = 'Nie można wystawić opinii dla tego ogłoszenia.';
+            return $response->withHeader('Location', '/')->withStatus(403);
         }
 
-        // Renderuj formularz opinii
+
+
         $view = $this->container->get('view');
         $output = $view->render('reviews/add_review', [
-            'negotiationId' => $negotiationId,
-            'reviewedUserId' => $reviewedUserId,
+            'listingId' => $listingId,
+            'reviewedUserId' => $listingOwnerId,
         ], 'main');
+
         $response->getBody()->write($output);
         return $response;
     }
 
-
-    // Metoda obsługująca dodawanie opinii z zapisem zdjęć
+    // Obsługa dodawania opinii
     public function submitReview(Request $request, Response $response, $args): Response
     {
         $data = $request->getParsedBody();
-        $files = $request->getUploadedFiles();
 
-        // Upewniamy się, że 'photos' jest zawsze tablicą
-        $photos = $files['photos'] ?? [];
-        if (!is_array($photos)) {
-            $photos = [$photos];
-        }
-
-        // Teraz $photos powinno być tablicą wszystkich plików
-        // Możesz tymczasowo sprawdzić co jest w $photos:
-        // var_dump($photos); die(); 
-        // aby mieć pewność, że masz wiele plików.
-
-        $negotiationId = $data['negotiation_id'] ?? null;
+        $listingId = $data['listing_id'] ?? null;
         $reviewedUserId = $data['reviewed_user_id'] ?? null;
         $rating = $data['rating'] ?? null;
         $pros = $data['pros'] ?? null;
@@ -101,7 +69,7 @@ class ReviewController
         $comment = $data['comment'] ?? null;
         $currentUserId = $_SESSION['user_id'] ?? null;
 
-        if (!$negotiationId || !$reviewedUserId || !$rating || !$currentUserId) {
+        if (!$listingId || !$reviewedUserId || !$rating || !$currentUserId) {
             $_SESSION['review_error'] = 'Brakujące dane.';
             return $response->withHeader('Location', '/')->withStatus(302);
         }
@@ -111,49 +79,39 @@ class ReviewController
             return $response->withHeader('Location', '/')->withStatus(302);
         }
 
-
         $db = $this->container->get('db');
 
+        // Sprawdź, czy opinia już istnieje
         $stmt = $db->prepare("
             SELECT * FROM reviews 
-            WHERE negotiation_id = :negotiation_id AND reviewer_id = :reviewer_id
+            WHERE reviewer_id = :reviewer_id AND listing_id = :listing_id
         ");
         $stmt->execute([
-            'negotiation_id' => $negotiationId,
-            'reviewer_id' => $currentUserId
+            'reviewer_id' => $currentUserId,
+            'listing_id' => $listingId,
         ]);
-        $existingReview = $stmt->fetch();
-
-        if ($existingReview) {
-            $_SESSION['review_error'] = 'Już wystawiłeś opinię dla tej negocjacji.';
+        if ($stmt->fetch()) {
+            $_SESSION['review_error'] = 'Już wystawiłeś opinię dla tego ogłoszenia.';
             return $response->withHeader('Location', '/')->withStatus(302);
         }
 
-        $stmt = $db->prepare("SELECT * FROM negotiations WHERE id = :id");
-        $stmt->execute(['id' => $negotiationId]);
-        $negotiation = $stmt->fetch();
-
-        if (!$negotiation) {
-            $_SESSION['review_error'] = 'Negocjacja nie została znaleziona.';
-            return $response->withHeader('Location', '/')->withStatus(302);
-        }
-
+        // Dodaj opinię
         $stmt = $db->prepare("
-            INSERT INTO reviews (reviewer_id, reviewed_user_id, listing_id, rating, comment, negotiation_id, pros, cons, photos)
-            VALUES (:reviewer_id, :reviewed_user_id, :listing_id, :rating, :comment, :negotiation_id, :pros, :cons, :photos)
+            INSERT INTO reviews (reviewer_id, reviewed_user_id, listing_id, rating, comment, pros, cons, created_at)
+            VALUES (:reviewer_id, :reviewed_user_id, :listing_id, :rating, :comment, :pros, :cons, NOW())
         ");
         $stmt->execute([
             'reviewer_id' => $currentUserId,
             'reviewed_user_id' => $reviewedUserId,
-            'listing_id' => $negotiation['listing_id'],
+            'listing_id' => $listingId,
             'rating' => $rating,
             'comment' => $comment,
-            'negotiation_id' => $negotiationId,
             'pros' => $pros,
             'cons' => $cons,
         ]);
 
         $_SESSION['review_success'] = 'Twoja opinia została dodana pomyślnie!';
+
         return $response->withHeader('Location', '/')->withStatus(302);
     }
 
@@ -256,10 +214,9 @@ public function showUserReviews(Request $request, Response $response, $args): Re
         error_log("Błąd w showUserReviews: " . $e->getMessage());
         $response->getBody()->write("Błąd: " . $e->getMessage());
         return $response->withStatus(500);
+
     }
 }
-
-
 
 
 }
