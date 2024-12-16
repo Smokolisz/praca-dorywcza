@@ -93,7 +93,7 @@ class NegotiationController
             }
             //Sprawdź czy ogłoszenie jest otwarte
             if ($listing['status'] !== 'open') {
-                $_SESSION['negotiation_error'] = 'To ogłoszenie jest zamknięte i nie przyjmuje nowych negocjacji.';
+                $_SESSION['negotiation_error'] = 'To ogłoszenie nie przyjmuje nowych negocjacji.';
                 return $response->withHeader('Location', '/negocjacje/start/' . $listingId)->withStatus(403);
             }
 

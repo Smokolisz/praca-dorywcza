@@ -42,7 +42,7 @@
         </form>
     <?php else: ?>
         <div class="notification is-warning">
-            To ogłoszenie jest zamknięte i nie przyjmuje nowych negocjacji.
+            To ogłoszenie nie przyjmuje nowych negocjacji.
         </div>
     <?php endif; ?>
 
@@ -65,9 +65,6 @@
                     <form action="/negocjacje/<?= htmlspecialchars($negotiation['id']) ?>/odrzucenie" method="POST" style="display:inline;">
                         <button class="button is-danger" type="submit">Odrzuć ofertę</button>
                     </form>
-                <?php endif; ?>
-                <?php if ($negotiation['status'] === 'accepted' && ($currentUserId == $listingOwnerId || $currentUserId == $negotiation['user_id'])): ?>
-                    <br><a href="http://localhost:8888/opinie/dodaj/<?= htmlspecialchars($negotiation['id']) ?>" class="button is-small is-link">Dodaj Opinię</a><br>
                 <?php endif; ?>
             </li>
             <hr>

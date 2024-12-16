@@ -56,8 +56,9 @@ return function (App $app) {
     $app->post('/contracts/create', \App\Controllers\JobController::class . ':createContract');
     $app->post('/contracts/accept/{id}', \App\Controllers\JobController::class . ':acceptContract');
     $app->post('/contracts/reject/{id}', \App\Controllers\JobController::class . ':rejectContract');
-    
-    
+
+    $app->post('/ogloszenia/{id}/zakoncz', callable: [JobController::class, 'completeListing']);
+
     // dodawanie ogloszenia
     $app->get('/add-listing', [ListingController::class, 'showAddListingForm']);
     $app->post('/add-listing', [ListingController::class, 'submitListing']);
@@ -100,7 +101,9 @@ return function (App $app) {
     $app->get('/faq', [FaqController::class, 'show']);
 
     // Opinie
-    $app->get('/opinie/dodaj/{negotiation_id}', [ReviewController::class, 'showAddReviewForm']);
+    $app->get('/opinie/dodaj/{listing_id}', [ReviewController::class, 'showAddReviewForm']);
+
+
 
     $app->get('/opinie', [ReviewController::class, 'showReviews']);
 
@@ -110,5 +113,4 @@ return function (App $app) {
 
     $app->get('/kategoria', [CategoryController::class, 'index']);
     $app->get('/kategoria/{name}', [CategoryController::class, 'show']);
-
 };
