@@ -24,7 +24,7 @@ Podgląd ogłoszenia pracy dorywczej
                         </p>
                         <p>
                             <strong>Ocena:</strong>
-                            <a href="/user-reviews/<?= htmlspecialchars($job['USER_ID']) ?>">
+                            <a href="/user-reviews/<?= htmlspecialchars($job['user_id']) ?>">
                                 <?= number_format($averageRating, 1) ?> / 5 (<?= $reviewCount ?> opinii)
                             </a>
                         </p>

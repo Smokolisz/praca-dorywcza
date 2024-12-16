@@ -242,7 +242,10 @@ class ProfileController
             $stmt->execute(['reviewed_user_id' => $userId]);
             $reviews = $stmt->fetchAll();
 
-            $output = $view->render('reviews/user_reviews', ['reviews' => $reviews], "main");
+            $output = $view->render('reviews/user_reviews', [
+                'reviews' => $reviews,
+                'isOwnProfile' => true
+            ], "main");
             $response->getBody()->write($output);
             return $response;
         }

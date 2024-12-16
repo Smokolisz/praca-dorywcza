@@ -115,79 +115,69 @@ class ReviewController
         return $response->withHeader('Location', '/')->withStatus(302);
     }
 
-    
+
 
     // Metoda wyświetlająca wszystkie opinie (przykładowa)
     public function showReviews(Request $request, Response $response, $args): Response
-{
-    try {
-        $db = $this->container->get('db');
-        $reviewedUserId = $args['user_id'] ?? null;
+    {
+        try {
+            $db = $this->container->get('db');
+            $reviewedUserId = $args['user_id'] ?? null;
 
-        // Pobierz informacje o użytkowniku
-        $stmtUser = $db->prepare("SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM users WHERE id = :user_id");
-        $stmtUser->execute(['user_id' => $reviewedUserId]);
-        $user = $stmtUser->fetch();
+            // Pobierz informacje o użytkowniku
+            $stmtUser = $db->prepare("SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM users WHERE id = :user_id");
+            $stmtUser->execute(['user_id' => $reviewedUserId]);
+            $user = $stmtUser->fetch();
 
-        if (!$user) {
-            throw new \Exception("Nie znaleziono użytkownika.");
+            if (!$user) {
+                throw new \Exception("Nie znaleziono użytkownika.");
+            }
+
+            // Pobierz opinie
+            $stmt = $db->prepare("SELECT * FROM reviews WHERE reviewed_user_id = :user_id");
+            $stmt->execute(['user_id' => $reviewedUserId]);
+            $reviews = $stmt->fetchAll();
+
+            // Dane dla widoku
+            $userName = $user['full_name'];
+            $isOwnProfile = isset($_SESSION['user_id']) && $_SESSION['user_id'] == $reviewedUserId;
+
+            $view = $this->container->get('view');
+            $output = $view->render('reviews/view_user_reviews', [
+                "reviews" => $reviews,
+                "isOwnProfile" => true,
+                "userName" => $userName
+            ], 'main');
+            $response->getBody()->write($output);
+            return $response;
+        } catch (\Exception $e) {
+            error_log("Błąd w showReviews: " . $e->getMessage());
+            $response->getBody()->write("Błąd: " . $e->getMessage());
+            return $response->withStatus(500);
         }
-
-        // Pobierz opinie
-        $stmt = $db->prepare("SELECT * FROM reviews WHERE reviewed_user_id = :user_id");
-        $stmt->execute(['user_id' => $reviewedUserId]);
-        $reviews = $stmt->fetchAll();
-
-        // Dane dla widoku
-        $userName = $user['full_name'];
-        $isOwnProfile = isset($_SESSION['user_id']) && $_SESSION['user_id'] == $reviewedUserId;
-
-        // Ścieżka do pliku widoku
-        require_once __DIR__ . '/../resources/views/reviews/view_user_reviews.php';
-
-
-
-
-
-        if (!file_exists($viewPath)) {
-            throw new \Exception("Plik widoku nie istnieje: " . $viewPath);
-        }
-
-        // Załaduj widok
-        ob_start();
-        include $viewPath;
-        $output = ob_get_clean();
-
-        $response->getBody()->write($output);
-        return $response;
-    } catch (\Exception $e) {
-        error_log("Błąd w showReviews: " . $e->getMessage());
-        $response->getBody()->write("Błąd: " . $e->getMessage());
-        return $response->withStatus(500);
     }
-}
 
-public function showUserReviews(Request $request, Response $response, $args): Response
-{
-    try {
-        $db = $this->container->get('db');
-        $userId = $args['user_id'] ?? null;
+    public function showUserReviews(Request $request, Response $response, $args): Response
+    {
+        try {
+            $db = $this->container->get('db');
+            $userId = $args['user_id'] ?? null;
 
-        if (!$userId) {
-            throw new \Exception("Brak ID użytkownika.");
-        }
+            if (!$userId) {
+                throw new \Exception("Brak ID użytkownika.");
+            }
 
-        // Pobierz nazwę użytkownika
-        $stmt = $db->prepare("SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM users WHERE id = :user_id");
-        $stmt->execute(['user_id' => $userId]);
-        $user = $stmt->fetch();
+            // Pobierz nazwę użytkownika
+            $stmt = $db->prepare("SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM users WHERE id = :user_id");
+            $stmt->execute(['user_id' => $userId]);
+            $user = $stmt->fetch();
 
-        if (!$user) {
-            throw new \Exception("Nie znaleziono użytkownika o ID: " . $userId);
-        }
+            if (!$user) {
+                throw new \Exception("Nie znaleziono użytkownika o ID: " . $userId);
+            }
 
-        // Pobierz opinie o użytkowniku
-        $stmt = $db->prepare("
+            // Pobierz opinie o użytkowniku
+            $stmt = $db->prepare("
             SELECT r.rating, r.comment, r.created_at, CONCAT(u.first_name, ' ', u.last_name) AS reviewer_name,
             r.pros, r.cons
             FROM reviews r
@@ -195,28 +185,24 @@ public function showUserReviews(Request $request, Response $response, $args): Re
             WHERE r.reviewed_user_id = :user_id
             ORDER BY r.created_at DESC
         ");
-        $stmt->execute(['user_id' => $userId]);
-        $reviews = $stmt->fetchAll();
+            $stmt->execute(['user_id' => $userId]);
+            $reviews = $stmt->fetchAll();
 
-        $userName = $user['full_name'];
+            $userName = $user['full_name'];
 
-        
-        $view = $this->container->get('view');
-        $output = $view->render('reviews/view_user_reviews', [
-            "reviews"=>$reviews,
-            "isOwnProfile"=>false,
-            "userName"=>$userName
-        ], 'main');
-        $response->getBody()->write($output);
-        return $response;
 
-    } catch (\Exception $e) {
-        error_log("Błąd w showUserReviews: " . $e->getMessage());
-        $response->getBody()->write("Błąd: " . $e->getMessage());
-        return $response->withStatus(500);
-
+            $view = $this->container->get('view');
+            $output = $view->render('reviews/view_user_reviews', [
+                "reviews" => $reviews,
+                "isOwnProfile" => false,
+                "userName" => $userName
+            ], 'main');
+            $response->getBody()->write($output);
+            return $response;
+        } catch (\Exception $e) {
+            error_log("Błąd w showUserReviews: " . $e->getMessage());
+            $response->getBody()->write("Błąd: " . $e->getMessage());
+            return $response->withStatus(500);
+        }
     }
-}
-
-
 }
