@@ -103,6 +103,8 @@ return function (App $app) {
     // Opinie
     $app->get('/opinie/dodaj/{listing_id}', [ReviewController::class, 'showAddReviewForm']);
 
+    $app->get('/user-reviews/{user_id}', \App\Controllers\ReviewController::class . ':showUserReviews');
+
 
 
     $app->get('/opinie', [ReviewController::class, 'showReviews']);
@@ -113,4 +115,9 @@ return function (App $app) {
 
     $app->get('/kategoria', [CategoryController::class, 'index']);
     $app->get('/kategoria/{name}', [CategoryController::class, 'show']);
+
+
+    $app->get('/kategoria/ulubione/dodaj/{id}', [CategoryController::class, 'addFavorite']);
+    $app->get('/kategoria/ulubione/usun/{id}', [CategoryController::class, 'removeFavorite']);
+
 };
