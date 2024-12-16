@@ -16,6 +16,8 @@ use App\Controllers\FaqController;
 use App\Controllers\ReviewController;
 use App\Controllers\SearchController;
 use App\Controllers\CategoryController;
+use App\Controllers\MyListingsController;
+use App\Controllers\MyJobsController;
 use Slim\App;
 
 return function (App $app) {
@@ -120,4 +122,10 @@ return function (App $app) {
     $app->get('/kategoria/ulubione/dodaj/{id}', [CategoryController::class, 'addFavorite']);
     $app->get('/kategoria/ulubione/usun/{id}', [CategoryController::class, 'removeFavorite']);
 
+    $app->get('/mylistings', [MyListingsController::class, 'index']);
+    $app->get('/moje-prace', [MyJobsController::class, 'index']);
+
+
 };
+
+

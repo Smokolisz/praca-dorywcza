@@ -79,10 +79,11 @@
                         </a>
 
                         <div class="navbar-dropdown" style="margin-left:-25px;">
-                            <a class="navbar-item">
-                                Moje ogłoszenia
-                            </a>
-                            <a class="navbar-item">
+                        <a class="navbar-item" href="/mylistings">
+                            Moje ogłoszenia
+                        </a>
+
+                            <a class="navbar-item" href="/moje-prace">
                                 Moje prace
                             </a>
                             <a class="navbar-item">
