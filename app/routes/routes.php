@@ -101,6 +101,10 @@ return function (App $app) {
 
     // Opinie
     $app->get('/opinie/dodaj/{negotiation_id}', [ReviewController::class, 'showAddReviewForm']);
+    $app->get('/user-reviews/{user_id}', \App\Controllers\ReviewController::class . ':showUserReviews');
+
+
+
 
     $app->get('/opinie', [ReviewController::class, 'showReviews']);
 
