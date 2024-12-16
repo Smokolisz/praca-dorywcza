@@ -17,72 +17,72 @@ class JobController
     }
 
     public function index(Request $request, Response $response, $args): Response
-{
-    $db = $this->container->get('db');
+    {
+        $db = $this->container->get('db');
 
-    // Pobierz szczegóły ogłoszenia
-    $stmt = $db->prepare("SELECT * FROM listings WHERE id = :id LIMIT 1");
-    $stmt->bindParam(':id', $args['id'], PDO::PARAM_INT);
-    $stmt->execute();
-    $job = $stmt->fetch();
+        // Pobierz szczegóły ogłoszenia
+        $stmt = $db->prepare("SELECT * FROM listings WHERE id = :id LIMIT 1");
+        $stmt->bindParam(':id', $args['id'], PDO::PARAM_INT);
+        $stmt->execute();
+        $job = $stmt->fetch();
 
-    if (!$job) {
-        $response->getBody()->write("Ogłoszenie nie zostało znalezione.");
-        return $response->withStatus(404);
-    }
+        if (!$job) {
+            $response->getBody()->write("Ogłoszenie nie zostało znalezione.");
+            return $response->withStatus(404);
+        }
 
-    // Sprawdź, czy użytkownik jest pracodawcą
-    $isEmployer = $job['USER_ID'] == $_SESSION['user_id'];
+        // Sprawdź, czy użytkownik jest pracodawcą
+        $isEmployer = $job['user_id'] == $_SESSION['user_id'];
 
-    // Pobierz średnią ocen i liczbę opinii dla użytkownika, który wystawił ogłoszenie
-    $stmt = $db->prepare("
+        // Pobierz średnią ocen i liczbę opinii dla użytkownika, który wystawił ogłoszenie
+        $stmt = $db->prepare("
         SELECT COALESCE(AVG(rating), 0) AS average_rating, COUNT(*) AS review_count 
         FROM reviews 
         WHERE reviewed_user_id = :user_id
     ");
-    $stmt->bindParam(':user_id', $job['USER_ID'], PDO::PARAM_INT);
-    $stmt->execute();
-    $reviewsData = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->bindParam(':user_id', $job['USER_ID'], PDO::PARAM_INT);
+        $stmt->execute();
+        $reviewsData = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Przypisz wartości do zmiennych
-    $averageRating = $reviewsData['average_rating'] ?? 0; // Domyślnie 0, jeśli brak ocen
-    $reviewCount = $reviewsData['review_count'] ?? 0;     // Domyślnie 0, jeśli brak opinii
+        // Przypisz wartości do zmiennych
+        $averageRating = $reviewsData['average_rating'] ?? 0; // Domyślnie 0, jeśli brak ocen
+        $reviewCount = $reviewsData['review_count'] ?? 0;     // Domyślnie 0, jeśli brak opinii
 
-    // Pobierz wszystkie kontrakty związane z ogłoszeniem
-    $stmt = $db->prepare("
+        // Pobierz wszystkie kontrakty związane z ogłoszeniem
+        $stmt = $db->prepare("
         SELECT * 
         FROM contracts 
         WHERE job_id = :job_id
     ");
-    $stmt->bindParam(':job_id', $args['id'], PDO::PARAM_INT);
-    $stmt->execute();
-    $contracts = $stmt->fetchAll();
+        $stmt->bindParam(':job_id', $args['id'], PDO::PARAM_INT);
+        $stmt->execute();
+        $contracts = $stmt->fetchAll();
 
-    // Sprawdź, czy użytkownik już wysłał kontrakt dla tego ogłoszenia
-    $stmt = $db->prepare("
+        // Sprawdź, czy użytkownik już wysłał kontrakt dla tego ogłoszenia
+        $stmt = $db->prepare("
         SELECT COUNT(*) AS count
         FROM contracts
         WHERE job_id = :job_id AND user_id = :user_id
     ");
-    $stmt->bindParam(':job_id', $args['id'], PDO::PARAM_INT);
-    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-    $stmt->execute();
-    $contractExists = $stmt->fetch()['count'] > 0;
+        $stmt->bindParam(':job_id', $args['id'], PDO::PARAM_INT);
+        $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+        $stmt->execute();
+        $contractExists = $stmt->fetch()['count'] > 0;
 
-    // Renderowanie widoku
-    $view = $this->container->get('view');
-    $output = $view->render('preview/index', [
-        'job' => $job,
-        'contracts' => $contracts,
-        'isEmployer' => $isEmployer,
-        'contractExists' => $contractExists,
-        'averageRating' => $averageRating, // Średnia ocen
-        'reviewCount' => $reviewCount,     // Liczba opinii
-    ], 'main');
+        // Renderowanie widoku
+        $view = $this->container->get('view');
+        $output = $view->render('preview/index', [
+            'job' => $job,
+            'contracts' => $contracts,
+            'isEmployer' => $isEmployer,
+            'contractExists' => $contractExists,
+            'averageRating' => $averageRating, // Średnia ocen
+            'reviewCount' => $reviewCount,     // Liczba opinii
+        ], 'main');
 
-    $response->getBody()->write($output);
-    return $response;
-}
+        $response->getBody()->write($output);
+        return $response;
+    }
 
 
 
