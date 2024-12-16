@@ -31,6 +31,27 @@ Wyszukiwarka kategorii
                     </div>
                 </form>
 
+                <!-- Box ulubionych kategorii -->
+                <div class="box" style="background-color: #none; color: #fff; margin-top: 20px;">
+                    <h2 class="title is-5" style="color: #fff;">Ulubione kategorie</h2>
+                    <?php if (!empty($favoriteCategories)): ?>
+                        <ul style="list-style-type: none; padding-left: 0;">
+                            <?php foreach ($categories as $cat): ?>
+                                <?php if (in_array($cat['id'], $favoriteCategories)): ?>
+                                    <li style="margin-bottom: 10px;">
+                                        <a href="/kategoria?category_name=<?php echo rawurlencode($cat['name']); ?>" 
+                                           style="font-size: 1.1em; color: #fff; text-decoration: none;">
+                                            <?php echo htmlspecialchars($cat['name']); ?>
+                                        </a>
+                                    </li>
+                                <?php endif; ?>
+                            <?php endforeach; ?>
+                        </ul>
+                    <?php else: ?>
+                        <p>Nie obserwujesz żadnych kategorii.</p>
+                    <?php endif; ?>
+                </div>
+
                 <hr>
 
                 <!-- Wyniki wyszukiwania -->
@@ -56,16 +77,27 @@ Wyszukiwarka kategorii
                 <?php endif; ?>
             </div>
 
-            <!-- Sekcja z listą kategorii -->
+            <!-- Sekcja boczna z kategoriami -->
             <div class="column is-one-third">
-                <div class="box">
-                    <h2 class="title is-5">Dostępne kategorie</h2>
-                    <ul>
+                <!-- Box dostępnych kategorii -->
+                <div class="box" style="background-color: #none; color: #fff;">
+                    <h2 class="title is-5" style="color: #fff;">Dostępne kategorie</h2>
+                    <ul style="list-style-type: none; padding-left: 0;">
                         <?php foreach ($categories as $cat): ?>
-                            <li>
-                                <a href="/kategoria?category_name=<?php echo rawurlencode($cat['name']); ?>">
+                            <li style="margin-bottom: 10px; display: flex; justify-content: space-between;">
+                                <a href="/kategoria?category_name=<?php echo rawurlencode($cat['name']); ?>" 
+                                   style="font-size: 1.1em; color: #fff; text-decoration: none;">
                                     <?php echo htmlspecialchars($cat['name']); ?>
                                 </a>
+                                <?php if (in_array($cat['id'], $favoriteCategories)): ?>
+                                    <a href="/kategoria/ulubione/usun/<?php echo $cat['id']; ?>" style="color: red;">
+                                        ❤️
+                                    </a>
+                                <?php else: ?>
+                                    <a href="/kategoria/ulubione/dodaj/<?php echo $cat['id']; ?>" style="color: gray;">
+                                        🤍
+                                    </a>
+                                <?php endif; ?>
                             </li>
                         <?php endforeach; ?>
                     </ul>

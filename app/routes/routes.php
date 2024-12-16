@@ -111,4 +111,7 @@ return function (App $app) {
     $app->get('/kategoria', [CategoryController::class, 'index']);
     $app->get('/kategoria/{name}', [CategoryController::class, 'show']);
 
+    $app->get('/kategoria/ulubione/dodaj/{id}', [CategoryController::class, 'addFavorite']);
+    $app->get('/kategoria/ulubione/usun/{id}', [CategoryController::class, 'removeFavorite']);
+
 };
