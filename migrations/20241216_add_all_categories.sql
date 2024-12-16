@@ -1,0 +1,22 @@
+INSERT INTO `categories` (`id`, `name`)
+VALUES
+    (1, 'IT i programowanie'),
+    (2, 'Budownictwo'),
+    (3, 'Sprzedaż i handel'),
+    (4, 'Logistyka i transport'),
+    (5, 'Finanse i księgowość'),
+    (6, 'Marketing i reklama'),
+    (7, 'Edukacja i szkolenia'),
+    (8, 'Opieka zdrowotna'),
+    (9, 'Produkcja i przemysł'),
+    (10, 'Gastronomia i hotelarstwo'),
+    (11, 'Sztuka i projektowanie'),
+    (12, 'Nauka i badania'),
+    (13, 'Prawo i administracja'),
+    (14, 'Zarządzanie i HR'),
+    (15, 'Telekomunikacja'),
+    (16, 'Rolnictwo i leśnictwo'),
+    (17, 'Energetyka i środowisko'),
+    (18, 'Bezpieczeństwo i ochrona'),
+    (19, 'Praca fizyczna i remonty'),
+    (20, 'Praca zdalna');

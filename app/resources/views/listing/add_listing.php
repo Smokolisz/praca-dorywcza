@@ -32,7 +32,24 @@ Dodaj Ogłoszenie
                                 </select>
                             </div>
                         </div>
-                    </div>
+                        </div>
+
+                        <!-- Wybór kategorii -->
+                        <div class="field">
+                        <label class="label">Kategoria</label>
+                        <div class="control">
+                            <div class="select is-fullwidth">
+                                <select name="category_id" required>
+                                    <option value="">Wybierz kategorię</option>
+                                    <?php foreach ($categories as $category): ?>
+                                        <option value="<?php echo htmlspecialchars($category['id']); ?>">
+                                            <?php echo htmlspecialchars($category['name']); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                        </div>
+                        </div>
 
                     <div class="field">
                         <label class="label">Opis pracy</label>
