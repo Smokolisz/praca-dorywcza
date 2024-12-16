@@ -68,43 +68,52 @@ class JobController
     }
 
     public function createContract(Request $request, Response $response): Response
-    {
-        $data = json_decode($request->getBody()->getContents(), true);
+{
+    $data = json_decode($request->getBody()->getContents(), true);
 
-        if (!isset($data['job_id'])) {
-            $response->getBody()->write('Nieprawidłowe dane wejściowe.');
-            return $response->withStatus(400);
-        }
+    error_log('Received data: ' . print_r($data, true)); // Loguj dane wejściowe
 
-        $db = $this->container->get('db');
+    if (!isset($data['job_id']) || empty($_SESSION['user_id'])) {
+        error_log('Invalid data or missing session.');
+        $response->getBody()->write('Nieprawidłowe dane wejściowe.');
+        return $response->withStatus(400);
+    }
 
-        $stmt = $db->prepare("SELECT employer_id FROM listings WHERE id = :job_id");
-        $stmt->bindParam(':job_id', $data['job_id'], PDO::PARAM_INT);
-        $stmt->execute();
-        $employer = $stmt->fetch();
+    $db = $this->container->get('db');
 
-        if (!$employer) {
-            $response->getBody()->write('Nie znaleziono ogłoszenia.');
-            return $response->withStatus(404);
-        }
+    // Sprawdź, czy ogłoszenie istnieje
+    $stmt = $db->prepare("SELECT employer_id FROM listings WHERE id = :job_id");
+    $stmt->bindParam(':job_id', $data['job_id'], PDO::PARAM_INT);
+    $stmt->execute();
+    $employer = $stmt->fetch();
+    error_log('Employer data: ' . print_r($employer, true));
 
-        // Zapisz kontrakt
-        $stmt = $db->prepare("
+    if (!$employer) {
+        $response->getBody()->write('Nie znaleziono ogłoszenia.');
+        return $response->withStatus(404);
+    }
+
+    // Zapisz kontrakt
+    $stmt = $db->prepare("
         INSERT INTO contracts (job_id, user_id, employer_id, created_at, status) 
         VALUES (:job_id, :user_id, :employer_id, NOW(), 'pending')
-        ");
-        $stmt->bindParam(':job_id', $data['job_id'], PDO::PARAM_INT);
-        $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-        $stmt->bindParam(':employer_id', $employer['employer_id'], PDO::PARAM_INT);
+    ");
+    $stmt->bindParam(':job_id', $data['job_id'], PDO::PARAM_INT);
+    $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $stmt->bindParam(':employer_id', $employer['employer_id'], PDO::PARAM_INT);
 
-        if ($stmt->execute()) {
-            $response->getBody()->write('Kontrakt został zapisany.');
-            return $response->withStatus(201);
-        }
-
-        $response->getBody()->write('Wystąpił błąd podczas zapisywania kontraktu.');
-        return $response->withStatus(500);
+    if ($stmt->execute()) {
+        error_log('Contract successfully created.');
+        $response->getBody()->write('Kontrakt został zapisany.');
+        return $response->withStatus(201);
     }
+
+    error_log('SQL Error: ' . print_r($stmt->errorInfo(), true));
+    $response->getBody()->write('Wystąpił błąd podczas zapisywania kontraktu.');
+    return $response->withStatus(500);
+}
+
+    
 
 
 
