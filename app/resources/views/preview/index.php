@@ -2,6 +2,8 @@
 Podgląd ogłoszenia pracy dorywczej
 <?php $this->endSection(); ?>
 
+
+
 <div class="container my-6">
     <div class="box has-text-centered">
         <h1 class="title"><?= htmlspecialchars($job['job_type']) ?></h1>
@@ -17,7 +19,19 @@ Podgląd ogłoszenia pracy dorywczej
                     <!-- Informacje o pracy -->
                     <div class="column">
                         <h2 class="subtitle">Informacje</h2>
-                        <p><strong>Pracodawca:</strong> <?= htmlspecialchars($job['employer_name']) ?></p>
+                        <p>
+                            <strong>Pracodawca:</strong> <?= htmlspecialchars($job['employer_name']) ?>
+                        </p>
+                        <p>
+                            <strong>Ocena:</strong>
+                            <a href="/user-reviews/<?= htmlspecialchars($job['USER_ID']) ?>">
+                                <?= number_format($averageRating, 1) ?> / 5 (<?= $reviewCount ?> opinii)
+                            </a>
+                        </p>
+
+
+
+
                         <p><strong>Miasto:</strong> <?= htmlspecialchars($job['city']) ?></p>
                         <p><strong>Stawka godzinowa:</strong> <?= htmlspecialchars($job['payment']) ?> PLN/h</p>
                         <p><strong>Data publikacji:</strong> <?= htmlspecialchars($job['created_at']) ?></p>

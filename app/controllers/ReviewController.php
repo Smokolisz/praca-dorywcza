@@ -111,8 +111,6 @@ class ReviewController
             return $response->withHeader('Location', '/')->withStatus(302);
         }
 
-        $photoPaths = $this->savePhotos($photos);
-        $photosJson = json_encode($photoPaths);
 
         $db = $this->container->get('db');
 
@@ -153,64 +151,115 @@ class ReviewController
             'negotiation_id' => $negotiationId,
             'pros' => $pros,
             'cons' => $cons,
-            'photos' => $photosJson
         ]);
 
         $_SESSION['review_success'] = 'Twoja opinia została dodana pomyślnie!';
         return $response->withHeader('Location', '/')->withStatus(302);
     }
 
-    // Funkcja do zapisu przesłanych plików
-    private function savePhotos(array $photos)
-    {
-        $paths = [];
-        $uploadDir = __DIR__ . '/../../public/review_photos';
-
-        if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0777, true);
-        }
-
-        foreach ($photos as $photo) {
-            if ($photo->getError() === UPLOAD_ERR_OK) {
-                $originalFileName = $photo->getClientFilename();
-                $extension = pathinfo($originalFileName, PATHINFO_EXTENSION);
-                $newFileName = 'review_' . time() . '_' . uniqid() . '.' . $extension;
-                $photo->moveTo($uploadDir . '/' . $newFileName);
-                $paths[] = $newFileName;
-            }
-        }
-
-        return $paths;
-    }
+    
 
     // Metoda wyświetlająca wszystkie opinie (przykładowa)
     public function showReviews(Request $request, Response $response, $args): Response
-    {
-        try {
-            $db = $this->container->get('db');
+{
+    try {
+        $db = $this->container->get('db');
+        $reviewedUserId = $args['user_id'] ?? null;
 
-            // Pobierz wszystkie opinie
-            $stmt = $db->prepare("
-                SELECT r.*, 
-                       CONCAT(u.first_name, ' ', u.last_name) AS reviewer_name,
-                       l.description AS listing_description
-                FROM reviews r
-                JOIN users u ON r.reviewer_id = u.id
-                JOIN listings l ON r.listing_id = l.id
-                ORDER BY r.created_at DESC
-            ");
-            $stmt->execute();
-            $reviews = $stmt->fetchAll();
+        // Pobierz informacje o użytkowniku
+        $stmtUser = $db->prepare("SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM users WHERE id = :user_id");
+        $stmtUser->execute(['user_id' => $reviewedUserId]);
+        $user = $stmtUser->fetch();
 
-            // Renderuj widok z opiniami
-            $view = $this->container->get('view');
-            return $view->render($response, 'reviews/view_reviews', [
-                'reviews' => $reviews,
-            ]);
-        } catch (\Exception $e) {
-            error_log("Error fetching reviews: " . $e->getMessage());
-            $_SESSION['review_error'] = 'Wystąpił błąd podczas ładowania opinii.';
-            return $response->withHeader('Location', '/')->withStatus(302);
+        if (!$user) {
+            throw new \Exception("Nie znaleziono użytkownika.");
         }
+
+        // Pobierz opinie
+        $stmt = $db->prepare("SELECT * FROM reviews WHERE reviewed_user_id = :user_id");
+        $stmt->execute(['user_id' => $reviewedUserId]);
+        $reviews = $stmt->fetchAll();
+
+        // Dane dla widoku
+        $userName = $user['full_name'];
+        $isOwnProfile = isset($_SESSION['user_id']) && $_SESSION['user_id'] == $reviewedUserId;
+
+        // Ścieżka do pliku widoku
+        require_once __DIR__ . '/../resources/views/reviews/view_user_reviews.php';
+
+
+
+
+
+        if (!file_exists($viewPath)) {
+            throw new \Exception("Plik widoku nie istnieje: " . $viewPath);
+        }
+
+        // Załaduj widok
+        ob_start();
+        include $viewPath;
+        $output = ob_get_clean();
+
+        $response->getBody()->write($output);
+        return $response;
+    } catch (\Exception $e) {
+        error_log("Błąd w showReviews: " . $e->getMessage());
+        $response->getBody()->write("Błąd: " . $e->getMessage());
+        return $response->withStatus(500);
     }
+}
+
+public function showUserReviews(Request $request, Response $response, $args): Response
+{
+    try {
+        $db = $this->container->get('db');
+        $userId = $args['user_id'] ?? null;
+
+        if (!$userId) {
+            throw new \Exception("Brak ID użytkownika.");
+        }
+
+        // Pobierz nazwę użytkownika
+        $stmt = $db->prepare("SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM users WHERE id = :user_id");
+        $stmt->execute(['user_id' => $userId]);
+        $user = $stmt->fetch();
+
+        if (!$user) {
+            throw new \Exception("Nie znaleziono użytkownika o ID: " . $userId);
+        }
+
+        // Pobierz opinie o użytkowniku
+        $stmt = $db->prepare("
+            SELECT r.rating, r.comment, r.created_at, CONCAT(u.first_name, ' ', u.last_name) AS reviewer_name,
+            r.pros, r.cons
+            FROM reviews r
+            JOIN users u ON r.reviewer_id = u.id
+            WHERE r.reviewed_user_id = :user_id
+            ORDER BY r.created_at DESC
+        ");
+        $stmt->execute(['user_id' => $userId]);
+        $reviews = $stmt->fetchAll();
+
+        $userName = $user['full_name'];
+
+        
+        $view = $this->container->get('view');
+        $output = $view->render('reviews/view_user_reviews', [
+            "reviews"=>$reviews,
+            "isOwnProfile"=>false,
+            "userName"=>$userName
+        ], 'main');
+        $response->getBody()->write($output);
+        return $response;
+
+    } catch (\Exception $e) {
+        error_log("Błąd w showUserReviews: " . $e->getMessage());
+        $response->getBody()->write("Błąd: " . $e->getMessage());
+        return $response->withStatus(500);
+    }
+}
+
+
+
+
 }
