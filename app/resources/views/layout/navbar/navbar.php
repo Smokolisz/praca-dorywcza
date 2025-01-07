@@ -34,7 +34,7 @@
             <a class="navbar-item" href="/faq">
                 FAQ
             </a>
-            <a class="navbar-item" href="/kontakt">
+            <a class="navbar-item" href="/contact">
                 Kontakt
             </a>
 

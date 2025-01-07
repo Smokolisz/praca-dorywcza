@@ -6,7 +6,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Container\ContainerInterface;
 
-class FaqController
+class HelpController
 {
     protected $container;
 
@@ -15,11 +15,11 @@ class FaqController
         $this->container = $container;
     }
 
-    // Wyświetlanie strony FAQ
+    // Wyświetlanie strony Pomoc
     public function show(Request $request, Response $response, $args): Response
     {
         $view = $this->container->get('view');
-        $output = $view->render('regulations/faq', [], 'main');
+        $output = $view->render('footer-links/help', [], 'main'); // Ładowanie widoku help.php
         $response->getBody()->write($output);
         return $response;
     }
