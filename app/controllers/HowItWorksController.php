@@ -6,7 +6,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Psr\Container\ContainerInterface;
 
-class FaqController
+class HowItWorksController
 {
     protected $container;
 
@@ -15,11 +15,11 @@ class FaqController
         $this->container = $container;
     }
 
-    // Wyświetlanie strony FAQ
+    // Wyświetlanie strony Jak działa SwiftJobs?
     public function show(Request $request, Response $response, $args): Response
     {
         $view = $this->container->get('view');
-        $output = $view->render('regulations/faq', [], 'main');
+        $output = $view->render('footer-links/howitworks', [], 'main');
         $response->getBody()->write($output);
         return $response;
     }

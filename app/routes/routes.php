@@ -18,6 +18,15 @@ use App\Controllers\SearchController;
 use App\Controllers\CategoryController;
 use App\Controllers\MyListingsController;
 use App\Controllers\MyJobsController;
+use App\Controllers\HelpController;
+use App\Controllers\OfferController;
+use App\Controllers\ContactController;
+use App\Controllers\PrivacyController;
+use App\Controllers\AboutUsController;
+use App\Controllers\HowItWorksController;
+use App\Controllers\CookiesController;
+
+
 use Slim\App;
 
 return function (App $app) {
@@ -101,13 +110,25 @@ return function (App $app) {
 
     // Strona FAQ
     $app->get('/faq', [FaqController::class, 'show']);
+    
+    
+    $app->get('/help', [HelpController::class, 'show']);
+    $app->get('/offer', [OfferController::class, 'show']);
+    $app->get('/contact', [ContactController::class, 'show']);
+    $app->post('/contact/send', [ContactController::class, 'send']);
+    $app->get('/privacy', [PrivacyController::class, 'show']);
+    $app->get('/aboutus', [AboutUsController::class, 'show']);
+    $app->get('/howitworks', [HowItWorksController::class, 'show']);
+    $app->get('/cookies', [CookiesController::class, 'show']);
+
+
+
+
 
     // Opinie
     $app->get('/opinie/dodaj/{listing_id}', [ReviewController::class, 'showAddReviewForm']);
 
     $app->get('/user-reviews/{user_id}', \App\Controllers\ReviewController::class . ':showUserReviews');
-
-
 
     $app->get('/opinie', [ReviewController::class, 'showReviews']);
 
@@ -118,12 +139,13 @@ return function (App $app) {
     $app->get('/kategoria', [CategoryController::class, 'index']);
     $app->get('/kategoria/{name}', [CategoryController::class, 'show']);
 
-
     $app->get('/kategoria/ulubione/dodaj/{id}', [CategoryController::class, 'addFavorite']);
     $app->get('/kategoria/ulubione/usun/{id}', [CategoryController::class, 'removeFavorite']);
 
     $app->get('/mylistings', [MyListingsController::class, 'index']);
     $app->get('/moje-prace', [MyJobsController::class, 'index']);
+
+
 
 
 };
