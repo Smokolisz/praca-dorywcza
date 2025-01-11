@@ -20,7 +20,7 @@ Moje Ogłoszenia
                         <div class="box has-background-grey-darker">
                             <!-- Tytuł jako link do szczegółów -->
                             <p class="title is-4 no-gap">
-                                <a href="/job/<?= htmlspecialchars($listing['id']) ?>" class="has-text-light">
+                                <a href="/job/<?= htmlspecialchars($listing['id']) ?>" class="has-text-light-dark has-text-black-dark">
                                     <?= htmlspecialchars($listing['job_type']) ?>
                                 </a>
                             </p>

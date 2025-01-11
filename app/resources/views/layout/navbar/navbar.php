@@ -7,13 +7,13 @@
 
         <div class="navbar-item">
             <h1 class="title">
-                <a href="/" class="has-text-white">SwiftJobs</a>
+                <a href="/" class="has-text-white-dark has-text-black-dark">SwiftJobs</a>
             </h1>
         </div>
 
-        <button class="button is-ghost">
+        <button id="theme-toggle" class="button is-ghost">
             <figure class="image is-32x32">
-                <img src="/pictures/daynight.png" />
+                <img src="/pictures/daynight.png" alt="Zmień motyw"/>
             </figure>
         </button>
 
