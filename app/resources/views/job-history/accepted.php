@@ -3,6 +3,14 @@ Historia wykonanych prac
 <?php $this->endSection(); ?>
 
 <div class="container is-fluid py-6">
+
+    <div class="tabs is-medium is-centered">
+        <ul>
+            <li><a href="/archiwum/utworzone">Utworzone</a></li>
+            <li class="is-active"><a href="/archiwum/wykonane">Wykonane</a></li>
+        </ul>
+    </div>
+
     <div class="grid">
         <div class="cell">
             <h1 class="title is-3 has-text-centered">Historia wykonanych prac</h1>
@@ -14,13 +22,13 @@ Historia wykonanych prac
                 </div>
             <?php else: ?>
                 <!-- Lista ogłoszeń -->
-                <div class="scroll-container py-3">
+                <div class="py-3">
                     <?php foreach ($listings as $listing): ?>
-                        <div class="box has-background-grey-darker">
+                        <div class="">
                             <!-- Tytuł jako link do szczegółów -->
                             <p class="title is-4 no-gap">
-                                <a href="/job/<?= htmlspecialchars($listing['id']) ?>" class="has-text-light">
-                                    <?= htmlspecialchars($listing['job_type']) ?>
+                                <a href="/job/<?= htmlspecialchars($listing->id) ?>" class="has-text-light">
+                                    <?= htmlspecialchars($listing->job_type) ?>
                                 </a>
                             </p>
 
@@ -28,22 +36,18 @@ Historia wykonanych prac
                                 <span class="icon">
                                     <i class="fas fa-map-marker-alt"></i>
                                 </span>
-                                <?= htmlspecialchars($listing['city']) ?>, <?= htmlspecialchars($listing['address']) ?> |
+                                <?= htmlspecialchars($listing->city ?? '') ?>, <?= htmlspecialchars($listing->address ?? '') ?> |
                                 <span class="icon">
                                     <i class="fas fa-file-contract"></i>
                                 </span>
-                                <?= htmlspecialchars($listing['payment_type']) ?> |
+                                <?= htmlspecialchars($listing->payment_type ?? '') ?> |
                                 <span class="icon">
                                     <i class="fas fa-coins"></i>
                                 </span>
-                                <?= number_format($listing['payment'], 2) ?> zł/h
+                                <?= number_format($listing->payment ?? 0, 2) ?> zł/h
                             </p>
                             <div class="tags">
-                                <span class="tag">Brak doświadczenia wymagane</span>
-                                <span class="tag"><?= number_format($listing['payment'], 2) ?> zł/h</span>
-                                <span class="icon has-text-danger is-pulled-right">
-                                    <i class="fas fa-heart"></i>
-                                </span>
+                                <span class="tag"><?= number_format($listing->payment ?? 0, 2) ?> zł/h</span>
                             </div>
                         </div>
                     <?php endforeach; ?>

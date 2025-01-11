@@ -26,8 +26,6 @@ use App\Controllers\PrivacyController;
 use App\Controllers\AboutUsController;
 use App\Controllers\HowItWorksController;
 use App\Controllers\CookiesController;
-
-
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Slim\App;
@@ -151,8 +149,8 @@ return function (App $app) {
     $app->get('/archiwum', function(Request $request, Response $response) {
         return $response->withHeader('Location', '/archiwum/wykonane')->withStatus(302);
     });
+    $app->get('/archiwum/utworzone', [JobHistoryController::class, 'createdJobs']);
     $app->get('/archiwum/wykonane', [JobHistoryController::class, 'acceptedJobs']);
-    $app->get('/archiwum/dodane', [JobHistoryController::class, 'createdJobs']);
     
 };
 
