@@ -154,9 +154,6 @@ return function (App $app) {
     $app->get('/archiwum/wykonane', [JobHistoryController::class, 'acceptedJobs']);
     $app->get('/archiwum/dodane', [JobHistoryController::class, 'createdJobs']);
     
-
-
-
 };
 
 
