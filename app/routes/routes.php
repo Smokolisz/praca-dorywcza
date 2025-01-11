@@ -16,6 +16,7 @@ use App\Controllers\FaqController;
 use App\Controllers\ReviewController;
 use App\Controllers\SearchController;
 use App\Controllers\CategoryController;
+use App\Controllers\JobHistoryController;
 use App\Controllers\MyListingsController;
 use App\Controllers\MyJobsController;
 use App\Controllers\HelpController;
@@ -27,6 +28,8 @@ use App\Controllers\HowItWorksController;
 use App\Controllers\CookiesController;
 
 
+use Slim\Psr7\Request;
+use Slim\Psr7\Response;
 use Slim\App;
 
 return function (App $app) {
@@ -145,6 +148,12 @@ return function (App $app) {
     $app->get('/mylistings', [MyListingsController::class, 'index']);
     $app->get('/moje-prace', [MyJobsController::class, 'index']);
 
+    $app->get('/archiwum', function(Request $request, Response $response) {
+        return $response->withHeader('Location', '/archiwum/wykonane')->withStatus(302);
+    });
+    $app->get('/archiwum/wykonane', [JobHistoryController::class, 'acceptedJobs']);
+    $app->get('/archiwum/dodane', [JobHistoryController::class, 'createdJobs']);
+    
 
 
 

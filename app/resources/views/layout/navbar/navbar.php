@@ -79,15 +79,17 @@
                         </a>
 
                         <div class="navbar-dropdown" style="margin-left:-25px;">
-                        <a class="navbar-item" href="/mylistings">
-                            Moje ogłoszenia
-                        </a>
-
+                            <a class="navbar-item" href="/mylistings">
+                                Moje ogłoszenia
+                            </a>
                             <a class="navbar-item" href="/moje-prace">
                                 Moje prace
                             </a>
-                            <a class="navbar-item">
+                            <a class="navbar-item" href="/czat">
                                 Wiadomości
+                            </a>
+                            <a class="navbar-item" href="/archiwum">
+                                Archiwum
                             </a>
                             <hr class="navbar-divider">
                             <div class="navbar-item">
