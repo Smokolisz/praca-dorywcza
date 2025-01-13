@@ -60,16 +60,19 @@ Podgląd ogłoszenia pracy dorywczej
         <!-- Dane kontaktowe i akcje -->
         <div class="column is-one-third">
             <div class="box">
-                <div class="field">
-                    <div class="field">
-                        <?php if ($job['listing_status'] === 'closed'): ?>
-                            <button class="button is-danger is-fullwidth" disabled>To ogłoszenie zostało zakończone</button>
-                        <?php elseif ($contractExists): ?>
-                            <button class="button is-primary is-fullwidth" disabled>Kontrakt został już wysłany</button>
-                        <?php else: ?>
-                            <button class="button is-primary is-fullwidth" onclick="showConfirmationModal()">Przyjmuję zlecenie</button>
-                        <?php endif; ?>
-                    </div>
+            <div class="field">
+                <?php if ($job['user_id'] == $_SESSION['user_id']): ?>
+
+                <?php else: ?>
+                    <?php if ($job['listing_status'] === 'closed'): ?>
+                        <button class="button is-danger is-fullwidth" disabled>To ogłoszenie zostało zakończone</button>
+                    <?php elseif ($contractExists): ?>
+                        <button class="button is-primary is-fullwidth" disabled>Kontrakt został już wysłany</button>
+                    <?php else: ?>
+                        <button class="button is-primary is-fullwidth" onclick="showConfirmationModal()">Przyjmuję zlecenie</button>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
 
 
 
@@ -79,7 +82,9 @@ Podgląd ogłoszenia pracy dorywczej
                         <p><strong>E-mail:</strong> <?= htmlspecialchars($job['e-mail']) ?></p>
                     </div>
                     <div class="field mt-4">
-                        <a class="button is-info is-fullwidth" href="/czat/utworz/<?= $job['id'] ?>">Napisz wiadomość</a>
+                        <?php if ($job['user_id'] != $_SESSION['user_id']): ?>
+                            <a class="button is-info is-fullwidth" href="/czat/utworz/<?= htmlspecialchars($job['id']) ?>">Napisz wiadomość</a>
+                        <?php endif; ?>
                     </div>
                     <!-- Przycisk Negocjuj stawkę, który zamienia się na zostaw opinię, po zakończeniu ogłoszenia -->
                     <div class="mt-4">
@@ -125,7 +130,7 @@ Podgląd ogłoszenia pracy dorywczej
                 <tbody>
                     <?php foreach ($contracts as $contract): ?>
                         <tr>
-                            <td><?= htmlspecialchars($contract['user_id']) ?></td>
+                            <td><?= htmlspecialchars($contract['first_name'] . ' ' . $contract['last_name']) ?></td>
                             <td><?= htmlspecialchars($contract['created_at']) ?></td>
                             <td><?= htmlspecialchars($contract['status']) ?></td>
                             <td>
@@ -140,6 +145,7 @@ Podgląd ogłoszenia pracy dorywczej
                     <?php endforeach; ?>
                 </tbody>
             </table>
+
         </div>
     <?php endif; ?>
 

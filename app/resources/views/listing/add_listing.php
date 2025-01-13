@@ -13,25 +13,13 @@ Dodaj Ogłoszenie
                     <div class="field">
                         <label class="label">Rodzaj ogłoszenia</label>
                         <div class="control">
-                            <div class="select is-fullwidth">
-                                <select name="job_type" required>
-                                    <option value="koszenie_trawnika">Koszenie trawnika</option>
-                                    <option value="rabanie_drewna">Rąbanie drewna</option>
-                                    <option value="mycie_okien">Mycie okien</option>
-                                    <option value="sprzatanie">Sprzątanie</option>
-                                    <option value="naprawa_sprzetu">Naprawa sprzętu</option>
-                                    <option value="skladanie_mebli">Składanie mebli</option>
-                                    <option value="prace_ogrodowe">Prace ogrodowe</option>
-                                    <option value="przeprowadzki">Pomoc przy przeprowadzkach</option>
-                                    <option value="opieka_nad_zwierzetami">Opieka nad zwierzętami</option>
-                                    <option value="prace_budowlane">Drobne prace budowlane</option>
-                                    <option value="naprawa_rowerow">Naprawa rowerów</option>
-                                    <option value="czyszczenie_podjazdow">Czyszczenie podjazdów</option>
-                                    <option value="prace_malarskie">Prace malarskie</option>
-                                    <option value="inne">Inne</option>
-                                </select>
+                            <input 
+                                class="input is-fullwidth" 
+                                type="text" 
+                                name="job_type" 
+                                required 
+                                placeholder="Wprowadź rodzaj pracy">
                             </div>
-                        </div>
                         </div>
 
                         <!-- Wybór kategorii -->
