@@ -21,7 +21,8 @@ class MyListingsController
 
         $userId = $_SESSION['user_id'] ?? null;
         if (!$userId) {
-            return $response->withStatus(403)->write('Access denied. Please log in.');
+            $response->getBody()->write('Access denied. Please log in.');
+            return $response->withStatus(403);
         }
 
         $query = "
