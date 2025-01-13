@@ -50,19 +50,21 @@ class JobController
 
         // Pobierz wszystkie kontrakty związane z ogłoszeniem
         $stmt = $db->prepare("
-        SELECT * 
-        FROM contracts 
-        WHERE job_id = :job_id
-    ");
+        SELECT c.*, u.first_name, u.last_name 
+        FROM contracts c
+        LEFT JOIN users u ON c.user_id = u.id
+        WHERE c.job_id = :job_id AND c.status != 'rejected' AND c.status != 'accepted'  
+        ");
         $stmt->bindParam(':job_id', $args['id'], PDO::PARAM_INT);
         $stmt->execute();
-        $contracts = $stmt->fetchAll();
+        $contracts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
 
         // Sprawdź, czy użytkownik już wysłał kontrakt dla tego ogłoszenia
         $stmt = $db->prepare("
         SELECT COUNT(*) AS count
         FROM contracts
-        WHERE job_id = :job_id AND user_id = :user_id
+        WHERE job_id = :job_id AND user_id = :user_id AND status != 'rejected'
     ");
         $stmt->bindParam(':job_id', $args['id'], PDO::PARAM_INT);
         $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
@@ -113,8 +115,6 @@ class JobController
             return $response->withStatus(404);
         }
 
-        echo "1";
-
         // Zapisz kontrakt
         $stmt = $db->prepare("
         INSERT INTO contracts (job_id, user_id, employer_id, created_at, status) 
@@ -122,9 +122,8 @@ class JobController
     ");
         $stmt->bindParam(':job_id', $data['job_id'], PDO::PARAM_INT);
         $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
-        $stmt->bindParam(':employer_id', $employer['employer_id'], PDO::PARAM_INT);
+        $stmt->bindParam(':employer_id', $employer['user_id'], PDO::PARAM_INT);
 
-        echo "2";
         if ($stmt->execute()) {
             error_log('Contract successfully created.');
             $response->getBody()->write('Kontrakt został zapisany.');

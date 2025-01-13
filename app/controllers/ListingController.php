@@ -94,11 +94,11 @@ class ListingController
             $stmt = $db->prepare('
             INSERT INTO listings (
                 user_id, job_type, description, payment_type, payment, address, city, estimated_time, 
-                images, category_id, employer_name, `e-mail`, phone_number, requirements, equipment, offer, employer_id
+                images, category_id, employer_name, `e-mail`, phone_number, requirements, equipment, offer
             ) 
             VALUES (
                 :user_id, :job_type, :description, :payment_type, :payment, :address, :city, :estimated_time, 
-                :images, :category_id, :employer_name, :email, :phone_number, :requirements, :equipment, :offer, :employer_id
+                :images, :category_id, :employer_name, :email, :phone_number, :requirements, :equipment, :offer
             )
             ');
 
