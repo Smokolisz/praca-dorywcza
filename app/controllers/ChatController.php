@@ -144,7 +144,7 @@ class ChatController
 
         $chat = $this->getChat($job);
 
-        if(!$chat && $job->user_id == $_SESSION['user_id']) {
+        if(!$chat && $job && $job->user_id == $_SESSION['user_id']) {
             // zalogowany użytkownik jest właścicielem ogłoszenia, więc nie może zacząć czatu sam ze sobą
             return $response->withHeader('Location', '/job/'.$job->job_id)->withStatus(302);
         } else if(!$chat) {
