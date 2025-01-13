@@ -71,7 +71,7 @@ class ChatController
         INNER JOIN listings ON listings.id = chat.job_id
         INNER JOIN users ON listings.user_id = users.id
         INNER JOIN users AS other_user ON other_user.id = CASE
-            WHEN chat.employer_id = listings.user_id THEN chat.worker_id
+            WHEN chat.employer_id = :current_user_id THEN chat.worker_id 
             ELSE chat.employer_id
         END
         WHERE chat.id = :chat_id
@@ -79,7 +79,8 @@ class ChatController
         SQL;
         $stmt = $this->db->prepare($sql);
         $stmt->execute([
-            'chat_id' => $chatId
+            'chat_id' => $chatId,
+            'current_user_id' => $_SESSION['user_id']        
         ]);
         $chat = $stmt->fetch(PDO::FETCH_OBJ);
 
