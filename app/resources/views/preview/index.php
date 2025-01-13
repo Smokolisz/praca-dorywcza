@@ -45,7 +45,7 @@ Podgląd ogłoszenia pracy dorywczej
                             $images = json_decode($job['images']);
                             foreach ($images as $image): ?>
                                 <figure class="image is-128x128">
-                                    <img src="/pictures/<?= htmlspecialchars($image) ?>" alt="Zdjęcie związane z ofertą">
+                                    <img src="/pictures/jobs_pictures/<?= htmlspecialchars($image) ?>" alt="Zdjęcie związane z ofertą">
                                 </figure>
                             <?php endforeach; ?>
                         </div>
@@ -170,7 +170,7 @@ Podgląd ogłoszenia pracy dorywczej
 
 
 
-    <!-- Panele informacyjne z zakładkami -->
+    <!-- Sekcja z zakładkami -->
     <div class="tabs is-centered is-boxed">
         <ul>
             <li class="is-active" onclick="showTab('requirements')"><a>Wymagania</a></li>
@@ -183,45 +183,61 @@ Podgląd ogłoszenia pracy dorywczej
         <div id="requirements" class="tab-content box">
             <h2 class="subtitle">Wymagania</h2>
             <ul>
-                <?php foreach (json_decode($job['requirements']) as $requirement): ?>
-                    <li class="is-flex is-align-items-center">
-                        <span class="icon has-text-primary">
-                            <i class="fas fa-check-circle"></i>
-                        </span>
-                        <span><?= htmlspecialchars($requirement->requirement) ?></span>
-                    </li>
-                <?php endforeach; ?>
+                <?php $requirements = json_decode($job['requirements']); ?>
+                <?php if ($requirements): ?>
+                    <?php foreach ($requirements as $requirement): ?>
+                        <li class="is-flex is-align-items-center">
+                            <span class="icon has-text-primary">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
+                            <span><?= htmlspecialchars($requirement) ?></span>
+                        </li>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Brak wymagań.</p>
+                <?php endif; ?>
             </ul>
         </div>
 
         <div id="equipment" class="tab-content box" style="display: none;">
             <h2 class="subtitle">Dostępny sprzęt</h2>
             <ul>
-                <?php foreach (json_decode($job['equipment']) as $item): ?>
-                    <li class="is-flex is-align-items-center">
-                        <span class="icon has-text-primary">
-                            <i class="fas fa-check-circle"></i>
-                        </span>
-                        <span><?= htmlspecialchars($item->item) ?></span>
-                    </li>
-                <?php endforeach; ?>
+                <?php $equipment = json_decode($job['equipment']); ?>
+                <?php if ($equipment): ?>
+                    <?php foreach ($equipment as $item): ?>
+                        <li class="is-flex is-align-items-center">
+                            <span class="icon has-text-primary">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
+                            <span><?= htmlspecialchars($item) ?></span>
+                        </li>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Brak dostępnego sprzętu.</p>
+                <?php endif; ?>
             </ul>
         </div>
 
         <div id="offer" class="tab-content box" style="display: none;">
             <h2 class="subtitle">To oferujemy</h2>
             <ul>
-                <?php foreach (json_decode($job['offer']) as $benefit): ?>
-                    <li class="is-flex is-align-items-center">
-                        <span class="icon has-text-primary">
-                            <i class="fas fa-check-circle"></i>
-                        </span>
-                        <span><?= htmlspecialchars($benefit->benefit) ?></span>
-                    </li>
-                <?php endforeach; ?>
+                <?php $offer = json_decode($job['offer']); ?>
+                <?php if ($offer): ?>
+                    <?php foreach ($offer as $benefit): ?>
+                        <li class="is-flex is-align-items-center">
+                            <span class="icon has-text-primary">
+                                <i class="fas fa-check-circle"></i>
+                            </span>
+                            <span><?= htmlspecialchars($benefit) ?></span>
+                        </li>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>Brak informacji o ofercie.</p>
+                <?php endif; ?>
             </ul>
         </div>
     </div>
+</div>
 
 
     <!-- Kafelek z mapą Google -->

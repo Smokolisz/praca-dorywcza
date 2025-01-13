@@ -91,24 +91,37 @@ class ListingController
             $phoneNumber = $data['phone_number'] ?? null;
     
             // Wstawianie ogłoszenia
-            $stmt = $db->prepare('INSERT INTO listings (user_id, job_type, description, payment_type, payment, address, city, estimated_time, images, category_id, employer_name, `e-mail`, phone_number) 
-                                  VALUES (:user_id, :job_type, :description, :payment_type, :payment, :address, :city, :estimated_time, :images, :category_id, :employer_name, :email, :phone_number)');
-    
-            $stmt->execute([
-                'user_id' => $currentUserId,
-                'job_type' => $data['job_type'],
-                'description' => $data['description'],
-                'payment_type' => $data['payment_type'],
-                'payment' => $data['payment'],
-                'address' => $address,
-                'city' => $city,
-                'estimated_time' => $data['estimated_time'] ?? null,
-                'images' => json_encode($imageNames),
-                'category_id' => $data['category_id'],
-                'employer_name' => $employerName,
-                'email' => $email,
-                'phone_number' => $phoneNumber
-            ]);
+            $stmt = $db->prepare('
+            INSERT INTO listings (
+                user_id, job_type, description, payment_type, payment, address, city, estimated_time, 
+                images, category_id, employer_name, `e-mail`, phone_number, requirements, equipment, offer, employer_id
+            ) 
+            VALUES (
+                :user_id, :job_type, :description, :payment_type, :payment, :address, :city, :estimated_time, 
+                :images, :category_id, :employer_name, :email, :phone_number, :requirements, :equipment, :offer, :employer_id
+            )
+        ');
+        
+        $stmt->execute([
+            'user_id' => $currentUserId,
+            'job_type' => $data['job_type'],
+            'description' => $data['description'],
+            'payment_type' => $data['payment_type'],
+            'payment' => $data['payment'],
+            'address' => $address,
+            'city' => $city,
+            'estimated_time' => $data['estimated_time'] ?? null,
+            'images' => json_encode($imageNames),
+            'category_id' => $data['category_id'],
+            'employer_name' => $employerName,
+            'email' => $email,
+            'phone_number' => $phoneNumber,
+            'requirements' => !empty($data['requirements']) ? json_encode(array_map('trim', explode("\n", $data['requirements']))) : '[]',
+            'equipment' => !empty($data['equipment']) ? json_encode(array_map('trim', explode("\n", $data['equipment']))) : '[]',
+            'offer' => !empty($data['offer']) ? json_encode(array_map('trim', explode("\n", $data['offer']))) : '[]',
+
+        ]);
+        
     
             return $response->withHeader('Location', '/?success=1')->withStatus(302);
         } catch (\PDOException $e) {
