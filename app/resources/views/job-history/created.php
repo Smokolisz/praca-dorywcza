@@ -1,27 +1,34 @@
 <?php $this->startSection('title'); ?>
-Moje Ogłoszenia
+Historia utworzonych ogłoszeń
 <?php $this->endSection(); ?>
 
 <div class="container is-fluid py-6">
+
+    <div class="tabs is-medium is-centered">
+        <ul>
+            <li class="is-active"><a href="/archiwum/utworzone">Utworzone</a></li>
+            <li><a href="/archiwum/wykonane">Wykonane</a></li>
+        </ul>
+    </div>
+
     <div class="grid">
         <div class="cell">
-            <h1 class="title is-3 has-text-centered">Moje Ogłoszenia</h1>
+            <h1 class="title is-3 has-text-centered">Historia utworzonych ogłoszeń</h1>
 
             <?php if (empty($listings)): ?>
                 <!-- Komunikat, gdy brak ogłoszeń -->
                 <div class="notification is-info has-text-centered">
-                    Nie masz jeszcze dodanych żadnych ogłoszeń. <br>
-                    <a href="/" class="button is-primary mt-3">Dodaj ogłoszenie</a>
+                    Brak dodanych ogłoszeń <br>
                 </div>
             <?php else: ?>
                 <!-- Lista ogłoszeń -->
-                <div class="scroll-container py-3">
+                <div class="py-3">
                     <?php foreach ($listings as $listing): ?>
-                        <div class="box has-background-grey-darker">
+                        <div class="">
                             <!-- Tytuł jako link do szczegółów -->
                             <p class="title is-4 no-gap">
-                                <a href="/job/<?= htmlspecialchars($listing['id']) ?>" class="has-text-light-dark has-text-black-dark">
-                                    <?= htmlspecialchars($listing['job_type']) ?>
+                                <a href="/job/<?= htmlspecialchars($listing->id) ?>" class="has-text-light-dark has-text-black-dark">
+                                    <?= htmlspecialchars($listing->job_type ?? '') ?>
                                 </a>
                             </p>
 
@@ -29,22 +36,18 @@ Moje Ogłoszenia
                                 <span class="icon">
                                     <i class="fas fa-map-marker-alt"></i>
                                 </span>
-                                <?= htmlspecialchars($listing['city']) ?>, <?= htmlspecialchars($listing['address']) ?> |
+                                <?= htmlspecialchars($listing->city ?? '') ?>, <?= htmlspecialchars($listing->address ?? '') ?> |
                                 <span class="icon">
                                     <i class="fas fa-file-contract"></i>
                                 </span>
-                                <?= htmlspecialchars($listing['payment_type']) ?> |
+                                <?= htmlspecialchars($listing->payment_type ?? '') ?> |
                                 <span class="icon">
                                     <i class="fas fa-coins"></i>
                                 </span>
-                                <?= number_format($listing['payment'], 2) ?> zł/h
+                                <?= number_format($listing->payment ?? 0, 2) ?> zł/h
                             </p>
                             <div class="tags">
-                                <span class="tag">Brak doświadczenia wymagane</span>
-                                <span class="tag"><?= number_format($listing['payment'], 2) ?> zł/h</span>
-                                <span class="icon has-text-danger is-pulled-right">
-                                    <i class="fas fa-heart"></i>
-                                </span>
+                                <span class="tag"><?= number_format($listing->payment ?? 0, 2) ?> zł/h</span>
                             </div>
                         </div>
                     <?php endforeach; ?>

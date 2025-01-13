@@ -65,5 +65,12 @@ $container->set('notificationService', function () use ($container) {
 
 $app->add(NotificationMiddleware::class);
 
+$app->addErrorMiddleware(true, true, true)
+    ->setDefaultErrorHandler(function ($request, \Throwable $exception, bool $displayErrorDetails) use ($container) {
+        $logger = $container->get('logger');
+        $logger->error($exception->__toString());
+        throw $exception;
+});
+
 // Załaduj plik z trasami
 (require __DIR__ . '/../routes/routes.php')($app);

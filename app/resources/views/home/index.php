@@ -131,7 +131,7 @@ Strona Główna
                             <?php foreach ($listings as $listing): ?>
                                     <div class="box has-background-grey-darker">
                                         <p class="title is-4 no-gap">
-                                        <a href="/job/<?= htmlspecialchars($listing['id']) ?>" class="has-text-light">
+                                        <a href="/job/<?= htmlspecialchars($listing['id']) ?>" class="has-text-light-dark has-text-black-dark">
                                             <?= htmlspecialchars($listing['job_type']) ?>
                                         </a>
                                         <p class="subtitle is-6 no-gap">

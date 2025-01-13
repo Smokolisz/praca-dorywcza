@@ -7,13 +7,13 @@
 
         <div class="navbar-item">
             <h1 class="title">
-                <a href="/" class="has-text-white">SwiftJobs</a>
+                <a href="/" class="has-text-white-dark has-text-black-dark">SwiftJobs</a>
             </h1>
         </div>
 
-        <button class="button is-ghost">
+        <button id="theme-toggle" class="button is-ghost">
             <figure class="image is-32x32">
-                <img src="/pictures/daynight.png" />
+                <img src="/pictures/daynight.png" alt="Zmień motyw"/>
             </figure>
         </button>
 
@@ -92,12 +92,14 @@
                             <a class="navbar-item" href="/mylistings">
                                 Moje ogłoszenia
                             </a>
-
                             <a class="navbar-item" href="/moje-prace">
                                 Moje prace
                             </a>
-                            <a class="navbar-item">
+                            <a class="navbar-item" href="/czat">
                                 Wiadomości
+                            </a>
+                            <a class="navbar-item" href="/archiwum">
+                                Archiwum
                             </a>
                             <hr class="navbar-divider">
                             <div class="navbar-item">

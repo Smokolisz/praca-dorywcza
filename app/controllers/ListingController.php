@@ -91,8 +91,16 @@ class ListingController
             $phoneNumber = $data['phone_number'] ?? null;
 
             // Wstawianie ogłoszenia
-            $stmt = $db->prepare('INSERT INTO listings (user_id, job_type, description, payment_type, payment, address, city, estimated_time, images, category_id, employer_name, `e-mail`, phone_number) 
-                                  VALUES (:user_id, :job_type, :description, :payment_type, :payment, :address, :city, :estimated_time, :images, :category_id, :employer_name, :email, :phone_number)');
+            $stmt = $db->prepare('
+            INSERT INTO listings (
+                user_id, job_type, description, payment_type, payment, address, city, estimated_time, 
+                images, category_id, employer_name, `e-mail`, phone_number, requirements, equipment, offer, employer_id
+            ) 
+            VALUES (
+                :user_id, :job_type, :description, :payment_type, :payment, :address, :city, :estimated_time, 
+                :images, :category_id, :employer_name, :email, :phone_number, :requirements, :equipment, :offer, :employer_id
+            )
+            ');
 
             $stmt->execute([
                 'user_id' => $currentUserId,
@@ -107,12 +115,15 @@ class ListingController
                 'category_id' => $data['category_id'],
                 'employer_name' => $employerName,
                 'email' => $email,
-                'phone_number' => $phoneNumber
+                'phone_number' => $phoneNumber,
+                'requirements' => !empty($data['requirements']) ? json_encode(array_map('trim', explode("\n", $data['requirements']))) : '[]',
+                'equipment' => !empty($data['equipment']) ? json_encode(array_map('trim', explode("\n", $data['equipment']))) : '[]',
+                'offer' => !empty($data['offer']) ? json_encode(array_map('trim', explode("\n", $data['offer']))) : '[]',
+
             ]);
-
-            // Wysyłanie powiadomień do użytkowników z ulubioną kategorią
+          
             $this->notifyUsersAboutNewListing($data['category_id']);
-
+        
             return $response->withHeader('Location', '/?success=1')->withStatus(302);
         } catch (\PDOException $e) {
             $response->getBody()->write("Błąd podczas dodawania ogłoszenia: " . $e->getMessage());

@@ -11,7 +11,7 @@
                     </figure>
                 <?php endif; ?>
                 <div class="box p-5">
-                    <h3 class="title is-5 has-text-white">Informacje o użytkowniku</h3>
+                    <h3 class="title is-5 has-text-white-dark has-text-black-dark">Informacje o użytkowniku</h3>
                     <p><strong>Imię:</strong> <?= htmlspecialchars($user['first_name'] ?? 'Brak imienia') ?></p>
                     <p><strong>Nazwisko:</strong> <?= htmlspecialchars($user['last_name'] ?? 'Brak nazwiska') ?></p>
                     <p><strong>Email:</strong> <?= htmlspecialchars($user['email'] ?? 'Brak adresu email') ?></p>
@@ -21,7 +21,7 @@
             <!-- Przesyłanie zdjęcia profilowego -->
             <div class="column is-one-third">
                 <div class="box p-5">
-                    <h3 class="title is-5 has-text-white">Prześlij zdjęcie profilowe</h3>
+                    <h3 class="title is-5 has-text-white-dark has-text-black-dark">Prześlij zdjęcie profilowe</h3>
                     <form action="/profil/upload-profile-picture" method="POST" enctype="multipart/form-data">
                         <div class="file has-name is-fullwidth mb-3">
                             <label class="file-label is-fullwidth">
@@ -42,24 +42,24 @@
             <!-- Opcje profilu -->
             <div class="column is-one-third">
                 <nav class="panel  p-5 is-rounded">
-                    <p class="panel-heading has-background-black-ter has-text-white has-text-centered">Opcje profilu</p>
-                    <a href="/profil/opinie" class="panel-block has-text-white">
+                    <p class="panel-heading has-background-black-ter has-text-white-dark has-text-black-dark has-text-centered">Opcje profilu</p>
+                    <a href="/profil/opinie" class="panel-block has-text-white-dark has-text-black-dark">
                         <span class="panel-icon"><i class="fas fa-star"></i></span>
                         Opinie
                     </a>
-                    <a href="/profil/powiadomienia" class="panel-block  has-text-white">
+                    <a href="/profil/powiadomienia" class="panel-block has-text-white-dark has-text-black-dark">
                         <span class="panel-icon"><i class="fas fa-bell"></i></span>
                         Powiadomienia
                     </a>
-                    <a href="/profil/edytuj" class="panel-block  has-text-white">
+                    <a href="/profil/edytuj" class="panel-block has-text-white-dark has-text-black-dark">
                         <span class="panel-icon"><i class="fas fa-user-edit"></i></span>
                         Edytuj profil
                     </a>
-                    <a href="/profil/zmien-haslo" class="panel-block  has-text-white">
+                    <a href="/profil/zmien-haslo" class="panel-block has-text-white-dark has-text-black-dark">
                         <span class="panel-icon"><i class="fas fa-key"></i></span>
                         Zmień hasło
                     </a>
-                    <a href="/profil/aktywnosc" class="panel-block  has-text-white">
+                    <a href="/profil/aktywnosc" class="panel-block has-text-white-dark has-text-black-dark">
                         <span class="panel-icon"><i class="fas fa-history"></i></span>
                         Historia aktywności
                     </a>

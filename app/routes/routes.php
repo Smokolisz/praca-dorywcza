@@ -16,6 +16,7 @@ use App\Controllers\FaqController;
 use App\Controllers\ReviewController;
 use App\Controllers\SearchController;
 use App\Controllers\CategoryController;
+use App\Controllers\JobHistoryController;
 use App\Controllers\MyListingsController;
 use App\Controllers\MyJobsController;
 use App\Controllers\HelpController;
@@ -27,7 +28,8 @@ use App\Controllers\HowItWorksController;
 use App\Controllers\CookiesController;
 use App\Controllers\NotificationController;
 
-
+use Slim\Psr7\Request;
+use Slim\Psr7\Response;
 use Slim\App;
 
 return function (App $app) {
@@ -143,4 +145,11 @@ return function (App $app) {
     $app->get('/profil/powiadomienia', [NotificationController::class, 'index']);
     $app->post('/profil/powiadomienia/oznacz-jako-przeczytane', [NotificationController::class, 'markAsRead']);
     $app->post('/profil/powiadomienia/zobacz-szczegoly', [NotificationController::class, 'viewDetails']);
+
+    $app->get('/archiwum', function(Request $request, Response $response) {
+        return $response->withHeader('Location', '/archiwum/wykonane')->withStatus(302);
+    });
+    $app->get('/archiwum/utworzone', [JobHistoryController::class, 'createdJobs']);
+    $app->get('/archiwum/wykonane', [JobHistoryController::class, 'acceptedJobs']);
+    
 };
