@@ -102,7 +102,7 @@ class JobController
         $db = $this->container->get('db');
 
         // Sprawdź, czy ogłoszenie istnieje
-        $stmt = $db->prepare("SELECT employer_id FROM listings WHERE id = :job_id");
+        $stmt = $db->prepare("SELECT user_id FROM listings WHERE id = :job_id");
         $stmt->bindParam(':job_id', $data['job_id'], PDO::PARAM_INT);
         $stmt->execute();
         $employer = $stmt->fetch();
@@ -113,6 +113,8 @@ class JobController
             return $response->withStatus(404);
         }
 
+        echo "1";
+
         // Zapisz kontrakt
         $stmt = $db->prepare("
         INSERT INTO contracts (job_id, user_id, employer_id, created_at, status) 
@@ -122,6 +124,7 @@ class JobController
         $stmt->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
         $stmt->bindParam(':employer_id', $employer['employer_id'], PDO::PARAM_INT);
 
+        echo "2";
         if ($stmt->execute()) {
             error_log('Contract successfully created.');
             $response->getBody()->write('Kontrakt został zapisany.');
@@ -131,6 +134,7 @@ class JobController
         error_log('SQL Error: ' . print_r($stmt->errorInfo(), true));
         $response->getBody()->write('Wystąpił błąd podczas zapisywania kontraktu.');
         return $response->withStatus(500);
+
     }
 
 

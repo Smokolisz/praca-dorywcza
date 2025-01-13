@@ -23,7 +23,7 @@ class HomeController
             SELECT l.id, l.job_type, l.description, l.payment, l.payment_type, l.city, l.address 
             FROM listings l
             LEFT JOIN contracts c ON l.id = c.job_id AND c.status = 'accepted'
-            WHERE c.id IS NULL
+            WHERE c.id IS NULL AND l.listing_status = 'active';
         ";
         $stmt = $db->query($query);
         $listings = $stmt->fetchAll();
