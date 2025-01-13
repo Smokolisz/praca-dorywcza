@@ -75,6 +75,13 @@ class LoginController
                     ->withStatus(302);
             }
 
+            if ($user['ban'] == 1) {
+                $_SESSION['login_errors'] = ['Konto zbanowane. Powód: '.$user['ban_message']];
+                $_SESSION['login_data'] = $data; //Zapisz dane logowania w sesji
+                return $response->withHeader('Location', '/zaloguj-sie')
+                    ->withStatus(302);
+            }
+
             if ($user['verified'] == 0) {
                 $_SESSION['login_errors'] = ['Email nie zweryfikowany'];
                 $_SESSION['login_data'] = $data; //Zapisz dane logowania w sesji
