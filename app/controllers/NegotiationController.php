@@ -109,6 +109,25 @@ class NegotiationController
                 'justification' => $justification,
             ]);
 
+            // Pobranie imienia użytkownika, który złożył ofertę
+            $stmt = $db->prepare("SELECT first_name, last_name FROM users WHERE id = :user_id");
+            $stmt->execute(['user_id' => $userId]);
+            $user = $stmt->fetch();
+
+            // Sprawdzenie, czy użytkownik istnieje
+            if (!$user) {
+                $_SESSION['negotiation_error'] = 'Nie znaleziono danych użytkownika.';
+                return $response->withHeader('Location', '/')->withStatus(404);
+            }
+
+            $userName = $user['first_name'] . ' ' . $user['last_name']; // Pełne imię użytkownika
+
+            // Powiadomienie dla właściciela ogłoszenia
+            $notificationController = new NotificationController($this->container);
+            $listingOwnerId = $listing['user_id']; // Identyfikator właściciela ogłoszenia
+            $content = "Użytkownik {$userName} złożył ofertę negocjacyjną na Twoje ogłoszenie!";
+            $notificationController->createNotification($listingOwnerId, 'new_negotiation', $content, $listingId);
+
             $_SESSION['negotiation_success'] = 'Twoja oferta została złożona pomyślnie!';
             return $response->withHeader('Location', '/negocjacje/start/' . $listingId)->withStatus(302);
         } catch (\PDOException $e) {
@@ -236,6 +255,12 @@ class NegotiationController
             $stmt = $db->prepare("UPDATE negotiations SET status = 'accepted', updated_at = NOW() WHERE id = :id");
             $stmt->execute(['id' => $negotiationId]);
 
+            // Powiadomienie dla użytkownika, który złożył ofertę
+            $notificationController = new NotificationController($this->container);
+            $content = "Twoja oferta negocjacyjna została zaakceptowana! :)";
+            $notificationController->createNotification($negotiation['user_id'], 'accepted_negotiation', $content, $negotiation['listing_id']);
+
+
             // Ustawienie statusu ogłoszenia na 'closed'
             $stmt = $db->prepare("UPDATE listings SET status = 'closed' WHERE id = :id");
             $stmt->execute(['id' => $negotiation['listing_id']]);
@@ -309,6 +334,12 @@ class NegotiationController
             // Aktualizacja statusu negocjacji na 'rejected'
             $stmt = $db->prepare("UPDATE negotiations SET status = 'rejected', updated_at = NOW() WHERE id = :id");
             $stmt->execute(['id' => $negotiationId]);
+
+            // Powiadomienie dla użytkownika, który złożył ofertę
+            $notificationController = new NotificationController($this->container);
+            $content = "Twoja oferta negocjacyjna została odrzucona :(";
+            $notificationController->createNotification($negotiation['user_id'], 'rejected_negotiation', $content, $negotiation['listing_id']);
+
 
             $_SESSION['negotiation_success'] = 'Oferta została odrzucona.';
             // Przekierowanie na stronę z formularzem

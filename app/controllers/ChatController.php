@@ -41,10 +41,10 @@ class ChatController
         ]);
         $chat = $stmt->fetch(PDO::FETCH_OBJ);
 
-        if($chat) {
+        if ($chat) {
             // przekieruj do ostatniego czatu
-            return $response->withHeader('Location', '/czat/'.$chat->id)
-                    ->withStatus(302);
+            return $response->withHeader('Location', '/czat/' . $chat->id)
+                ->withStatus(302);
         }
 
         // brak czatów
@@ -84,7 +84,7 @@ class ChatController
         ]);
         $chat = $stmt->fetch(PDO::FETCH_OBJ);
 
-        if(!$chat) {
+        if (!$chat) {
             return $response->withHeader('Location', '/czat')->withStatus(302);
         }
 
@@ -126,7 +126,7 @@ class ChatController
         $response->getBody()->write($output);
         return $response;
     }
-    
+
     public function create(Request $request, Response $response, $args): Response
     {
         $jobId = (int)$args['jobId'];
@@ -147,17 +147,17 @@ class ChatController
 
         if(!$chat && $job && $job->user_id == $_SESSION['user_id']) {
             // zalogowany użytkownik jest właścicielem ogłoszenia, więc nie może zacząć czatu sam ze sobą
-            return $response->withHeader('Location', '/job/'.$job->job_id)->withStatus(302);
-        } else if(!$chat) {
+            return $response->withHeader('Location', '/job/' . $job->job_id)->withStatus(302);
+        } else if (!$chat) {
             // zalogowany użytkownik to zleceniobiorca i rozpoczyna nowy czat
             $this->createChat($job);
             $chat = $this->getChat($job);
         }
 
-        return $response->withHeader('Location', '/czat/'.$chat->chat_id)->withStatus(302);
+        return $response->withHeader('Location', '/czat/' . $chat->chat_id)->withStatus(302);
     }
 
-    public function getMessages(Request $request, Response $response, $args) : Response
+    public function getMessages(Request $request, Response $response, $args): Response
     {
         $chatId = (int)$args['chatId'];
 
@@ -180,10 +180,10 @@ class ChatController
 
         $response->getBody()->write(json_encode($result));
         return $response
-                ->withHeader('Content-Type', 'application/json');
+            ->withHeader('Content-Type', 'application/json');
     }
 
-    private function createChat(object $job) : void
+    private function createChat(object $job): void
     {
         // tworzenie nowego chatu:
         $sql = <<<SQL
@@ -200,7 +200,7 @@ class ChatController
         $stmt->fetch(PDO::FETCH_OBJ);
     }
 
-    private function getChat(object $job) : object|false
+    private function getChat(object $job): object|false
     {
         $sql = <<<SQL
             SELECT chat.id as chat_id, job_id, employer_id, worker_id, other_user.first_name AS other_user_first_name FROM chat 
@@ -210,7 +210,7 @@ class ChatController
             'job_id' => $job->id,
         ];
 
-        if($job->user_id == $_SESSION['user_id']) {
+        if ($job->user_id == $_SESSION['user_id']) {
             // zalogowany użytkownik jest właścicielem ogłoszenia
             $sql .= <<<SQL
             INNER JOIN users other_user ON chat.worker_id = other_user.id
@@ -235,5 +235,50 @@ class ChatController
         $chat = $stmt->fetch(PDO::FETCH_OBJ);
 
         return $chat;
+    }
+    public function sendMessage(Request $request, Response $response, $args): Response
+    {
+        $chatId = (int)$args['chatId'];
+        $message = $request->getParsedBody()['message'] ?? null;
+
+        if (!$message) {
+            $_SESSION['chat_error'] = 'Wiadomość nie może być pusta.';
+            return $response->withHeader('Location', '/czat/' . $chatId)->withStatus(400);
+        }
+
+        try {
+            // Zapisz wiadomość w bazie
+            $stmt = $this->db->prepare("INSERT INTO chat_messages (chat_id, sender_id, message, date_added) 
+            VALUES (:chat_id, :sender_id, :message, NOW())");
+            $stmt->execute([
+                'chat_id' => $chatId,
+                'sender_id' => $_SESSION['user_id'],
+                'message' => $message,
+            ]);
+
+            // Pobierz dane czatu
+            $stmt = $this->db->prepare("SELECT * FROM chat WHERE id = :chat_id LIMIT 1");
+            $stmt->execute(['chat_id' => $chatId]);
+            $chat = $stmt->fetch(PDO::FETCH_OBJ);
+
+            if (!$chat) {
+                $_SESSION['chat_error'] = 'Nie znaleziono czatu.';
+                return $response->withHeader('Location', '/czat')->withStatus(404);
+            }
+
+            // Zidentyfikuj odbiorcę wiadomości
+            $receiverId = $chat->employer_id == $_SESSION['user_id'] ? $chat->worker_id : $chat->employer_id;
+
+            // Powiadomienie dla odbiorcy
+            $notificationController = new NotificationController($this->container);
+            $content = "Masz nową wiadomość na czacie od użytkownika " . htmlspecialchars($_SESSION['user_id']); // Możesz dodać imię nadawcy
+            $notificationController->createNotification($receiverId, 'new_chat_message', $content, $chat->job_id); // Możesz dodać job_id, jeśli chcesz
+
+            $_SESSION['chat_success'] = 'Wiadomość została wysłana.';
+            return $response->withHeader('Location', '/czat/' . $chatId)->withStatus(302);
+        } catch (\PDOException $e) {
+            $response->getBody()->write("Błąd podczas zapisu do bazy danych: " . $e->getMessage());
+            return $response->withStatus(500);
+        }
     }
 }

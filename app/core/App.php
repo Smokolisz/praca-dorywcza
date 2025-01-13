@@ -3,6 +3,8 @@
 use Slim\Factory\AppFactory;
 use DI\Container;
 use App\Core\View;
+use App\Middleware\NotificationMiddleware;
+use App\Services\NotificationService;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
@@ -57,12 +59,18 @@ $container->set('mailService', function () use ($mailConfig) {
     return new \App\Services\MailService($host, $username, $password, $port);
 });
 
+$container->set('notificationService', function () use ($container) {
+    return new NotificationService($container->get('db'));
+});
+
+$app->add(NotificationMiddleware::class);
+
 $app->addErrorMiddleware(true, true, true)
     ->setDefaultErrorHandler(function ($request, \Throwable $exception, bool $displayErrorDetails) use ($container) {
         $logger = $container->get('logger');
         $logger->error($exception->__toString());
         throw $exception;
-    });
+});
 
 // Załaduj plik z trasami
 (require __DIR__ . '/../routes/routes.php')($app);

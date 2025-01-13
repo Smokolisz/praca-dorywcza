@@ -31,6 +31,30 @@
 }
 
 .footer a {
+    color:#ddd;
+}
+
+.notification-icon {
+    position: relative; /* Umożliwia umieszczenie elementu wewnątrz */
+}
+
+.notification-dot {
+    position: absolute;
+    top: -5px;    /* Pozycjonowanie na górze ikony */
+    right: -5px;  /* Pozycjonowanie na prawo od ikony */
+    width: 10px;  /* Szerokość kropeczki */
+    height: 10px; /* Wysokość kropeczki */
+    border-radius: 50%;  /* Ustawienie kształtu na okrągły */
+    background-color: red; /* Czerwony kolor */
+    display: none; /* Domyślnie niewidoczna */
+}
+
+.notification-icon.new-notification .notification-dot {
+    display: block; /* Widoczna, gdy użytkownik ma nowe powiadomienia */
+}
+
+.notification-icon {
+    position: relative;
     color:var(--text-color);
 }
 

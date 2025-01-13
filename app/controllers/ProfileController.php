@@ -143,30 +143,6 @@ class ProfileController
         return $response->withHeader('Location', '/zaloguj-sie')->withStatus(302);
     }
 
-
-
-    // Wyświetlanie powiadomień użytkownika
-    public function notifications(Request $request, Response $response, $args): Response
-    {
-        $db = $this->container->get("db");
-        $view = $this->container->get("view");
-
-        $userId = $_SESSION['user_id'] ?? null;
-
-        if ($userId) {
-            $stmt = $db->prepare("SELECT * FROM notifications WHERE user_id = :user_id ORDER BY created_at DESC");
-            $stmt->bindParam(':user_id', $userId);
-            $stmt->execute();
-            $notifications = $stmt->fetchAll();
-
-            $output = $view->render('account/notifications', ['notifications' => $notifications], "main");
-            $response->getBody()->write($output);
-            return $response;
-        }
-
-        return $response->withHeader('Location', '/zaloguj-sie')->withStatus(302);
-    }
-
     // Wyświetlanie historii aktywności użytkownika
     public function activityLog(Request $request, Response $response, $args): Response
     {
