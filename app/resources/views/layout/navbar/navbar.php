@@ -45,18 +45,18 @@
             <?php
             if (strpos($_SERVER['REQUEST_URI'], '/szukaj') === false):
             ?>
-            <div class="navbar-item">
-                <form method="GET" action="/szukaj">
-                    <div class="field has-addons">
-                        <div class="control">
-                            <input class="input" type="text" name="q" placeholder="">
+                <div class="navbar-item">
+                    <form method="GET" action="/szukaj">
+                        <div class="field has-addons">
+                            <div class="control">
+                                <input class="input" type="text" name="q" placeholder="">
+                            </div>
+                            <div class="control">
+                                <button class="button is-info">Szukaj</button>
+                            </div>
                         </div>
-                        <div class="control">
-                            <button class="button is-info">Szukaj</button>
-                        </div>
-                    </div>
-                </form>
-            </div>
+                    </form>
+                </div>
             <?php
             endif;
             ?>
@@ -64,6 +64,13 @@
         </div>
 
         <div class="navbar-end">
+
+            <a class="navbar-item" href="/profil/powiadomienia" title="Powiadomienia">
+                <div class="notification-icon <?php echo $hasNewNotifications ? 'new-notification' : ''; ?>">
+                    <i class="far fa-bell"></i>
+                    <span class="notification-dot"></span> <!-- Kropeczka powiadomienia -->
+                </div>
+            </a>
 
             <a class="navbar-item" href="/czat" title="Czaty">
                 <i class="fa-regular fa-comments"></i>
@@ -79,9 +86,9 @@
                         </a>
 
                         <div class="navbar-dropdown" style="margin-left:-25px;">
-                        <a class="navbar-item" href="/mylistings">
-                            Moje ogłoszenia
-                        </a>
+                            <a class="navbar-item" href="/mylistings">
+                                Moje ogłoszenia
+                            </a>
 
                             <a class="navbar-item" href="/moje-prace">
                                 Moje prace

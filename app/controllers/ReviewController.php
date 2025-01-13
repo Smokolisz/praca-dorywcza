@@ -90,10 +90,23 @@ class ReviewController
             'reviewer_id' => $currentUserId,
             'listing_id' => $listingId,
         ]);
+
         if ($stmt->fetch()) {
             $_SESSION['review_error'] = 'Już wystawiłeś opinię dla tego ogłoszenia.';
             return $response->withHeader('Location', '/')->withStatus(302);
         }
+
+        // Pobierz imię i nazwisko użytkownika
+        $stmt = $db->prepare("SELECT CONCAT(first_name, ' ', last_name) AS full_name FROM users WHERE id = :id");
+        $stmt->execute(['id' => $currentUserId]);
+        $user = $stmt->fetch();
+
+        if (!$user) {
+            $_SESSION['review_error'] = 'Nie znaleziono danych użytkownika.';
+            return $response->withHeader('Location', '/')->withStatus(302);
+        }
+
+        $userName = htmlspecialchars($user['full_name']);
 
         // Dodaj opinię
         $stmt = $db->prepare("
@@ -111,6 +124,13 @@ class ReviewController
         ]);
 
         $_SESSION['review_success'] = 'Twoja opinia została dodana pomyślnie!';
+
+        $notificationController = new NotificationController($this->container);
+
+        $content = "Użytkownik " . $userName . " wystawił Ci nową opinię!";
+        $notificationController->createNotification($reviewedUserId, 'new_review', $content);
+
+
 
         return $response->withHeader('Location', '/')->withStatus(302);
     }
