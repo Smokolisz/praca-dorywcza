@@ -8,52 +8,49 @@ class View
     protected $data = [];
     protected $sections = [];
     protected $currentSection;
+    protected $globals = []; // Dodaj tablicę na zmienne globalne
 
     public function __construct($path = '../resources/views/')
     {
         $this->path = $path;
     }
 
+    // Dodaj metodę do ustawiania zmiennych globalnych
+    public function addGlobal($name, $value)
+    {
+        $this->globals[$name] = $value;
+    }
+
     public function render($view, $data = [], $layout = null)
     {
-        $this->data = $data;
+        // Połącz zmienne globalne z lokalnymi danymi
+        $this->data = array_merge($this->globals, $data);
 
         $viewPath = $this->path . $view . '.php';
 
         if (file_exists($viewPath)) {
-            // Przekazujemy dane do widoku
             extract($this->data);
 
-            // Definiujemy funkcje sekcji
             $this->sections = [];
             $this->currentSection = null;
 
-            // Start buforowania wyjścia
             ob_start();
             require $viewPath;
             $content = ob_get_clean();
 
-            // Jeśli podano layout
             if ($layout) {
                 $layoutPath = $this->path . 'layout/' . $layout . '.php';
-
                 if (file_exists($layoutPath)) {
-                    // Przekazujemy dane do layoutu
-                    extract($this->data);
-
-                    // Zmienna $content i sekcje będą dostępne w layout
                     ob_start();
                     require $layoutPath;
                     return ob_get_clean();
-                } else {
-                    throw new \Exception("Layout $layout nie został znaleziony.");
                 }
-            } else {
-                return $content;
             }
-        } else {
-            throw new \Exception("Widok $view nie został znaleziony.");
+
+            return $content;
         }
+
+        throw new \Exception("View $view not found");
     }
 
     // Funkcje do obsługi sekcji

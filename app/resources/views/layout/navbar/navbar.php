@@ -66,9 +66,12 @@
         <div class="navbar-end">
 
             <a class="navbar-item" href="/profil/powiadomienia" title="Powiadomienia">
-                <div class="notification-icon <?php echo $hasNewNotifications ? 'new-notification' : ''; ?>">
+                <div class="notification-icon <?= (isset($unreadCount) && $unreadCount > 0) ? 'new-notification' : ''  ?>">
                     <i class="far fa-bell"></i>
-                    <span class="notification-dot"></span> <!-- Kropeczka powiadomienia -->
+
+                    <?php if (isset($unreadCount) && $unreadCount > 0): ?>
+                        <span class="notification-dot"></span>
+                    <?php endif; ?>
                 </div>
             </a>
 

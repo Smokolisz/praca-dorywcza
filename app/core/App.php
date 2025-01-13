@@ -3,6 +3,8 @@
 use Slim\Factory\AppFactory;
 use DI\Container;
 use App\Core\View;
+use App\Middleware\NotificationMiddleware;
+use App\Services\NotificationService;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use Monolog\Level;
@@ -57,7 +59,11 @@ $container->set('mailService', function () use ($mailConfig) {
     return new \App\Services\MailService($host, $username, $password, $port);
 });
 
+$container->set('notificationService', function () use ($container) {
+    return new NotificationService($container->get('db'));
+});
 
+$app->add(NotificationMiddleware::class);
 
 // Załaduj plik z trasami
 (require __DIR__ . '/../routes/routes.php')($app);
