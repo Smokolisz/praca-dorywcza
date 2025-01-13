@@ -26,6 +26,8 @@ use App\Controllers\PrivacyController;
 use App\Controllers\AboutUsController;
 use App\Controllers\HowItWorksController;
 use App\Controllers\CookiesController;
+use App\Controllers\NotificationController;
+
 use Slim\Psr7\Request;
 use Slim\Psr7\Response;
 use Slim\App;
@@ -65,9 +67,9 @@ return function (App $app) {
     $app->post('/profil/zmien-haslo', [ProfileController::class, 'updatePassword']);
 
     $app->get('/job/{id}', [JobController::class, 'index']);
-    $app->post('/contracts/create', \App\Controllers\JobController::class . ':createContract');
-    $app->post('/contracts/accept/{id}', \App\Controllers\JobController::class . ':acceptContract');
-    $app->post('/contracts/reject/{id}', \App\Controllers\JobController::class . ':rejectContract');
+    $app->post('/contracts/create', [JobController::class, 'createContract']);
+    $app->post('/contracts/accept/{id}', [JobController::class, 'acceptContract']);
+    $app->post('/contracts/reject/{id}', [JobController::class, 'rejectContract']);
 
     $app->post('/ogloszenia/{id}/zakoncz', callable: [JobController::class, 'completeListing']);
 
@@ -76,7 +78,7 @@ return function (App $app) {
     $app->post('/add-listing', [ListingController::class, 'submitListing']);
 
     //powiadomienia użytkownika
-    $app->get('/profil/powiadomienia', [ProfileController::class, 'notifications']);
+    // $app->get('/profil/powiadomienia', [ProfileController::class, 'notifications']);
 
     //historia aktywności użytkownika
     $app->get('/profil/aktywnosc', [ProfileController::class,  'activityLog']);
@@ -111,8 +113,6 @@ return function (App $app) {
 
     // Strona FAQ
     $app->get('/faq', [FaqController::class, 'show']);
-    
-    
     $app->get('/help', [HelpController::class, 'show']);
     $app->get('/offer', [OfferController::class, 'show']);
     $app->get('/contact', [ContactController::class, 'show']);
@@ -122,29 +122,29 @@ return function (App $app) {
     $app->get('/howitworks', [HowItWorksController::class, 'show']);
     $app->get('/cookies', [CookiesController::class, 'show']);
 
-
-
-
-
     // Opinie
     $app->get('/opinie/dodaj/{listing_id}', [ReviewController::class, 'showAddReviewForm']);
-
-    $app->get('/user-reviews/{user_id}', \App\Controllers\ReviewController::class . ':showUserReviews');
-
+    $app->get('/user-reviews/{user_id}', [ReviewController::class, 'showUserReviews']);
     $app->get('/opinie', [ReviewController::class, 'showReviews']);
-
     $app->post('/opinie/dodaj', [ReviewController::class, 'submitReview']);
 
+    // Szukaj
     $app->get('/szukaj', [SearchController::class,  'index']);
 
+    // Kategoria
     $app->get('/kategoria', [CategoryController::class, 'index']);
     $app->get('/kategoria/{name}', [CategoryController::class, 'show']);
-
     $app->get('/kategoria/ulubione/dodaj/{id}', [CategoryController::class, 'addFavorite']);
     $app->get('/kategoria/ulubione/usun/{id}', [CategoryController::class, 'removeFavorite']);
 
+    // Zakładki moje ogłoszenia i moje prace
     $app->get('/mylistings', [MyListingsController::class, 'index']);
     $app->get('/moje-prace', [MyJobsController::class, 'index']);
+
+    // Powiadomienia użytkownika
+    $app->get('/profil/powiadomienia', [NotificationController::class, 'index']);
+    $app->post('/profil/powiadomienia/oznacz-jako-przeczytane', [NotificationController::class, 'markAsRead']);
+    $app->post('/profil/powiadomienia/zobacz-szczegoly', [NotificationController::class, 'viewDetails']);
 
     $app->get('/archiwum', function(Request $request, Response $response) {
         return $response->withHeader('Location', '/archiwum/wykonane')->withStatus(302);
@@ -153,5 +153,3 @@ return function (App $app) {
     $app->get('/archiwum/wykonane', [JobHistoryController::class, 'acceptedJobs']);
     
 };
-
-
