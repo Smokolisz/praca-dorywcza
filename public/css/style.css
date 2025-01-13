@@ -53,10 +53,7 @@
     display: block; /* Widoczna, gdy użytkownik ma nowe powiadomienia */
 }
 
-.notification-icon {
-    position: relative;
-    color:var(--text-color);
-}
+
 
 /* Domyślny motyw ciemny */
 html[data-theme="dark"] {
