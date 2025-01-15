@@ -29,7 +29,7 @@ class MyJobsController
             SELECT l.id, l.job_type, l.description, l.payment, l.payment_type, l.city, l.address, c.created_at AS accepted_date
             FROM contracts c
             JOIN listings l ON c.job_id = l.id
-            WHERE c.user_id = :user_id AND c.status = 'accepted'
+            WHERE c.user_id = :user_id AND c.status = 'accepted' AND l.listing_status = 'active'
         ";
         $stmt = $db->prepare($query);
         $stmt->execute(['user_id' => $userId]);
