@@ -1,6 +1,10 @@
 <?php $this->startSection('title'); ?>
 Dodaj Ogłoszenie
+
 <?php $this->endSection(); ?>
+
+
+
 
 <div class="container my-6 is-flex is-flex-direction-column" style="min-height: 80vh;">
     <div class="box my-6">
@@ -134,9 +138,17 @@ Dodaj Ogłoszenie
 
             <div class="field">
                 <div class="control">
-                    <button class="button is-primary is-fullwidth" style="max-width: 300px; margin: 0 auto;">Dodaj ogłoszenie</button>
+                    <?php if (!isset($_SESSION['user_id'])): ?>
+                        <!-- Przycisk wyłączony z komunikatem -->
+                        <button class="button is-primary is-fullwidth" style="max-width: 300px; margin: 0 auto;" disabled>Dodaj ogłoszenie</button>
+                        <p class="has-text-danger has-text-centered">Musisz być zalogowany, aby dodać ogłoszenie.</p>
+                    <?php else: ?>
+                        <!-- Aktywny przycisk dla zalogowanych -->
+                        <button class="button is-primary is-fullwidth" style="max-width: 300px; margin: 0 auto;">Dodaj ogłoszenie</button>
+                    <?php endif; ?>
                 </div>
-            </div>
+</div>
+
         </form>
     </div>
 </div>
@@ -193,11 +205,7 @@ Dodaj Ogłoszenie
                 if (request.location) document.getElementById('address').value = results[0].formatted_address;
             }
         });
-    }
-
-
-    
-    
+    }  
     window.initMap = initMap;
 </script>
 
