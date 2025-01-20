@@ -78,7 +78,6 @@ Podgląd ogłoszenia pracy dorywczej
 
                     <div class="content has-text-centered mt-4">
                         <h2 class="subtitle">Dane kontaktowe</h2>
-                        <p><strong>Telefon:</strong> <?= htmlspecialchars($job['phone_number']) ?></p>
                         <p><strong>E-mail:</strong> <?= htmlspecialchars($job['e-mail']) ?></p>
                     </div>
                     <div class="field mt-4">
