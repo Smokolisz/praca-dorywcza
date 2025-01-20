@@ -18,7 +18,8 @@ Dodaj Ogłoszenie
                                 type="text" 
                                 name="job_type" 
                                 required 
-                                placeholder="Wprowadź rodzaj pracy">
+                                placeholder="Wprowadź rodzaj pracy"
+                                value="<?= htmlspecialchars($_SESSION['job_data']['job_type'] ?? '') ?>">
                             </div>
                         </div>
 
@@ -30,7 +31,8 @@ Dodaj Ogłoszenie
                                 <select name="category_id" required>
                                     <option value="">Wybierz kategorię</option>
                                     <?php foreach ($categories as $category): ?>
-                                        <option value="<?php echo htmlspecialchars($category['id']); ?>">
+                                        <option value="<?php echo htmlspecialchars($category['id']); ?>"
+                                            <?= (isset($_SESSION['job_data']['category_id']) && $_SESSION['job_data']['category_id'] == $category['id']) ? 'selected' : '' ?>>
                                             <?php echo htmlspecialchars($category['name']); ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -42,14 +44,14 @@ Dodaj Ogłoszenie
                     <div class="field">
                         <label class="label">Opis pracy</label>
                         <div class="control">
-                            <textarea name="description" class="textarea is-fullwidth" placeholder="Tutaj opisz pracę do wykonania" required></textarea>
+                            <textarea name="description" class="textarea is-fullwidth" placeholder="Tutaj opisz pracę do wykonania" required><?= htmlspecialchars($_SESSION['job_data']['description'] ?? '') ?></textarea>
                         </div>
                     </div>
 
                     <div class="field">
                         <label class="label">Szacowany czas pracy (godziny)</label>
                         <div class="control">
-                            <input class="input is-fullwidth" type="number" id="estimated_time" name="estimated_time" placeholder="Podaj szacowany czas w godzinach" required>
+                            <input class="input is-fullwidth" type="number" id="estimated_time" name="estimated_time" placeholder="Podaj szacowany czas w godzinach" required value="<?= htmlspecialchars($_SESSION['job_data']['estimated_time'] ?? '') ?>">
                         </div>
                     </div>
                 </div>
@@ -76,10 +78,10 @@ Dodaj Ogłoszenie
                         <label class="label">Typ zapłaty</label>
                         <div class="control">
                             <label class="radio">
-                                <input type="radio" name="payment_type" value="godzinowa" required> Stawka godzinowa
+                                <input type="radio" name="payment_type" value="godzinowa" required <?= (isset($_SESSION['job_data']['payment_type']) && $_SESSION['job_data']['payment_type'] == 'godzinowa') ? 'checked' : '' ?>> Stawka godzinowa
                             </label>
                             <label class="radio">
-                                <input type="radio" name="payment_type" value="za_cala_prace" required> Kwota za całą pracę
+                                <input type="radio" name="payment_type" value="za_cala_prace" required <?= (isset($_SESSION['job_data']['payment_type']) && $_SESSION['job_data']['payment_type'] == 'za_cala_prace') ? 'checked' : '' ?>> Kwota za całą pracę
                             </label>
                         </div>
                     </div>
@@ -87,7 +89,7 @@ Dodaj Ogłoszenie
                     <div class="field">
                         <label class="label">Kwota (PLN)</label>
                         <div class="control">
-                            <input class="input is-fullwidth" type="number" id="payment" name="payment" placeholder="Wpisz kwotę w zł" required>
+                            <input class="input is-fullwidth" type="number" id="payment" name="payment" placeholder="Wpisz kwotę w zł" required value="<?= htmlspecialchars($_SESSION['job_data']['payment'] ?? '') ?>" min="1">
                         </div>
                     </div>
                 </div>
@@ -101,7 +103,7 @@ Dodaj Ogłoszenie
 
                     <div class="field">
                         <label class="label">Adres</label>
-                        <input class="input is-fullwidth" type="text" id="address" name="address" placeholder="Podaj adres">
+                        <input class="input is-fullwidth" type="text" id="address" name="address" placeholder="Podaj adres" value="<?= htmlspecialchars($_SESSION['job_data']['address'] ?? '') ?>">
                     </div>
                 </div>
             </div>
@@ -117,17 +119,17 @@ Dodaj Ogłoszenie
 
             <div id="requirements" class="tab-content box">
                 <h2 class="subtitle">Wymagania</h2>
-                <textarea name="requirements" class="textarea is-fullwidth" placeholder="Wymień wymagania, oddzielając je przecinkami"></textarea>
+                <textarea name="requirements" class="textarea is-fullwidth" placeholder="Wymień wymagania, oddzielając je przecinkami"><?= htmlspecialchars($_SESSION['job_data']['requirements'] ?? '') ?></textarea>
             </div>
 
             <div id="equipment" class="tab-content box" style="display: none;">
                 <h2 class="subtitle">Dostępny sprzęt</h2>
-                <textarea name="equipment" class="textarea is-fullwidth" placeholder="Wymień dostępny sprzęt, oddzielając go przecinkami"></textarea>
+                <textarea name="equipment" class="textarea is-fullwidth" placeholder="Wymień dostępny sprzęt, oddzielając go przecinkami"><?= htmlspecialchars($_SESSION['job_data']['equipment'] ?? '') ?></textarea>
             </div>
 
             <div id="offer" class="tab-content box" style="display: none;">
                 <h2 class="subtitle">To oferujemy</h2>
-                <textarea name="offer" class="textarea is-fullwidth" placeholder="Wymień korzyści, oddzielając je przecinkami"></textarea>
+                <textarea name="offer" class="textarea is-fullwidth" placeholder="Wymień korzyści, oddzielając je przecinkami"><?= htmlspecialchars($_SESSION['job_data']['offer'] ?? '') ?></textarea>
             </div>
 
             <div class="field">

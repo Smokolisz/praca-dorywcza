@@ -125,13 +125,12 @@ Strona Główna
 
                     <div class="cell pl-5">
                         <h1 class="title is-3">Popularne ogłoszenia</h1>
-                        <div class="scroll-container py-3">
-
+                        <div class="scroll-container py-5">
 
                             <?php foreach ($listings as $listing): ?>
-                                    <div class="box has-background-grey-darker">
+                                    <div class="box has-background-grey-darker-dark has-text-light-dark">
                                         <p class="title is-4 no-gap">
-                                        <a href="/job/<?= htmlspecialchars($listing['id']) ?>" class="has-text-light-dark has-text-black-dark">
+                                        <a href="/job/<?= htmlspecialchars($listing['id']) ?>" class="has-text-inherit">
                                             <?= htmlspecialchars($listing['job_type']) ?>
                                         </a>
                                         <p class="subtitle is-6 no-gap">

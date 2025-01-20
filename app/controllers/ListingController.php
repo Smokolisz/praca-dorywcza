@@ -127,6 +127,7 @@ class ListingController
             return $response->withHeader('Location', '/?success=1')->withStatus(302);
         } catch (\PDOException $e) {
             $response->getBody()->write("Błąd podczas dodawania ogłoszenia: " . $e->getMessage());
+            $_SESSION['job_data'] = $data;
             return $response->withStatus(500);
         }
     }
@@ -162,9 +163,6 @@ class ListingController
             ]);
         }
     }
-
-
-
 
     // Funkcja do zapisywania plików na serwerze
     private function moveUploadedFile(string $directory, \Psr\Http\Message\UploadedFileInterface $uploadedFile): string

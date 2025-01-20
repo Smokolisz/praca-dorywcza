@@ -11,7 +11,7 @@
                     </figure>
                 <?php endif; ?>
                 <div class="box p-5">
-                    <h3 class="title is-5 has-text-white-dark has-text-black-dark">Informacje o użytkowniku</h3>
+                    <h3 class="title is-5 has-background-grey-darker-dark has-text-light-dark">Informacje o użytkowniku</h3>
                     <p><strong>Imię:</strong> <?= htmlspecialchars($user['first_name'] ?? 'Brak imienia') ?></p>
                     <p><strong>Nazwisko:</strong> <?= htmlspecialchars($user['last_name'] ?? 'Brak nazwiska') ?></p>
                     <p><strong>Email:</strong> <?= htmlspecialchars($user['email'] ?? 'Brak adresu email') ?></p>
@@ -42,7 +42,7 @@
             <!-- Opcje profilu -->
             <div class="column is-one-third">
                 <nav class="panel  p-5 is-rounded">
-                    <p class="panel-heading has-background-black-ter has-text-white-dark has-text-black-dark has-text-centered">Opcje profilu</p>
+                    <p class="panel-heading has-background-black-dark has-text-white-dark has-text-centered">Opcje profilu</p>
                     <a href="/profil/opinie" class="panel-block has-text-white-dark has-text-black-dark">
                         <span class="panel-icon"><i class="fas fa-star"></i></span>
                         Opinie

@@ -1,6 +1,6 @@
 <!-- app/resources/views/layout/main.php -->
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" data-theme="<?= isset($_COOKIE['theme']) ? htmlspecialchars($_COOKIE['theme']) : '' ?>">
 
 <head>
     <meta charset="UTF-8">

@@ -17,7 +17,7 @@ Moje Ogłoszenia
                 <!-- Lista ogłoszeń -->
                 <div class="scroll-container py-3">
                     <?php foreach ($listings as $listing): ?>
-                        <div class="box has-background-grey-darker">
+                        <div class="box has-background-grey-darker-dark has-text-light-dark">
                             <!-- Tytuł jako link do szczegółów -->
                             <p class="title is-4 no-gap">
                                 <a href="/job/<?= htmlspecialchars($listing['id']) ?>" class="has-text-light-dark has-text-black-dark">

@@ -32,7 +32,7 @@ Wyszukiwarka kategorii
                 </form>
 
                 <!-- Box ulubionych kategorii -->
-                <div class="box" style="background-color: #none; color: #fff; margin-top: 20px;">
+                <div class="box" style="background-color: none; color: #fff; margin-top: 20px;">
                     <h2 class="title is-5" style="color: #fff;">Ulubione kategorie</h2>
                     <?php if (!empty($favoriteCategories)): ?>
                         <ul style="list-style-type: none; padding-left: 0;">
@@ -61,7 +61,7 @@ Wyszukiwarka kategorii
                         <?php foreach ($listings as $listing): ?>
                             <div class="column is-half">
                                 <div class="box">
-                                    <h3 class="title is-5"><?php echo htmlspecialchars($listing['job_type']); ?></h3>
+                                    <h3 class="title is-5"><a href="/job/<?= htmlspecialchars($listing['id']) ?>"><?php echo htmlspecialchars($listing['job_type']); ?></a></h3>
                                     <p><?php echo htmlspecialchars($listing['description']); ?></p>
                                     <p><strong>Płatność:</strong> <?php echo htmlspecialchars($listing['payment_type']); ?></p>
                                     <p><strong>Pracodawca:</strong> <?php echo htmlspecialchars($listing['employer_name'] ?? 'Nie podano'); ?></p>
@@ -80,7 +80,7 @@ Wyszukiwarka kategorii
             <!-- Sekcja boczna z kategoriami -->
             <div class="column is-one-third">
                 <!-- Box dostępnych kategorii -->
-                <div class="box" style="background-color: #none; color: #fff;">
+                <div class="box" style="background-color: none; color: #fff;">
                     <h2 class="title is-5" style="color: #fff;">Dostępne kategorie</h2>
                     <ul style="list-style-type: none; padding-left: 0;">
                         <?php foreach ($categories as $cat): ?>
