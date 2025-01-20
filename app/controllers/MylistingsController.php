@@ -28,7 +28,7 @@ class MyListingsController
         $query = "
             SELECT id, job_type, description, payment, payment_type, city, address 
             FROM listings
-            WHERE user_id = :user_id
+            WHERE user_id = :user_id AND listing_status = 'active'
         ";
         $stmt = $db->prepare($query);
         $stmt->execute(['user_id' => $userId]);
